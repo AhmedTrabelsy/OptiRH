@@ -4,10 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class DBConnection {
-    private final String USER = "root";
-    private final String PWD = "";
-    private final String URL = "jdbc:mysql://localhost:3306/optirh";
+    Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+    private final String URL = dotenv.get("DB_URL", "jdbc:mysql://localhost:3306/optirh");
+    private final String USER = dotenv.get("DB_USER", "root");
+    private final String PWD = dotenv.get("DB_PWD", "");
 
     public static DBConnection instance;
 
