@@ -13,13 +13,11 @@ private Integer utilistaeurId;
 public Demande() {
 }
 
-public Demande(Integer id, String status, LocalDate date, String description, Integer utilistaeurId) {
-    this.id = id;
+public Demande(String status, LocalDate date, String description, Integer utilistaeurId) {
     this.status = status;
     this.date = date;
     this.description = description;
     this.utilistaeurId = utilistaeurId;
-
 }
 
 public Integer getId() {
@@ -62,16 +60,6 @@ public void setUtilistaeurId(Integer utilistaeurId) {
     this.utilistaeurId = utilistaeurId;
 }
 
-@Override
-public String toString() {
-    return "User{" +
-            "id=" + id +
-            ", status='" + status + '\'' +
-            ", date='" + date + '\'' +
-            ", description='" + description + '\'' +
-            ", utilistaeurId=" + utilistaeurId +
-            '}';
-}
 
 
 }

@@ -1,7 +1,5 @@
 package tn.nexus.Entities;
 
-i//mport java.time.LocalDate;
-
 public class offreEmploi {
 
     private Integer id;
@@ -9,9 +7,8 @@ public class offreEmploi {
     private String description;
     private String status;
     private Integer utilistaeurId;
-
+    
     public offreEmploi() {
-
     }
 
     public offreEmploi(String poste, String description, String status, Integer utilistaeurId) {
@@ -21,7 +18,6 @@ public class offreEmploi {
         this.utilistaeurId = utilistaeurId;
     }
 
-    // Getters et Setters
     public Integer getId() {
         return id;
     }
@@ -62,14 +58,4 @@ public class offreEmploi {
         this.utilistaeurId = utilistaeurId;
     }
 
-    @Override
-    public String toString() {
-        return "OffreEmploi{" +
-                "id=" + id +
-                ", poste='" + poste + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", utilistaeurId=" + utilistaeurId +
-                '}';
-    }
 }
