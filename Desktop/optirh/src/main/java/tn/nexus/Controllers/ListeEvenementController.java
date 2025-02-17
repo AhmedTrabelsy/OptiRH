@@ -374,7 +374,7 @@ public class ListeEvenementController {
         if (selectedFile != null) {
             try {
                 // Récupérer le nom du fichier sélectionné
-                String fileName = selectedFile.getName();
+                String filePath = selectedFile.getAbsolutePath();
 
                 // Définir le chemin de destination dans le dossier "images" du projet
                 File destinationDir = new File("src/main/resources/image");
@@ -382,13 +382,13 @@ public class ListeEvenementController {
                     destinationDir.mkdirs(); // Créer le dossier s'il n'existe pas
                 }
 
-                File destinationFile = new File(destinationDir, fileName);
+                File destinationFile = new File(destinationDir, selectedFile.getName());
 
                 // Copier l'image sélectionnée dans le dossier "images"
                 Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
                 // Afficher uniquement le nom du fichier dans le champ de texte
-                imageField.setText(fileName);
+                imageField.setText(destinationFile.getAbsolutePath());
 
 
                 System.out.println("Image enregistrée avec succès : " + destinationFile.getAbsolutePath());
