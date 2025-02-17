@@ -45,7 +45,7 @@ public class ReclamationController {
     private ComboBox<String> statusField;
 
     @FXML
-    private TextField utilisateurIdField;
+   // private TextField utilisateurIdField;
 
     private final ReclamationService reclamationService = new ReclamationService();
 
@@ -69,32 +69,33 @@ public class ReclamationController {
                 descriptionField.setText(newValue.getDescription());
                 statusField.setValue(newValue.getStatus());
                 dateField.setValue(convertToLocalDate(newValue.getDate()));
-                utilisateurIdField.setText(String.valueOf(newValue.getUtilisateurId()));
+                //utilisateurIdField.setText(String.valueOf(newValue.getUtilisateurId()));
             }
         });
     }
 
     @FXML
     void ajouterReclamation(ActionEvent event) throws SQLException {
-        if (descriptionField.getText().isEmpty() || statusField.getValue() == null || dateField.getValue() == null || utilisateurIdField.getText().isEmpty()) {
+        if (descriptionField.getText().isEmpty() || statusField.getValue() == null || dateField.getValue() == null ) {
             showAlert(Alert.AlertType.WARNING, "Tous les champs doivent être remplis !");
             return;
         }
 
-        int utilisateurId;
-        try {
+       // int utilisateurId;
+        /*try {
             utilisateurId = Integer.parseInt(utilisateurIdField.getText());
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "L'ID utilisateur doit être un nombre valide !");
             return;
-        }
+        }*/
 
         Reclamation reclamation = new Reclamation(
                 descriptionField.getText(),
                 statusField.getValue(),
-                Date.valueOf(dateField.getValue()), // Conversion LocalDate -> Date SQL
-                utilisateurId
+                Date.valueOf(dateField.getValue()),
+                1 // Fixe l'utilisateur ID à 1
         );
+
 
         reclamationService.insert(reclamation);
         reclamationsTable.getItems().add(reclamation);
@@ -108,7 +109,7 @@ public class ReclamationController {
             selectedReclamation.setDescription(descriptionField.getText());
             selectedReclamation.setStatus(statusField.getValue());
             selectedReclamation.setDate(Date.valueOf(dateField.getValue())); // Conversion LocalDate -> Date SQL
-            selectedReclamation.setUtilisateurId(Integer.parseInt(utilisateurIdField.getText()));
+            //selectedReclamation.setUtilisateurId(Integer.parseInt(utilisateurIdField.getText()));
 
             reclamationService.update(selectedReclamation);
             reclamationsTable.refresh();
@@ -141,7 +142,7 @@ public class ReclamationController {
         descriptionField.clear();
         statusField.setValue(null);
         dateField.setValue(null);
-        utilisateurIdField.clear();
+        //utilisateurIdField.clear();
     }
 
     // Convertit une Date SQL en LocalDate

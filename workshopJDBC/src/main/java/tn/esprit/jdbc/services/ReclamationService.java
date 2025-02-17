@@ -18,7 +18,7 @@ public class ReclamationService implements CRUD<Reclamation> {
             ps.setString(1, reclamation.getDescription());
             ps.setDate(2, new java.sql.Date(reclamation.getDate().getTime()));
             ps.setString(3, reclamation.getStatus());
-            ps.setInt(4, reclamation.getUtilisateurId());
+            ps.setInt(4, 1);
             return ps.executeUpdate();
         }
     }
@@ -30,7 +30,7 @@ public class ReclamationService implements CRUD<Reclamation> {
             ps.setString(1, reclamation.getDescription());
             ps.setDate(2, new java.sql.Date(reclamation.getDate().getTime()));
             ps.setString(3, reclamation.getStatus());
-            ps.setInt(4, reclamation.getUtilisateurId());
+            ps.setInt(4, 1);
             ps.setInt(5, reclamation.getId());
             return ps.executeUpdate();
         }
@@ -48,7 +48,7 @@ public class ReclamationService implements CRUD<Reclamation> {
     @Override
     public List<Reclamation> showAll() throws SQLException {
         List<Reclamation> reclamations = new ArrayList<>();
-        String req = "SELECT * FROM reclamation";
+        String req = "SELECT * FROM reclamation WHERE utilisateur_id <> 1";
         try (Statement st = cnx.createStatement(); ResultSet rs = st.executeQuery(req)) {
             while (rs.next()) {
                 Reclamation reclamation = new Reclamation(
@@ -57,6 +57,7 @@ public class ReclamationService implements CRUD<Reclamation> {
                         rs.getString("status"),  // 'status' est une chaîne de caractères
                         rs.getDate("date"),      // 'date' est de type java.sql.Date
                         rs.getInt("utilisateur_id")
+
                 );
                 reclamations.add(reclamation);
             }
