@@ -45,7 +45,7 @@ public class ReclamationController {
     private ComboBox<String> statusField;
 
     @FXML
-   // private TextField utilisateurIdField;
+    // private TextField utilisateurIdField;
 
     private final ReclamationService reclamationService = new ReclamationService();
 
@@ -81,7 +81,7 @@ public class ReclamationController {
             return;
         }
 
-       // int utilisateurId;
+        // int utilisateurId;
         /*try {
             utilisateurId = Integer.parseInt(utilisateurIdField.getText());
         } catch (NumberFormatException e) {
@@ -122,8 +122,14 @@ public class ReclamationController {
     void supprimerReclamation(ActionEvent event) throws SQLException {
         Reclamation selectedReclamation = reclamationsTable.getSelectionModel().getSelectedItem();
         if (selectedReclamation != null) {
-            reclamationService.delete(selectedReclamation);
+            int rowsAffected = reclamationService.delete(selectedReclamation);
             reclamationsTable.getItems().remove(selectedReclamation);
+            if (rowsAffected > 0) {
+                showAlert(Alert.AlertType.INFORMATION, "Réclamation supprimée avec succès !");
+                refreshTable();  // Recharger la TableView
+            } else {
+                showAlert(Alert.AlertType.WARNING, "La suppression a échoué !");
+            }
         } else {
             showAlert(Alert.AlertType.WARNING, "Aucune réclamation sélectionnée !");
         }
@@ -149,4 +155,10 @@ public class ReclamationController {
     private LocalDate convertToLocalDate(java.util.Date date) {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
+    private void refreshTable() throws SQLException {
+        List<Reclamation> reclamationList = reclamationService.showAll();
+        ObservableList<Reclamation> observableReclamationList = FXCollections.observableArrayList(reclamationList);
+        reclamationsTable.setItems(observableReclamationList);
+    }
+
 }

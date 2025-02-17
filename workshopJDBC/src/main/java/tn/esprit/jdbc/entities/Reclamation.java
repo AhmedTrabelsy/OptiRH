@@ -6,10 +6,10 @@ public class Reclamation {
     private int id;
     private String description;
     private String status;
-    private Date date; // ✅ Utilisation correcte de java.sql.Date
+    private Date date;
     private int utilisateurId;
 
-    // 🔹 Constructeur sans ID (pour insertion)
+
     public Reclamation(String description, String status, Date date, int utilisateurId) {
         this.description = description;
         this.status = status;
@@ -17,7 +17,7 @@ public class Reclamation {
         this.utilisateurId = utilisateurId;
     }
 
-    // ✅ Constructeur avec ID (pour récupération depuis la BDD)
+
     public Reclamation(int id, String description, String status, Date date, int utilisateurId) {
         this.id = id;
         this.description = description;
