@@ -1,0 +1,67 @@
+package tn.esprit.jdbc.services;
+
+import tn.esprit.jdbc.entities.Reponse;
+import tn.esprit.jdbc.utils.MyDatabase;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class ReponseService implements CRUD<Reponse> {
+
+    private Connection con = MyDatabase.getInstance().getCnx();
+
+    @Override
+    public int insert(Reponse reponse) throws SQLException {
+        String req = "INSERT INTO reponse (description, date, status, reclamation_id) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(req)) {
+            ps.setString(1, reponse.getDescription());
+            ps.setDate(2, new java.sql.Date(reponse.getDate().getTime()));
+            ps.setString(3, reponse.getStatus());
+            ps.setInt(4, reponse.getReclamationId());
+            return ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public int update(Reponse reponse) throws SQLException {
+        String req = "UPDATE reponse SET description = ?, date = ?, status = ?, reclamation_id = ? WHERE id = ?";
+        try (PreparedStatement ps = con.prepareStatement(req)) {
+            ps.setString(1, reponse.getDescription());
+            ps.setDate(2, new java.sql.Date(reponse.getDate().getTime()));
+            ps.setString(3, reponse.getStatus());
+            ps.setInt(4, reponse.getReclamationId());
+            ps.setInt(5, reponse.getId());
+            return ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public int delete(Reponse reponse) throws SQLException {
+        String req = "DELETE FROM reponse WHERE id = ?";
+        try (PreparedStatement ps = con.prepareStatement(req)) {
+            ps.setInt(1, reponse.getId());
+            return ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public List<Reponse> showAll() throws SQLException {
+        List<Reponse> reponses = new ArrayList<>();
+        String req = "SELECT * FROM reponse";
+        try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(req)) {
+            while (rs.next()) {
+                Reponse reponse = new Reponse(
+                        rs.getInt("id"),
+                        rs.getString("description"),
+                        rs.getDate("date"),
+                        rs.getString("status"),
+                        rs.getInt("reclamation_id")
+                );
+                reponses.add(reponse);
+            }
+        }
+        return reponses;
+    }
+}
