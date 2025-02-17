@@ -9,13 +9,11 @@ public class MyDatabase {
     private final String USER = "root";
     private final String PWD = "";
     private final String URL = "jdbc:mysql://localhost:3306/optirh";
-    //1st STEP
     public static MyDatabase instance;
 
     private Connection cnx;
 
-    //2ND STEP
-    private MyDatabase(){
+    private MyDatabase() {
         try {
             cnx = DriverManager.getConnection(URL, USER, PWD);
             System.out.println("Connection Etablie !");
@@ -24,13 +22,12 @@ public class MyDatabase {
         }
     }
 
-    //3RD STEP
-    public static MyDatabase getInstance(){
+    public static MyDatabase getInstance() {
         if (instance == null) instance = new MyDatabase();
         return instance;
     }
 
-    public Connection getCnx(){
+    public Connection getCnx() {
         return cnx;
     }
 }

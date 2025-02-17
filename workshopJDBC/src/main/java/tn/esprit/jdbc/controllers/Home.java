@@ -17,18 +17,15 @@ public class Home extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            // Vérification du chemin du fichier FXML
-            String fxmlPath = "/listeReclamation.fxml"; // Assurez-vous que le fichier est au bon endroit
+            String fxmlPath = "/listeReclamation.fxml";
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setTitle("Liste des reclamations"); // Titre de la fenêtre
+            stage.setTitle("Liste des réclamations");
             stage.show();
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement du fichier FXML: " + e.getMessage());
-            e.printStackTrace(); // Affiche la trace de l'exception pour faciliter le débogage
+            e.printStackTrace();
         }
-
     }
 }
-

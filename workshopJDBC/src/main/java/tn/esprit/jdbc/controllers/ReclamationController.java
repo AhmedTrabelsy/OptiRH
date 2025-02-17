@@ -2,50 +2,38 @@ package tn.esprit.jdbc.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import tn.esprit.jdbc.entities.Reclamation;
 import tn.esprit.jdbc.services.ReclamationService;
 
+import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 public class ReclamationController {
-
     @FXML
     private TableView<Reclamation> reclamationsTable;
-
     @FXML
     private TableColumn<Reclamation, Integer> idColumn;
-
     @FXML
     private TableColumn<Reclamation, String> descriptionColumn;
-
     @FXML
     private TableColumn<Reclamation, String> statusColumn;
-
     @FXML
     private TableColumn<Reclamation, LocalDate> dateColumn;
-
-    @FXML
-    private TableColumn<Reclamation, Integer> utilisateurIdColumn;
-
     @FXML
     private TextField descriptionField;
-
     @FXML
     private DatePicker dateField;
-
     @FXML
     private ComboBox<String> statusField;
-
-    @FXML
-    // private TextField utilisateurIdField;
 
     private final ReclamationService reclamationService = new ReclamationService();
 
@@ -55,7 +43,6 @@ public class ReclamationController {
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        utilisateurIdColumn.setCellValueFactory(new PropertyValueFactory<>("utilisateurId"));
 
         List<Reclamation> reclamationList = reclamationService.showAll();
         ObservableList<Reclamation> observableReclamationList = FXCollections.observableArrayList(reclamationList);
@@ -63,54 +50,84 @@ public class ReclamationController {
 
         statusField.getItems().addAll("En attente", "En cours", "Résolue");
 
-        // Sélectionner une réclamation et remplir les champs
-        reclamationsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                descriptionField.setText(newValue.getDescription());
-                statusField.setValue(newValue.getStatus());
-                dateField.setValue(convertToLocalDate(newValue.getDate()));
-                //utilisateurIdField.setText(String.valueOf(newValue.getUtilisateurId()));
+        // Ajouter une colonne d'action avec un bouton "Réponse"
+        TableColumn<Reclamation, Void> actionColumn = new TableColumn<>("Action");
+        actionColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button btn = new Button("Réponse");
+
+            {
+                btn.setOnAction(event -> {
+                    Reclamation reclamation = getTableView().getItems().get(getIndex());
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/reponseForm.fxml"));
+                        Parent root = loader.load();
+                        ReponseController controller = loader.getController();
+                        controller.setReclamationId(reclamation.getId());
+                        Stage stage = new Stage();
+                        stage.setScene(new Scene(root));
+                        stage.setTitle("Gérer les réponses");
+                        stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btn);
+                }
             }
         });
+
+        reclamationsTable.getColumns().add(actionColumn);
     }
 
     @FXML
-    void ajouterReclamation(ActionEvent event) throws SQLException {
-        if (descriptionField.getText().isEmpty() || statusField.getValue() == null || dateField.getValue() == null ) {
-            showAlert(Alert.AlertType.WARNING, "Tous les champs doivent être remplis !");
+    public void ajouterReclamation() throws SQLException {
+        // Vérifier si les champs sont vides ou nuls
+        if (descriptionField.getText() == null || descriptionField.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "La description ne peut pas être vide !");
+            return;
+        }
+        if (statusField.getValue() == null || statusField.getValue().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Le statut ne peut pas être vide !");
+            return;
+        }
+        if (dateField.getValue() == null) {
+            showAlert(Alert.AlertType.WARNING, "La date ne peut pas être vide !");
             return;
         }
 
-        // int utilisateurId;
-        /*try {
-            utilisateurId = Integer.parseInt(utilisateurIdField.getText());
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "L'ID utilisateur doit être un nombre valide !");
-            return;
-        }*/
-
+        // Créer une nouvelle réclamation
         Reclamation reclamation = new Reclamation(
                 descriptionField.getText(),
                 statusField.getValue(),
-                Date.valueOf(dateField.getValue()),
+                java.sql.Date.valueOf(dateField.getValue()),
                 1 // Fixe l'utilisateur ID à 1
         );
 
-
+        // Insérer la réclamation dans la base de données
         reclamationService.insert(reclamation);
+
+        // Ajouter la réclamation à la TableView
         reclamationsTable.getItems().add(reclamation);
+
+        // Effacer les champs après l'ajout
         clearFields();
     }
 
     @FXML
-    void modifierReclamation(ActionEvent event) throws SQLException {
+    public void modifierReclamation() throws SQLException {
         Reclamation selectedReclamation = reclamationsTable.getSelectionModel().getSelectedItem();
         if (selectedReclamation != null) {
             selectedReclamation.setDescription(descriptionField.getText());
             selectedReclamation.setStatus(statusField.getValue());
-            selectedReclamation.setDate(Date.valueOf(dateField.getValue())); // Conversion LocalDate -> Date SQL
-            //selectedReclamation.setUtilisateurId(Integer.parseInt(utilisateurIdField.getText()));
-
+            selectedReclamation.setDate(java.sql.Date.valueOf(dateField.getValue()));
             reclamationService.update(selectedReclamation);
             reclamationsTable.refresh();
         } else {
@@ -119,20 +136,26 @@ public class ReclamationController {
     }
 
     @FXML
-    void supprimerReclamation(ActionEvent event) throws SQLException {
+    public void supprimerReclamation() throws SQLException {
         Reclamation selectedReclamation = reclamationsTable.getSelectionModel().getSelectedItem();
         if (selectedReclamation != null) {
             int rowsAffected = reclamationService.delete(selectedReclamation);
             reclamationsTable.getItems().remove(selectedReclamation);
             if (rowsAffected > 0) {
                 showAlert(Alert.AlertType.INFORMATION, "Réclamation supprimée avec succès !");
-                refreshTable();  // Recharger la TableView
             } else {
                 showAlert(Alert.AlertType.WARNING, "La suppression a échoué !");
             }
         } else {
             showAlert(Alert.AlertType.WARNING, "Aucune réclamation sélectionnée !");
         }
+    }
+
+    @FXML
+    public void clearFields() {
+        descriptionField.clear();
+        dateField.setValue(null);
+        statusField.setValue(null);
     }
 
     private void showAlert(Alert.AlertType type, String message) {
@@ -142,23 +165,4 @@ public class ReclamationController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-    @FXML
-    private void clearFields() {
-        descriptionField.clear();
-        statusField.setValue(null);
-        dateField.setValue(null);
-        //utilisateurIdField.clear();
-    }
-
-    // Convertit une Date SQL en LocalDate
-    private LocalDate convertToLocalDate(java.util.Date date) {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-    private void refreshTable() throws SQLException {
-        List<Reclamation> reclamationList = reclamationService.showAll();
-        ObservableList<Reclamation> observableReclamationList = FXCollections.observableArrayList(reclamationList);
-        reclamationsTable.setItems(observableReclamationList);
-    }
-
 }

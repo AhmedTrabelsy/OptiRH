@@ -9,14 +9,12 @@ public class Reclamation {
     private Date date;
     private int utilisateurId;
 
-
     public Reclamation(String description, String status, Date date, int utilisateurId) {
         this.description = description;
         this.status = status;
         this.date = date;
         this.utilisateurId = utilisateurId;
     }
-
 
     public Reclamation(int id, String description, String status, Date date, int utilisateurId) {
         this.id = id;
@@ -26,7 +24,7 @@ public class Reclamation {
         this.utilisateurId = utilisateurId;
     }
 
-    // 🔹 Getters et Setters
+    // Getters et Setters
     public int getId() {
         return id;
     }

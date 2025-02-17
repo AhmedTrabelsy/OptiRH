@@ -8,15 +8,14 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.AnchorPane?>
-
 <?import javafx.scene.control.ComboBox?>
+
 <AnchorPane prefHeight="500" prefWidth="1000" style="-fx-background-color: #f4f4f4; -fx-padding: 30;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.jdbc.controllers.ReclamationController">
 
     <AnchorPane layoutX="25.0" layoutY="42.0" prefHeight="534.0" prefWidth="296.0">
         <TextField fx:id="descriptionField" layoutX="14.0" layoutY="29.0" promptText="Description" />
         <DatePicker fx:id="dateField" layoutX="14.0" layoutY="77.0" promptText="Date" />
         <ComboBox fx:id="statusField" layoutX="14.0" layoutY="139.0" promptText="Status" />
-
 
         <Button layoutX="10.0" layoutY="250.0" onAction="#ajouterReclamation" text="Ajouter" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
         <Button layoutX="100.0" layoutY="250.0" onAction="#modifierReclamation" text="Modifier" style="-fx-background-color: #2196F3; -fx-text-fill: white;" />
