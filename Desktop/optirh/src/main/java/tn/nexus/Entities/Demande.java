@@ -1,5 +1,6 @@
 package tn.nexus.Entities;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class Demande {
@@ -36,12 +37,12 @@ public void setStatus(String status) {
     this.status = status;
 }
 
-public LocalDate getDate() {
-    return date;
+public String getDate() {
+    return String.valueOf(date);
 }
 
-public void setDate(LocalDate date) {
-    this.date = date;
+public void setDate(Date date) {
+    this.date = date.toLocalDate();
 }
 
 public String getDescription() {

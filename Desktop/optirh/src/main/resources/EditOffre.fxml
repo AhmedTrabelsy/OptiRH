@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.nexus.Controllers.EditOffreController">
+
+    <Label text="Modifier l'Offre" style="-fx-font-size: 20; -fx-font-weight: bold;"
+           AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20"/>
+
+    <VBox spacing="15" alignment="CENTER"
+          AnchorPane.topAnchor="80" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50">
+        <Label text="Poste:"/>
+        <TextField fx:id="posteField" />
+
+        <Label text="Description:"/>
+        <TextArea fx:id="descriptionArea" prefRowCount="4"/>
+
+        <Label text="Statut:"/>
+        <ComboBox fx:id="statutComboBox"/>
+
+        <Label text="Date de création:"/>
+        <DatePicker fx:id="dateCreationPicker"/>
+    </VBox>
+
+    <HBox spacing="10" alignment="CENTER"
+          AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50" AnchorPane.bottomAnchor="20">
+        <Button text="Enregistrer" fx:id="saveButton" onAction="#handleSave"/>
+        <Button text="Annuler" fx:id="cancelButton" onAction="#handleCancel"/>
+    </HBox>
+
+</AnchorPane>

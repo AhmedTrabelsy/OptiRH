@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.nexus.Controllers.OffresController"
+            prefWidth="800" prefHeight="500">
+
+    <!-- Titre de la page -->
+    <Label text="Liste des Offres" style="-fx-font-size: 20; -fx-font-weight: bold;"
+           AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20"/>
+
+    <!-- HBox pour la barre de recherche et bouton Ajouter -->
+    <HBox spacing="10" alignment="CENTER_LEFT"
+          AnchorPane.topAnchor="60" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+        <TextField fx:id="searchField" promptText="Rechercher une offre..." />
+        <!-- Bouton pour lancer la recherche -->
+        <Button text="Rechercher" onAction="#handleSearch"/>
+        <Button text="Ajouter une offre" fx:id="btnAjouterOffre" onAction="#handleAddOffer"/>
+    </HBox>
+
+    <!-- TableView pour afficher les offres -->
+    <TableView fx:id="tableOffres"
+               AnchorPane.topAnchor="100" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20"
+               AnchorPane.bottomAnchor="20">
+        <columns>
+            <TableColumn fx:id="colPoste" text="Poste"/>
+            <TableColumn fx:id="colDescription" text="Description"/>
+            <TableColumn fx:id="colStatut" text="Statut"/>
+            <TableColumn fx:id="colDate" text="Date de création"/>
+            <TableColumn fx:id="colActions" text="Actions"/>
+        </columns>
+    </TableView>
+
+</AnchorPane>
