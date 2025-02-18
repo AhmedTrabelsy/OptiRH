@@ -1,5 +1,6 @@
 package tn.nexus.Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -18,17 +19,41 @@ import java.time.LocalDate;
 public class EventDetailsController {
 
     @FXML
-    private Label titleLabel;
+    private Label DateDebutData;
+
     @FXML
-    private ImageView eventImage;
+    private Label DateFinData;
+
     @FXML
-    private TextField firstNameField;
+    private Label DescriptionData;
+
     @FXML
-    private TextField lastNameField;
+    private Label HeureData;
+
+    @FXML
+    private Label LieuxData;
+
+    @FXML
+    private Label PrixData;
+
     @FXML
     private TextField emailField;
+
+    @FXML
+    private ImageView eventImage;
+
+    @FXML
+    private TextField firstNameField;
+
+    @FXML
+    private TextField lastNameField;
+
     @FXML
     private TextField phoneField;
+
+    @FXML
+    private Label titleLabel;
+
 
     private Evenement currentEvent;
     private Reservation_evenementServices reservationService = new Reservation_evenementServices();
@@ -36,6 +61,12 @@ public class EventDetailsController {
     public void setEventData(Evenement event) {
         this.currentEvent = event;
         titleLabel.setText(event.getTitre());
+        DateDebutData.setText(event.getDateDebut().toString());
+        DateFinData.setText(event.getDateFin().toString());
+        DescriptionData.setText(event.getDescription());
+        PrixData.setText(String.valueOf(event.getPrix()));
+        HeureData.setText(String.valueOf(event.getHeure()));
+        LieuxData.setText(String.valueOf(event.getLieu()));
 
         File file = new File(event.getImage());
         if (file.exists()) {
@@ -43,8 +74,10 @@ public class EventDetailsController {
         }
     }
 
+
     @FXML
-    private void handleReservation() {
+    void handleReservation(ActionEvent event) {
+
         String firstName = firstNameField.getText().trim();
         String lastName = lastNameField.getText().trim();
         String email = emailField.getText().trim();

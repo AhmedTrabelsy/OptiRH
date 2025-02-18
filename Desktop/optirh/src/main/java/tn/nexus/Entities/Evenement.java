@@ -42,6 +42,12 @@ public class Evenement {
         this.image = image;
     }
 
+    public Evenement(int idEvenement, String titre, LocalDate dateDebut) {
+        this.idEvenement = idEvenement;
+        this.titre = titre;
+        this.dateDebut = dateDebut;
+    }
+
 
     // Getters et Setters
     public int getIdEvenement() {

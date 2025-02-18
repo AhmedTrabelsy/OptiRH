@@ -119,4 +119,20 @@ public class EvenementServices implements CRUD<Evenement> {
 
         return events;
     }
+
+
+    public Evenement getEvenementById(int idEvenement) throws SQLException {
+        String query = "SELECT titre, date_debut FROM evenement WHERE id_evenement = ?";
+
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, idEvenement);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Evenement(idEvenement, rs.getString("titre"), rs.getDate("date_debut").toLocalDate());
+            }
+        }
+
+        return null;
+    }
 }

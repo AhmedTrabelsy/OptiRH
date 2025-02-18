@@ -4,27 +4,50 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="tn.nexus.Controllers.EventDetailsController"
-      spacing="10" alignment="center"
-      style="-fx-padding: 20px; -fx-background-color: #ffffff;">
+<AnchorPane prefHeight="574.0" prefWidth="629.0" style="-fx-padding: 20px; -fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.EventDetailsController">
 
-    <Label fx:id="titleLabel" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
-    <ImageView fx:id="eventImage" fitWidth="300" fitHeight="200"/>
+    <VBox alignment="center" layoutX="332.0" layoutY="44.0" prefHeight="460.0" prefWidth="284.0" spacing="10">
 
-    <Label text="First Name:"/>
-    <TextField fx:id="firstNameField"/>
+        <Label text="First Name:" />
+        <TextField fx:id="firstNameField" prefHeight="26.0" prefWidth="59.0" />
 
-    <Label text="Last Name:"/>
-    <TextField fx:id="lastNameField"/>
+        <Label text="Last Name:" />
+        <TextField fx:id="lastNameField" />
 
-    <Label text="Email:"/>
-    <TextField fx:id="emailField"/>
+        <Label text="Email:" />
+        <TextField fx:id="emailField" />
 
-    <Label text="Phone:"/>
-    <TextField fx:id="phoneField"/>
+        <Label text="Phone:" />
+        <TextField fx:id="phoneField" />
 
-    <Button text="Reserve" onAction="#handleReservation"/>
-</VBox>
+        <Button onAction="#handleReservation" text="Reserve" />
+    </VBox>
+   <VBox layoutX="27.0" layoutY="76.0" prefHeight="154.0" prefWidth="247.0">
+      <children>
+         <ImageView fx:id="eventImage" fitHeight="172.0" fitWidth="247.0" pickOnBounds="true" preserveRatio="true" />
+      </children>
+   </VBox>
+   <Label fx:id="titleLabel" layoutX="116.0" layoutY="44.0" prefHeight="18.0" prefWidth="107.0" text="Titre:" />
+   <Label layoutX="45.0" layoutY="262.0" text="Description:" />
+   <Label layoutX="46.0" layoutY="295.0" text="DateDebut:" />
+   <Label layoutX="46.0" layoutY="330.0" text="DateFin" />
+   <Label layoutX="48.0" layoutY="365.0" text="Heure:" />
+   <Label layoutX="48.0" layoutY="395.0" text="Prix:" />
+   <Label fx:id="DescriptionData" layoutX="138.0" layoutY="263.0" text="DescriptionData" />
+   <Label fx:id="DateDebutData" layoutX="139.0" layoutY="296.0" text="DateDebutData" />
+   <Label fx:id="DateFinData" layoutX="139.0" layoutY="331.0" text="DateFinData" />
+   <Label fx:id="HeureData" layoutX="141.0" layoutY="366.0" text="HeureData" />
+   <Label fx:id="PrixData" layoutX="141.0" layoutY="396.0" text="PrixData" />
+   <HBox layoutX="39.0" layoutY="388.0" prefHeight="30.0" prefWidth="200.0" />
+   <HBox layoutX="38.0" layoutY="358.0" prefHeight="30.0" prefWidth="200.0" />
+   <HBox layoutX="38.0" layoutY="323.0" prefHeight="30.0" prefWidth="200.0" />
+   <HBox layoutX="39.0" layoutY="288.0" prefHeight="30.0" prefWidth="200.0" />
+   <HBox layoutX="33.0" layoutY="256.0" prefHeight="30.0" prefWidth="200.0" />
+   <Label layoutX="45.0" layoutY="432.0" text="Lieux" />
+   <Label fx:id="LieuxData" layoutX="137.0" layoutY="432.0" text="LieuxData" />
+
+</AnchorPane>

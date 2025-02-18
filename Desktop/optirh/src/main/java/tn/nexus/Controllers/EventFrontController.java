@@ -2,17 +2,24 @@ package tn.nexus.Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+
 import tn.nexus.Entities.Evenement;
 import tn.nexus.Services.EvenementServices;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +82,20 @@ public class EventFrontController {
         }
     }
 
-    public void handleMyReservation(ActionEvent actionEvent) {
+    @FXML
+    private void handleMyReservation(ActionEvent event) {  // Vérifie bien que ActionEvent event est présent
+        try {
+            // Charger la nouvelle scène
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/reservation_list.fxml"));
+            Parent reservationView = loader.load();
+
+            // Obtenir la fenêtre actuelle et changer la scène
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(reservationView);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();  // Afficher l'erreur dans la console
+        }
     }
 }

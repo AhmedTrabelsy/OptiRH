@@ -2,6 +2,7 @@ package tn.nexus.Entities;
 
 import java.time.LocalDate;
 
+import tn.nexus.Entities.Evenement;
 
 public class Reservation_evenement {
 
@@ -27,6 +28,7 @@ public class Reservation_evenement {
         this.telephone = telephone;
         this.dateReservation = dateReservation;
     }
+
 
     // Getters et Setters
     public int getIdParticipation() {
