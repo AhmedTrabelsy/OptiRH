@@ -1,0 +1,74 @@
+/* styles.css */
+
+/* Style de base pour la racine de la scène */
+.root {
+    -fx-background-color: #f0f0f0;
+    -fx-font-family: 'Arial';
+}
+
+/* Style pour les boutons */
+.button {
+    -fx-background-color: #2196F3;; /* Vert */
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 10px 10px;
+    -fx-border-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #1976D2;; /* Vert plus foncé au survol */
+}
+
+/* Style pour les labels */
+.label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333333;
+}
+
+/* Style pour les champs de texte */
+.text-field {
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3px;
+}
+
+/* Style pour les zones de texte */
+.text-area {
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3px;
+}
+
+/* Style pour les panneaux */
+.pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+}
+
+/* Style pour les ListView */
+.list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+}
+
+/* Style pour les ComboBox */
+.combo-box {
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3px;
+}
+
+/* Style pour les CheckBox */
+.check-box {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}

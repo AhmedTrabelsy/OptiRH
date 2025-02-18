@@ -13,8 +13,8 @@ public class ProjetService implements CRUD<Projet> {
         connection = DBConnection.getInstance().getConnection();
     }
 
-    @Override
-    public int insert(Projet projet) throws SQLException {
+
+    public int insert1(Projet projet) throws SQLException {
         String query = "INSERT INTO projet (type, description, status, utilisateurId) VALUES (?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, projet.getType());
@@ -24,11 +24,33 @@ public class ProjetService implements CRUD<Projet> {
 
         int rowsInserted = ps.executeUpdate();
         if (rowsInserted > 0) {
-          return rowsInserted ;
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }
         }
         return -1;
     }
 
+    public  int insert(Projet projet) throws SQLException {
+        String query = "INSERT INTO projet (type, description, status, utilisateurId) VALUES (?, ?, ?, ?)";
+        PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        ps.setString(1, projet.getType());
+        ps.setString(2, projet.getDescription());
+        ps.setString(3, projet.getStatus());
+        ps.setInt(4, projet.getUtilisateurId());
+
+        int affectedRows = ps.executeUpdate();
+
+        if (affectedRows > 0) {
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                projet.setId(generatedKeys.getInt(1)); // Récupère l'ID généré
+            }
+        }
+
+        return projet.getId();
+    }
     @Override
     public int update(Projet projet) throws SQLException {
         String query = "UPDATE projet SET type = ?, description = ?, status = ?, utilisateurId = ? WHERE id = ?";
@@ -68,6 +90,48 @@ public class ProjetService implements CRUD<Projet> {
             );
             projets.add(projet);
         }
+        return projets;
+    }
+    public Projet getById(int projetId) throws SQLException {
+        String query = "SELECT * FROM projet WHERE id = ?";
+
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, projetId);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            Projet projet = new Projet();
+            projet.setId(rs.getInt("id"));
+            projet.setType(rs.getString("type"));
+            projet.setDescription(rs.getString("description"));
+            projet.setStatus(rs.getString("status"));
+            projet.setUtilisateurId(rs.getInt("utilisateurId"));
+
+            return projet;
+        }
+
+        return null;
+    }
+    public List<Projet> getProjetsByUtilisateurId(int utilisateurId) throws SQLException {
+        List<Projet> projets = new ArrayList<>();
+        String query = "SELECT * FROM projet WHERE utilisateurId = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, utilisateurId);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Projet projet = new Projet();
+            projet.setId(rs.getInt("id"));
+            projet.setType(rs.getString("type"));
+            projet.setDescription(rs.getString("description"));
+            projet.setStatus(rs.getString("status"));
+            projet.setUtilisateurId(rs.getInt("utilisateurId"));
+
+            projets.add(projet);
+        }
+
         return projets;
     }
 }

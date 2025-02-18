@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
+<VBox spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.RechercherProjetsController" stylesheets="styles.css">
+    <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Rechercher les projets par ID utilisateur" />
+    <HBox prefHeight="19.0" prefWidth="298.0">
+        <children>
 
-</AnchorPane>
+            <Label prefHeight="27.0" prefWidth="120.0" text="ID Utilisateur:" />
+            <TextField fx:id="utilisateurIdField" />
+        </children>
+    </HBox>
+    <HBox alignment="CENTER" prefHeight="26.0" prefWidth="298.0">
+        <children>
+
+            <Button alignment="CENTER" contentDisplay="CENTER" onAction="#handleRechercher" prefHeight="38.0" prefWidth="109.0" text="Rechercher" />
+        </children>
+    </HBox>
+
+    <Label style="-fx-font-size: 14; -fx-font-weight: bold;" text="Projets associés:" />
+    <ListView fx:id="projetsListView" prefHeight="47.0" prefWidth="298.0" />
+</VBox>

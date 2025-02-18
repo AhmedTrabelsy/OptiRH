@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="386.0" prefWidth="318.0" spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.ModifierMissionController" stylesheets="@styles.css">
+    <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Modifier la Mission" />
+
+    <Label text="Titre de la mission:" />
+    <TextField fx:id="titreField" />
+
+    <Label text="Description:" />
+    <TextField fx:id="descriptionField" />
+
+    <Label text="Statut:" />
+    <ComboBox fx:id="statutComboBox" prefHeight="26.0" prefWidth="125.0" />
+   <HBox prefHeight="100.0" prefWidth="200.0">
+      <children>
+      
+          <Label prefHeight="18.0" prefWidth="110.0" text="Présent:" />
+          <CheckBox fx:id="isPresentCheckBox" />
+      </children>
+   </HBox>
+   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+      <children>
+      
+          <Button alignment="CENTER" onAction="#handleEnregistrer" text="Enregistrer">
+            <opaqueInsets>
+               <Insets top="1.0" />
+            </opaqueInsets>
+         </Button>
+          <Button onAction="#handleAnnuler" text="Annuler" />
+      </children>
+   </HBox>
+</VBox>

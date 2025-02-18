@@ -1,14 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
+<VBox prefHeight="629.0" prefWidth="721.0" spacing="10" style="-fx-padding: 20;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.DetailProjetController">
+    <!-- Titre de la page -->
+    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="704.0" text="Détails du Projet">
+        <font>
+            <Font name="Berlin Sans FB Bold" size="20.0" />
+        </font>
+    </Label>
 
-</AnchorPane>
+    <!-- Détails du projet -->
+    <Label fx:id="typeProjetLabel" text="Type de projet:">
+        <font>
+            <Font name="Berlin Sans FB" size="12.0" />
+        </font></Label>
+    <Label fx:id="descriptionProjetLabel" text="Description:">
+        <font>
+            <Font name="Berlin Sans FB" size="12.0" />
+        </font></Label>
+    <Label fx:id="statusProjetLabel" text="Statut:" />
+    <Label fx:id="utilisateurIdLabel" text="ID Utilisateur:">
+        <font>
+            <Font name="Berlin Sans FB Demi Bold" size="12.0" />
+        </font></Label>
+    <HBox alignment="CENTER" prefHeight="28.0" prefWidth="409.0">
+        <children>
+            <Button fx:id="ModifierProjetButton" alignment="CENTER" onAction="#handleModifierProjet" prefHeight="36.0" prefWidth="132.0" text="Ajouter Projet" />
+         <Label prefHeight="20.0" prefWidth="18.0" />
+            <Button fx:id="supprimerProjetButton" alignment="CENTER" onAction="#handleSupprimerProjet" prefHeight="26.0" prefWidth="138.0" text="Supprimer Projet" />
+         <Label prefHeight="20.0" prefWidth="19.0" />
+            <Button fx:id="changerStatusProjetButton" alignment="CENTER" onAction="#handleChangerStatusProjet" prefHeight="26.0" prefWidth="138.0" text="Changer Status " />
+        </children>
+    </HBox>
+
+    <!-- Titre pour la liste des missions -->
+    <Label alignment="CENTER" prefHeight="20.0" prefWidth="771.0" text="Missions associées">
+        <font>
+            <Font name="Berlin Sans FB Bold" size="16.0" />
+        </font>
+    </Label>
+
+    <!-- Liste des missions -->
+    <ListView fx:id="missionsListView" />
+    <HBox alignment="CENTER" prefHeight="28.0" prefWidth="409.0">
+        <children>
+            <Button fx:id="ModifierMissionButton" alignment="CENTER" onAction="#handleAjouterMission" prefHeight="26.0" prefWidth="131.0" text="Ajouter Mission" />
+         <Label prefHeight="20.0" prefWidth="25.0" />
+            <Button fx:id="ajouterMissionButton" alignment="CENTER" onAction="#handleModifierMission" prefHeight="26.0" prefWidth="138.0" text="ModifierMission" />
+         <Label prefHeight="20.0" prefWidth="26.0" />
+            <Button fx:id="supprimerMissionButton" alignment="CENTER" onAction="#handleSupprimerMission" prefHeight="36.0" prefWidth="125.0" text="Supprimer Mission" />
+         <Label prefHeight="20.0" prefWidth="25.0" />
+            <Button fx:id="changerStatusMissionButRechercherProjetsControllerton" alignment="CENTER" onAction="#handleChangerStatusMission" prefHeight="26.0" prefWidth="138.0" text="Changer Status " />
+        </children>
+    </HBox>
+</VBox>
