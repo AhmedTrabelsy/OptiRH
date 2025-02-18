@@ -93,6 +93,27 @@ public class EventDetailsController {
             return;
         }
 
+        // Vérification du format du téléphone
+        if (!phone.matches("^\\+216[0-9]{8}$")) { // Numéro de téléphone tunisien (ex : +21612345678)
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Numéro de téléphone invalide");
+            alert.setHeaderText(null);
+            alert.setContentText("Veuillez entrer un numéro de téléphone valide (ex: +21612345678).");
+            alert.showAndWait();
+            return;
+        }
+
+        // Vérification du format de l'email
+        if (!email.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Email invalide");
+            alert.setHeaderText(null);
+            alert.setContentText("Veuillez entrer un email valide.");
+            alert.showAndWait();
+            return;
+        }
+
+
         // Création de l'objet Reservation_evenement
         Reservation_evenement reservation = new Reservation_evenement();
         reservation.setIdUser(1); // ID utilisateur fixe

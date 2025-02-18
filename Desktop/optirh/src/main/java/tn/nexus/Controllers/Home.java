@@ -21,7 +21,7 @@ public class Home extends Application {
     public void start(Stage stage) {
         try {
             // Vérification du chemin du fichier FXML
-            String fxmlPath = "/EventFront.fxml"; // Assurez-vous que le fichier est au bon endroit
+            String fxmlPath = "/listeEvenemnt.fxml"; // Assurez-vous que le fichier est au bon endroit
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
             Scene scene = new Scene(root);
             stage.setScene(scene);

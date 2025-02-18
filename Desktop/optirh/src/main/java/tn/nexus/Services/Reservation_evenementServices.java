@@ -84,11 +84,39 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
         return rowsAffected;
     }
 
-
     @Override
     public List<Reservation_evenement> showAll() throws SQLException {
-        return List.of();
+        List<Reservation_evenement> reservations = new ArrayList<>();
+        String req = "SELECT * FROM reservation_evenement";
+
+        try (PreparedStatement ps = con.prepareStatement(req)) {
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Reservation_evenement reservation = new Reservation_evenement();
+                reservation.setIdParticipation(rs.getInt("id_participation"));
+                reservation.setIdUser(rs.getInt("id_user"));
+                reservation.setIdEvenement(rs.getInt("id_evenement"));
+                reservation.setFirstName(rs.getString("first_name"));
+                reservation.setLastName(rs.getString("last_name"));
+                reservation.setEmail(rs.getString("email"));
+                reservation.setTelephone(rs.getString("telephone"));
+                Date dateReservation = rs.getDate("date_reservation");
+                if (dateReservation != null) {
+                    reservation.setDateReservation(dateReservation.toLocalDate());
+                }
+                reservations.add(reservation);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Erreur lors de la récupération des réservations", e);
+        }
+
+        return reservations;
     }
+
+
+
 
 
     public List<Reservation_evenement> getReservatiobByuserID() throws SQLException {
@@ -114,5 +142,43 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
         return reservations;
 
     }
+
+    public List<Reservation_evenement> getReservatiobByuserID2() throws SQLException {
+        List<Reservation_evenement> reservations = new ArrayList<>();
+
+        String query = "SELECT r.id_participation, r.id_user, r.id_evenement, r.date_reservation, " +
+                "r.last_name, r.first_name, r.telephone, r.email " +
+                "FROM reservation_evenement r " +
+                "WHERE r.id_user = 1"; // id_user fixé à 1
+
+        try (PreparedStatement stmt = con.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Reservation_evenement reservation = new Reservation_evenement();
+                reservation.setIdParticipation(rs.getInt("id_participation"));
+                reservation.setIdUser(rs.getInt("id_user"));
+                reservation.setIdEvenement(rs.getInt("id_evenement"));
+                reservation.setDateReservation(rs.getDate("date_reservation").toLocalDate());
+
+                // Récupérer les informations de l'utilisateur et les ajouter à la réservation
+                reservation.setLastName(rs.getString("last_name"));
+                reservation.setFirstName(rs.getString("first_name"));
+                reservation.setTelephone(rs.getString("telephone"));
+                reservation.setEmail(rs.getString("email"));
+
+                reservations.add(reservation);
+            }
+        }
+
+        return reservations;
+    }
+
+
+
+
+
+
+
 
 }

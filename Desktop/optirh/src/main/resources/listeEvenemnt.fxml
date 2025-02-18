@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="500" prefWidth="1000" style="-fx-background-color: #f4f4f4; -fx-padding: 30;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.ListeEvenementController">
 
-    <!-- Barre d'outils avec les champs et boutons -->
+    <!--Bare du champs avec les boutton choisir image et clear-->
     <AnchorPane layoutX="25.0" layoutY="42.0" prefHeight="534.0" prefWidth="296.0">
         <TextField fx:id="titreField" layoutX="14.0" layoutY="29.0" promptText="Titre" />
         <TextField fx:id="lieuField" layoutX="14.0" layoutY="77.0" promptText="Lieu" />
@@ -38,7 +38,7 @@
     </AnchorPane>
 
        <!-- TableView pour afficher la liste des événements -->
-    <TableView fx:id="eventsTable" layoutX="336.0" layoutY="74.0" prefHeight="400" prefWidth="637.0">
+    <TableView fx:id="eventsTable" layoutX="312.0" layoutY="81.0" prefHeight="228.0" prefWidth="702.0">
         <columns>
          <TableColumn fx:id="idColumn" prefWidth="27.20001220703125" text="ID">
             <cellValueFactory>
@@ -75,33 +75,48 @@
             </TableColumn>
 
                <!-- Colonne pour la date de début -->
-            <TableColumn fx:id="startDateColumn" prefWidth="79.20001220703125" text="Date Début">
+            <TableColumn fx:id="startDateColumn" prefWidth="111.20001220703125" text="Date Début">
                 <cellValueFactory>
                     <PropertyValueFactory property="dateDebut" />
                 </cellValueFactory>
             </TableColumn>
 
                <!-- Colonne pour la date de fin -->
-            <TableColumn fx:id="endDateColumn" prefWidth="77.5999755859375" text="Date Fin">
+            <TableColumn fx:id="endDateColumn" prefWidth="92.0" text="Date Fin">
                 <cellValueFactory>
                     <PropertyValueFactory property="dateFin" />
                 </cellValueFactory>
             </TableColumn>
 
                <!-- Colonne pour l'image de l'événement -->
-            <TableColumn fx:id="imageColumn" prefWidth="64.0001220703125" text="Image">
+            <TableColumn fx:id="imageColumn" prefWidth="71.20001220703125" text="Image">
                 <cellValueFactory>
                     <PropertyValueFactory property="image" />
                 </cellValueFactory>
             </TableColumn>
 
                <!-- Colonne pour l'heure de l'événement -->
-            <TableColumn fx:id="timeColumn" prefWidth="73.5999755859375" text="Heure">
+            <TableColumn fx:id="timeColumn" prefWidth="82.4000244140625" text="Heure">
                 <cellValueFactory>
                     <PropertyValueFactory property="heure" />
                 </cellValueFactory>
             </TableColumn>
         </columns>
     </TableView>
+
+
+    <!--Tableau pour afficher toutes les reservation-->
+   <TableView fx:id="Reservation_Tab" layoutX="310.0" layoutY="326.0" prefHeight="200.0" prefWidth="702.0">
+     <columns>
+       <TableColumn fx:id="idP_Column" prefWidth="35.20001220703125" text="idP" />
+       <TableColumn fx:id="Id_UserColumn" prefWidth="49.5999755859375" text="Id_User" />
+         <TableColumn fx:id="id_evenmentColumn" prefWidth="84.79998779296875" text="id_evenment" />
+         <TableColumn fx:id="FirstnameColumn" prefWidth="64.800048828125" text="Prenom" />
+         <TableColumn fx:id="LastNameColumn" prefWidth="88.0" text="Nom" />
+         <TableColumn fx:id="PhoneColumn" prefWidth="145.60003662109375" text="Telephone" />
+         <TableColumn fx:id="EmailColumn" prefWidth="92.800048828125" text="email" />
+         <TableColumn fx:id="DateReservationColumn" prefWidth="137.60001220703123" text="DateReservation" />
+     </columns>
+   </TableView>
 
 </AnchorPane>

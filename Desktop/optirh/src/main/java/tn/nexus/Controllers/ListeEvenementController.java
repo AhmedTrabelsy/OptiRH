@@ -8,6 +8,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import tn.nexus.Entities.Evenement;
+import tn.nexus.Entities.Reservation_evenement;
+import tn.nexus.Services.Reservation_evenementServices;
 import tn.nexus.Services.EvenementServices;
 
 import java.io.File;
@@ -21,6 +23,26 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class ListeEvenementController {
+
+    @FXML
+    private TableColumn<Reservation_evenement, ?> DateReservationColumn;
+    @FXML
+    private TableColumn<Reservation_evenement, ?> idP_Column;
+
+    @FXML
+    private TableColumn<Reservation_evenement, ?> EmailColumn;
+
+    @FXML
+    private TableColumn<Reservation_evenement, ?> FirstnameColumn;
+
+    @FXML
+    private TableColumn<Reservation_evenement, ?> Id_UserColumn;
+
+    @FXML
+    private TableColumn<Reservation_evenement, ?> LastNameColumn;
+
+    @FXML
+    private TableColumn<Reservation_evenement, ?> PhoneColumn;
 
     @FXML
     private DatePicker dateDebutField;
@@ -39,6 +61,9 @@ public class ListeEvenementController {
 
     @FXML
     private TableView<Evenement> eventsTable;
+
+    @FXML
+    private TableView<Reservation_evenement> Reservation_Tab;
 
     @FXML
     private TextField heureField;
@@ -72,56 +97,83 @@ public class ListeEvenementController {
 
     @FXML
     private TableColumn<Evenement, Integer> idColumn;
+
+    @FXML
+    private TableColumn<?, ?> id_evenmentColumn;
+
     @FXML
     private TextField titreField;
 
+    //instance du serviceevenement et de servicereservation
     private EvenementServices serviceEvenement = new EvenementServices();
+    private Reservation_evenementServices servicereservation = new Reservation_evenementServices();
 
 
     /*****************Initialisation du tableau ****************************/
     public void initialize() throws SQLException {
+        try {
+            // Initialisation des colonnes pour les réservations
+            idP_Column.setCellValueFactory(new PropertyValueFactory<>("idParticipation"));
+            Id_UserColumn.setCellValueFactory(new PropertyValueFactory<>("idUser"));
+            id_evenmentColumn.setCellValueFactory(new PropertyValueFactory<>("idEvenement"));
+            FirstnameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+            LastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+            PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+            EmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+            DateReservationColumn.setCellValueFactory(new PropertyValueFactory<>("dateReservation"));
 
+            // Récupération des réservations depuis le service
+            List<Reservation_evenement> reservationList = servicereservation.showAll();
 
-        // Associer les colonnes avec les propriétés correspondantes dans la classe Evenement
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("idEvenement"));
-
-        titleColumn.setCellValueFactory(new PropertyValueFactory<>("titre"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        locationColumn.setCellValueFactory(new PropertyValueFactory<>("lieu"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("prix"));
-        startDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
-        endDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
-        timeColumn.setCellValueFactory(new PropertyValueFactory<>("heure"));
-        imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
-
-        List<Evenement> evenementList = serviceEvenement.showAll(); // Récupère les événements
-
-        //FXCollections.observableArrayList(evenementList) transforme la List<Evenement> en ObservableList<Evenement>.
-        //ObservableList est nécessaire pour JavaFX car elle permet d'actualiser automatiquement l'interface graphique lorsque les données changent.
-        ObservableList<Evenement> observableEvenementList = FXCollections.observableArrayList(evenementList); // Convertit en ObservableList
-
-        //remplit la TableView avec la liste des événements.
-        eventsTable.setItems(observableEvenementList);
-
-        //selection
-        eventsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                // Mettre à jour les champs avec les données de l'événement sélectionné
-                titreField.setText(newValue.getTitre());
-                descriptionField.setText(newValue.getDescription());
-                lieuField.setText(newValue.getLieu());
-                prixField.setText(String.valueOf(newValue.getPrix()));
-                dateDebutField.setValue(newValue.getDateDebut());
-                dateFinField.setValue(newValue.getDateFin());
-                heureField.setText(String.valueOf(newValue.getHeure()));
-
-                imageField.setText(newValue.getImage());
+            // Vérification si la liste des réservations n'est pas vide
+            if (reservationList != null && !reservationList.isEmpty()) {
+                ObservableList<Reservation_evenement> observableList = FXCollections.observableArrayList(reservationList);
+                Reservation_Tab.setItems(observableList);
+            } else {
+                System.out.println("Aucune réservation trouvée.");
             }
-        });
 
+            // Initialisation des colonnes pour les événements
+            idColumn.setCellValueFactory(new PropertyValueFactory<>("idEvenement"));
+            titleColumn.setCellValueFactory(new PropertyValueFactory<>("titre"));
+            descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+            locationColumn.setCellValueFactory(new PropertyValueFactory<>("lieu"));
+            priceColumn.setCellValueFactory(new PropertyValueFactory<>("prix"));
+            startDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
+            endDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
+            timeColumn.setCellValueFactory(new PropertyValueFactory<>("heure"));
+            imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
 
+            // Récupération des événements depuis le service
+            List<Evenement> evenementList = serviceEvenement.showAll();
 
+            // Vérification si la liste des événements n'est pas vide
+            if (evenementList != null && !evenementList.isEmpty()) {
+                ObservableList<Evenement> observableEvenementList = FXCollections.observableArrayList(evenementList);
+                eventsTable.setItems(observableEvenementList);
+            } else {
+                System.out.println("Aucun événement trouvé.");
+            }
+
+            // Gestion de la sélection des événements
+            eventsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    titreField.setText(newValue.getTitre());
+                    descriptionField.setText(newValue.getDescription());
+                    lieuField.setText(newValue.getLieu());
+                    prixField.setText(String.valueOf(newValue.getPrix()));
+                    dateDebutField.setValue(newValue.getDateDebut());
+                    dateFinField.setValue(newValue.getDateFin());
+                    heureField.setText(String.valueOf(newValue.getHeure()));
+                    imageField.setText(newValue.getImage());
+                }
+            });
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Affiche l'erreur pour le débogage
+        }
     }
+
 
     /*****************Ajout d un evenement avec controle de saisie *********************/
     @FXML
@@ -134,7 +186,7 @@ public class ListeEvenementController {
                 heureField.getText().isEmpty() || dateDebutField.getValue() == null ||
                 dateFinField.getValue() == null || imageField.getText().isEmpty()) {
 
-            Alert alert = new Alert(Alert.AlertType.WARNING);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Avertissement");
             alert.setHeaderText("Tous les champs doivent être remplis !");
             alert.showAndWait();
@@ -198,7 +250,6 @@ public class ListeEvenementController {
         }
 
 
-
         // Création et ajout de l'événement
 
         String titre = titreField.getText();
@@ -219,7 +270,6 @@ public class ListeEvenementController {
 
 
     }
-
 
 
     /**************************Modifier un evenement ******************************/
@@ -343,7 +393,6 @@ public class ListeEvenementController {
     }
 
 
-
     /*****************Methode clear*********************/
     @FXML
     private void clearFields() {
@@ -356,7 +405,6 @@ public class ListeEvenementController {
         heureField.clear();
         imageField.clear();
     }
-
 
 
     /*********************choisir image png jpg jpeg******************************/
@@ -404,6 +452,8 @@ public class ListeEvenementController {
             System.out.println("Aucun fichier sélectionné.");
         }
     }
+
+
 
 }
 

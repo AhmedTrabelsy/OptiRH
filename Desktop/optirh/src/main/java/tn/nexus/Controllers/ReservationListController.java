@@ -22,7 +22,9 @@ import tn.nexus.Services.Reservation_evenementServices;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ReservationListController {
@@ -114,81 +116,105 @@ public class ReservationListController {
 
     @FXML
     private void handleDeleteAction(Reservation_evenement reservation) {
-        if (reservation != null) {
-            // Afficher une fenêtre de confirmation avant de supprimer
-            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmationAlert.setTitle("Confirmation");
-            confirmationAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cette réservation ?");
-            confirmationAlert.setContentText("Cette action est irréversible.");
+        try {
+            // Récupérer l'ID de l'événement associé à la réservation
+            int evenementId = reservation.getIdEvenement();
 
-            confirmationAlert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    try {
-                        // Appeler la méthode delete du service ReservationEvenementService
-                        int rowsAffected = reservationService.delete(reservation);
-                        if (rowsAffected > 0) {
-                            // Afficher un message de succès
-                            showAlert(Alert.AlertType.INFORMATION, "Réservation supprimée", "La réservation a été supprimée avec succès.");
-                            // Rafraîchir la liste des réservations
-                            refreshReservationList();
-                        } else {
-                            showAlert(Alert.AlertType.ERROR, "Erreur", "La réservation n'a pas pu être supprimée.");
-                        }
-                    } catch (SQLException e) {
-                        // En cas d'erreur, afficher un message d'erreur
-                        showAlert(Alert.AlertType.ERROR, "Erreur de suppression", "Une erreur est survenue lors de la suppression de la réservation.");
-                    }
+            // Récupérer l'événement associé à cet ID
+            Evenement evenement = evenementService.getEvenementById(evenementId);
+
+            if (evenement != null) {
+                // Récupérer la date de début de l'événement
+                LocalDate dateDebut = evenement.getDateDebut(); // Si c'est un LocalDate, vous pouvez utiliser atStartOfDay()
+
+                // Convertir LocalDate en LocalDateTime (en ajoutant minuit par défaut)
+                LocalDateTime dateDebutDateTime = dateDebut.atStartOfDay();
+
+                // Obtenir la date actuelle
+                LocalDateTime now = LocalDateTime.now();
+
+                // Vérifier la différence entre la date actuelle et la date de début
+                long hoursBetween = Duration.between(now, dateDebutDateTime).toHours();
+
+                // Si la différence est inférieure à 24 heures, empêcher la suppression
+                if (hoursBetween < 24) {
+                    // Afficher un message d'alerte
+                    showAlert("Erreur", "Impossible de supprimer la réservation car elle commence dans moins de 24 heures.");
+                    return;
                 }
-            });
-        } else {
-            // Si aucune réservation n'est sélectionnée
-            showAlert(Alert.AlertType.WARNING, "Aucune réservation sélectionnée", "Veuillez sélectionner une réservation à supprimer.");
+
+                // Sinon, procéder à la suppression
+                reservationService.delete(reservation);
+                System.out.println("Réservation supprimée avec succès !");
+                refreshReservationList();
+            } else {
+                // Si l'événement est introuvable
+                showAlert("Erreur", "Événement non trouvé.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la suppression !");
         }
     }
-
-
-
-    private void showAlert(Alert.AlertType alertType, String title, String content) {
-        Alert alert = new Alert(alertType);
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);  // Type d'alerte par défaut : erreur
         alert.setTitle(title);
-        alert.setContentText(content);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
         alert.showAndWait();
     }
 
     private void refreshReservationList() {
         try {
-            List<Reservation_evenement> updatedReservations = reservationService.getReservatiobByuserID(); // Recharger les réservations
-            ObservableList<Reservation_evenement> observableReservations = FXCollections.observableArrayList(updatedReservations);
-            reservationTable.setItems(observableReservations); // Mettre à jour la TableView
+            // Récupérer à nouveau la liste des réservations
+            List<Reservation_evenement> reservationList = reservationService.getReservatiobByuserID();
+
+            // Mettre à jour la TableView avec les nouvelles données
+            reservationTable.setItems(FXCollections.observableArrayList(reservationList));
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de recharger les réservations.");
+            showAlert("Erreur", "Impossible de récupérer la liste des réservations après suppression.");
         }
     }
 
     @FXML
     private void handleEditAction(Reservation_evenement reservation) {
         try {
-            // Charger la nouvelle fenêtre FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ReservationEditForm.fxml"));
-            AnchorPane page = loader.load();
+            // Récupérer la liste des réservations pour un utilisateur donné
+            List<Reservation_evenement> reservationList = reservationService.getReservatiobByuserID2();
 
-            // Créer la nouvelle scène
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Modifier Réservation");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(reservationTable.getScene().getWindow());
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
+            // Vérifier si la liste contient des éléments
+            if (!reservationList.isEmpty()) {
+                // Récupérer le premier élément de la liste (ou utiliser un autre critère pour en choisir un spécifique)
+                Reservation_evenement reservationDetails = reservationList.get(0);
 
-            // Passer la réservation à la nouvelle fenêtre
-            ReservationEditController controller = loader.getController();
-            controller.initData(reservation);
+                // Charger la nouvelle fenêtre FXML
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ReservationEditForm.fxml"));
+                AnchorPane page = loader.load();
 
-            // Afficher la fenêtre
-            dialogStage.showAndWait();
+                // Créer la nouvelle scène
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("Modifier Réservation");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                dialogStage.initOwner(reservationTable.getScene().getWindow());
+                Scene scene = new Scene(page);
+                dialogStage.setScene(scene);
 
-        } catch (IOException e) {
+                // Passer la réservation à la nouvelle fenêtre
+                ReservationEditController controller = loader.getController();
+                controller.initData(reservationDetails); // Passer les informations récupérées
+
+                // Afficher la fenêtre
+                dialogStage.showAndWait();
+            } else {
+                // Gérer le cas où aucune réservation n'est trouvée
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Aucune réservation");
+                alert.setHeaderText("Aucune réservation trouvée pour l'utilisateur.");
+                alert.showAndWait();
+            }
+
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
@@ -196,6 +222,5 @@ public class ReservationListController {
             alert.showAndWait();
         }
     }
-
 
 }

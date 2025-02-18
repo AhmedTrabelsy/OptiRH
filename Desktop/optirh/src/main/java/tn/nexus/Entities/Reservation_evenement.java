@@ -18,6 +18,22 @@ public class Reservation_evenement {
     // Constructeurs
     public Reservation_evenement() {}
 
+    public Reservation_evenement( int idParticipation ,int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
+
+        this.idParticipation = idParticipation;
+        this.idUser = idUser;
+        this.idEvenement = idEvenement;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.telephone = telephone;
+        this.dateReservation = dateReservation;
+
+    }
+
+
+
+
     public Reservation_evenement( int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
 
         this.idUser = idUser;
@@ -27,6 +43,12 @@ public class Reservation_evenement {
         this.email = email;
         this.telephone = telephone;
         this.dateReservation = dateReservation;
+    }
+    public Reservation_evenement (String lastName, String firstName, String telephone, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.telephone = telephone;
+        this.email = email;
     }
 
 

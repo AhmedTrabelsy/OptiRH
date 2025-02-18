@@ -12,17 +12,18 @@
             <Font size="20.0" />
         </font>
     </Label>
-    <Label layoutX="50.0" layoutY="60.0" text="Nom"/>
-    <TextField fx:id="nomField" layoutX="150.0" layoutY="60.0" prefWidth="200.0"/>
+    <Label layoutX="50.0" layoutY="60.0" text="Nom" />
+    <TextField fx:id="nomField" layoutX="150.0" layoutY="60.0" prefWidth="200.0" />
 
-    <Label layoutX="50.0" layoutY="100.0" text="Prénom"/>
-    <TextField fx:id="prenomField" layoutX="150.0" layoutY="100.0" prefWidth="200.0"/>
+    <Label layoutX="50.0" layoutY="100.0" text="Prénom" />
+    <TextField fx:id="prenomField" layoutX="150.0" layoutY="100.0" prefWidth="200.0" />
 
-    <Label layoutX="50.0" layoutY="140.0" text="Téléphone"/>
-    <TextField fx:id="telephoneField" layoutX="150.0" layoutY="140.0" prefWidth="200.0"/>
+    <Label layoutX="50.0" layoutY="140.0" text="Téléphone" />
+    <TextField fx:id="telephoneField" layoutX="150.0" layoutY="140.0" prefWidth="200.0" />
 
-    <Label layoutX="50.0" layoutY="180.0" text="Email"/>
-    <TextField fx:id="emailField" layoutX="150.0" layoutY="180.0" prefWidth="200.0"/>
+    <Label layoutX="50.0" layoutY="180.0" text="Email" />
+    <TextField fx:id="emailField" layoutX="150.0" layoutY="180.0" prefWidth="200.0" />
 
-    <Button text="Sauvegarder" layoutX="150.0" layoutY="220.0" onAction="#handleSaveAction"/>
+    <Button layoutX="150.0" layoutY="220.0" onAction="#handleSaveAction" text="Sauvegarder" />
+   <Button fx:id="ClearButton" layoutX="259.0" layoutY="220.0" onAction="#handleclear" text="Clear" />
 </AnchorPane>
