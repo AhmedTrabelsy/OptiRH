@@ -126,11 +126,33 @@ public class ReclamationfrontController {
     public void modifierReclamation() throws SQLException {
         Reclamation selectedReclamation = reclamationsTable.getSelectionModel().getSelectedItem();
         if (selectedReclamation != null) {
+            // Vérifier si les champs sont vides ou nuls
+            if (descriptionField.getText() == null || descriptionField.getText().trim().isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "La description ne peut pas être vide !");
+                return;
+            }
+            if (statusField.getValue() == null || statusField.getValue().trim().isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Le statut ne peut pas être vide !");
+                return;
+            }
+            if (dateField.getValue() == null) {
+                showAlert(Alert.AlertType.WARNING, "La date ne peut pas être vide !");
+                return;
+            }
+
+            // Mettre à jour la réclamation sélectionnée
             selectedReclamation.setDescription(descriptionField.getText());
             selectedReclamation.setStatus(statusField.getValue());
             selectedReclamation.setDate(java.sql.Date.valueOf(dateField.getValue()));
+
+            // Mettre à jour la réclamation dans la base de données
             reclamationService.update(selectedReclamation);
+
+            // Rafraîchir la TableView
             reclamationsTable.refresh();
+
+            // Effacer les champs après la modification
+            clearFields();
         } else {
             showAlert(Alert.AlertType.WARNING, "Aucune réclamation sélectionnée !");
         }

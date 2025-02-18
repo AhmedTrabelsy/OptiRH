@@ -52,6 +52,16 @@ public class ReponseController {
 
     @FXML
     public void ajouterReponse() {
+        // Vérifier si les champs sont vides ou nuls
+        if (descriptionField.getText() == null || descriptionField.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "La description ne peut pas être vide !");
+            return;
+        }
+        if (dateField.getValue() == null) {
+            showAlert(Alert.AlertType.WARNING, "La date ne peut pas être vide !");
+            return;
+        }
+
         try {
             Reponse reponse = new Reponse(
                     0,
@@ -64,6 +74,7 @@ public class ReponseController {
             clearFields();
         } catch (Exception e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Une erreur s'est produite lors de l'ajout de la réponse.");
         }
     }
 
@@ -71,14 +82,26 @@ public class ReponseController {
     public void modifierReponse() {
         Reponse selectedReponse = reponsesTable.getSelectionModel().getSelectedItem();
         if (selectedReponse != null) {
+            // Vérifier si les champs sont vides ou nuls
+            if (descriptionField.getText() == null || descriptionField.getText().trim().isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "La description ne peut pas être vide !");
+                return;
+            }
+            if (dateField.getValue() == null) {
+                showAlert(Alert.AlertType.WARNING, "La date ne peut pas être vide !");
+                return;
+            }
+
             try {
                 selectedReponse.setDescription(descriptionField.getText());
                 selectedReponse.setDate(Date.valueOf(dateField.getValue()));
                 reponseService.update(selectedReponse);
                 loadReponses();
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace(); // L'erreur est simplement loguée, aucune alerte n'est affichée
             }
+        } else {
+            showAlert(Alert.AlertType.WARNING, "Aucune réponse sélectionnée !");
         }
     }
 
@@ -91,7 +114,10 @@ public class ReponseController {
                 loadReponses();
             } catch (Exception e) {
                 e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Une erreur s'est produite lors de la suppression de la réponse.");
             }
+        } else {
+            showAlert(Alert.AlertType.WARNING, "Aucune réponse sélectionnée !");
         }
     }
 
@@ -99,5 +125,13 @@ public class ReponseController {
     public void clearFields() {
         descriptionField.clear();
         dateField.setValue(null);
+    }
+
+    private void showAlert(Alert.AlertType type, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
