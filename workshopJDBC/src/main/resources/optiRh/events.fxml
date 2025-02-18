@@ -16,17 +16,17 @@
          <children>
             <ImageView fx:id="ad" fitHeight="45.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@imgs/50041.png" />
+                  <Image url="@../imgs/50041.png" />
                </image>
             </ImageView>
             <ImageView fx:id="delete1" fitHeight="41.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@imgs/d.jpg" />
+                  <Image url="@../imgs/d.jpg" />
                </image>
             </ImageView>
             <ImageView fx:id="modif1" fitHeight="35.0" fitWidth="154.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@imgs/images.png" />
+                  <Image url="@../imgs/images.png" />
                </image>
             </ImageView>
          </children>
@@ -55,7 +55,7 @@
       </TableView>
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="281.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@imgs/47748.png" />
+            <Image url="@../imgs/47748.png" />
          </image>
       </ImageView>
       <MenuButton layoutX="320.0" layoutY="26.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="202.0" text="rechercher par">
@@ -73,17 +73,17 @@
          <children>
             <ImageView fx:id="added1" fitHeight="45.0" fitWidth="35.0" layoutX="187.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@imgs/50041.png" />
+                  <Image url="@../imgs/50041.png" />
                </image>
             </ImageView>
             <ImageView fx:id="delete11" fitHeight="41.0" fitWidth="41.0" layoutX="32.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@imgs/d.jpg" />
+                  <Image url="@../imgs/d.jpg" />
                </image>
             </ImageView>
             <ImageView fx:id="modif11" fitHeight="35.0" fitWidth="154.0" layoutX="106.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@imgs/images.png" />
+                  <Image url="@../imgs/images.png" />
                </image>
             </ImageView>
          </children>

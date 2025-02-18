@@ -36,7 +36,7 @@
       </TableView>
       <ImageView fitHeight="40.0" fitWidth="52.0" layoutX="505.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@imgs/50041.png" />
+            <Image url="@../imgs/50041.png" />
          </image>
       </ImageView>
       <Text layoutX="503.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="add me">
@@ -46,7 +46,7 @@
       </Text>
       <ImageView fitHeight="40.0" fitWidth="42.0" layoutX="207.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@imgs/47748.png" />
+            <Image url="@../imgs/47748.png" />
          </image>
       </ImageView>
       <MenuButton layoutX="246.0" layoutY="38.0" mnemonicParsing="false" text="rechercher par">
@@ -63,12 +63,12 @@
       </MenuButton>
       <ImageView fitHeight="52.0" fitWidth="50.0" layoutX="386.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@imgs/d.jpg" />
+            <Image url="@../imgs/d.jpg" />
          </image>
       </ImageView>
       <ImageView fitHeight="52.0" fitWidth="47.0" layoutX="442.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@imgs/images.png" />
+            <Image url="@../imgs/images.png" />
          </image>
       </ImageView>
    </children>

@@ -56,12 +56,12 @@
             </AnchorPane>
             <ImageView fitHeight="128.0" fitWidth="128.0" layoutX="91.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@imgs/login.png" />
+                  <Image url="@../imgs/login.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="56.0" layoutY="218.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@imgs/logo-white-small.png" />
+                  <Image url="@../imgs/logo-white-small.png" />
                </image>
             </ImageView>
            

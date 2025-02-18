@@ -1,0 +1,68 @@
+/* Style de base pour tous les boutons */
+.button-add, .button-edit, .button-delete, .button-clear {
+    -fx-background-radius: 5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-background-color: linear-gradient(to bottom right, #2E8B57, #3CB371); /* Couleur par défaut */
+    -fx-transition: all 0.3s ease; /* Transition pour l'effet de survol */
+}
+
+/* Couleurs spécifiques pour chaque bouton */
+.button-add {
+    -fx-background-color: linear-gradient(to bottom right, #2E8B57, #3CB371); /* Vert */
+}
+
+.button-edit {
+    -fx-background-color: linear-gradient(to bottom right, #1E90FF, #87CEEB); /* Bleu clair */
+}
+
+.button-delete {
+    -fx-background-color: linear-gradient(to bottom right, #FF4500, #FF6347); /* Rouge orangé */
+}
+
+.button-clear {
+    -fx-background-color: linear-gradient(to bottom right, #FFD700, #FFA500); /* Or */
+}
+
+/* Effet de survol pour tous les boutons */
+.button-add:hover, .button-edit:hover, .button-delete:hover, .button-clear:hover {
+    -fx-scale-x: 1.1; /* Agrandissement de 10% */
+    -fx-scale-y: 1.1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 2); /* Ombre plus prononcée */
+}
+
+/* Couleurs de survol spécifiques pour chaque bouton */
+.button-add:hover {
+    -fx-background-color: linear-gradient(to bottom right, #3CB371, #66CDAA); /* Vert plus clair */
+}
+
+.button-edit:hover {
+    -fx-background-color: linear-gradient(to bottom right, #42A5F5, #90CAF9); /* Bleu plus clair */
+}
+
+.button-delete:hover {
+    -fx-background-color: linear-gradient(to bottom right, #FF6347, #FF7F50); /* Rouge orangé plus clair */
+}
+
+.button-clear:hover {
+    -fx-background-color: linear-gradient(to bottom right, #FFA500, #FFD700); /* Or plus clair */
+}
+
+/* Style pour la barre supérieure */
+.up_barre {
+    -fx-background-color: #007b8f; /* Bleu foncé */
+}
+
+/* Style pour la barre latérale */
+.left_barre {
+    -fx-background-color: #8fa6b5; /* Bleu-gris */
+}
+
+/* Style pour le contenu principal */
+.dashContent {
+    -fx-background-color: #EEEEEE; /* Gris clair */
+}
