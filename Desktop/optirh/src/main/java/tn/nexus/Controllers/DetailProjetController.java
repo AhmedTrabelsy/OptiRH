@@ -71,7 +71,7 @@ public class DetailProjetController {
                 missionsListView.getItems().clear(); // Clear previous items
                 for (Mission mission : missions) {
                     missionsListView.getItems().add(
-                            mission.getId() + " - " + mission.getTitre() + " - " + mission.getDescription() + " (" + mission.getStatut() + ")"
+                            mission.getTitre() + " - " + mission.getDescription() + " (" + mission.getStatut() + ")"
                     );
                 }
             } catch (SQLException e) {

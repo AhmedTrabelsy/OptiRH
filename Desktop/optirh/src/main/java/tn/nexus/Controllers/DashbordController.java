@@ -1,5 +1,6 @@
 package tn.nexus.Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,12 +29,22 @@ public class DashbordController {
     @FXML
     private void ouvrirGestionProjet() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Projet.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/first.fxml"));
             Parent projetView = loader.load();
             dashContent.getChildren().clear(); // Effacer le contenu actuel
             dashContent.getChildren().add(projetView); // Afficher la nouvelle vue
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void loadProjetForm(ActionEvent actionEvent) {
+    }
+
+    public void loadEmployeeView(ActionEvent actionEvent) {
+    }
+
+    public void loadDashboard(ActionEvent actionEvent) {
+        
     }
 }
