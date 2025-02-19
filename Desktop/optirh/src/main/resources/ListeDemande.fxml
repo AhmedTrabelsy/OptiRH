@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.ListeDemandeController">
+    <top>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Liste des Demandes" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+            <Button text="Ajouter une demande" onAction="#handleAjouter" />
+        </HBox>
+
+    </top>
+    <center>
+        <TableView fx:id="tableDemandes">
+            <columns>
+                <TableColumn text="ID" fx:id="colId" />
+                <TableColumn text="Statut" fx:id="colStatut" />
+                <TableColumn text="Date" fx:id="colDate" />
+                <TableColumn text="Description" fx:id="colDescription" />
+                <TableColumn fx:id="colFichier" text="CV"/>
+                <TableColumn text="Actions" fx:id="colActions" />
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

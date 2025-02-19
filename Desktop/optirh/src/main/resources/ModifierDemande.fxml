@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.nexus.Controllers.ModifierDemandeController"
+      spacing="10">
+
+    <Label text="Modifier une Demande" style="-fx-font-size: 18px;"/>
+
+    <TextField fx:id="txtDescription" promptText="Description"/>
+    <DatePicker fx:id="datePicker"/>
+    <ComboBox fx:id="comboStatut"/>
+
+    <HBox spacing="10">
+        <Button text="Modifier" onAction="#modifierDemande"/>
+        <Button text="Annuler" onAction="#annuler"/>
+    </HBox>
+
+</VBox>

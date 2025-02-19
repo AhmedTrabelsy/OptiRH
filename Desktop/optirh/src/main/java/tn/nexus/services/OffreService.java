@@ -68,6 +68,9 @@ import tn.nexus.Utils.DBConnection;
                 offre.setDescription(rs.getString("description"));
                 offre.setStatut(rs.getString("statut"));
 
+                // Vérifier que la requête retourne des données
+                System.out.println("Offre récupérée : " + offre);
+
                 // Utiliser rs.getTimestamp() pour les champs de type TIMESTAMP
                 Timestamp timestamp = rs.getTimestamp("date_creation");
 
@@ -79,6 +82,28 @@ import tn.nexus.Utils.DBConnection;
             }
             return offres;
         }
+
+        public List<Offre> getAllOffres() {
+            List<Offre> offres = new ArrayList<>();
+            String req = "SELECT id, poste, description FROM offre WHERE statut = 'Disponible'"; // Filtrer les offres actives
+
+            try (Statement st = cnx.createStatement();
+                 ResultSet rs = st.executeQuery(req)) {
+
+                while (rs.next()) {
+                    Offre offre = new Offre();
+                    offre.setId(rs.getInt("id"));
+                    offre.setPoste(rs.getString("poste"));
+                    offre.setDescription(rs.getString("description"));
+                    offres.add(offre);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return offres;
+        }
+
     }
 
 
