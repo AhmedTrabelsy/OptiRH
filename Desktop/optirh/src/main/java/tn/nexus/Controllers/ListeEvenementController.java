@@ -110,7 +110,7 @@ public class ListeEvenementController {
 
 
     /*****************Initialisation du tableau ****************************/
-    public void initialize() throws SQLException {
+    public void initialize() {
         try {
             // Initialisation des colonnes pour les réservations
             idP_Column.setCellValueFactory(new PropertyValueFactory<>("idParticipation"));
@@ -179,17 +179,13 @@ public class ListeEvenementController {
     @FXML
     void ajouterEvenement(ActionEvent event) throws SQLException {
 
-
         // Vérification des champs vides
         if (titreField.getText().isEmpty() || lieuField.getText().isEmpty() ||
                 descriptionField.getText().isEmpty() || prixField.getText().isEmpty() ||
                 heureField.getText().isEmpty() || dateDebutField.getValue() == null ||
                 dateFinField.getValue() == null || imageField.getText().isEmpty()) {
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Avertissement");
-            alert.setHeaderText("Tous les champs doivent être remplis !");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Avertissement", "Tous les champs doivent être remplis !", null);
             return;
         }
 
@@ -198,19 +194,11 @@ public class ListeEvenementController {
         try {
             prix = Double.parseDouble(prixField.getText());
             if (prix < 0) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("Le prix doit être un nombre positif !");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Erreur", null, "Le prix doit être un nombre positif !");
                 return;
             }
         } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("Le prix doit être un nombre valide !");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Erreur", null, "Le prix doit être un nombre valide !");
             return;
         }
 
@@ -219,39 +207,25 @@ public class ListeEvenementController {
         try {
             heure = LocalTime.parse(heureField.getText());
         } catch (DateTimeParseException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("L'heure doit être au format HH:mm !");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Erreur", null, "L'heure doit être au format HH:mm !");
             return;
         }
 
         // Vérification des dates (date de début ne doit pas être avant aujourd'hui)
         LocalDate dateDebut = dateDebutField.getValue();
         if (dateDebut.isBefore(LocalDate.now())) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("La date de début ne peut pas être antérieure à la date d'aujourd'hui !");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Erreur", null, "La date de début ne peut pas être antérieure à la date d'aujourd'hui !");
             return;
         }
 
         // Vérification de la cohérence des dates
         LocalDate dateFin = dateFinField.getValue();
         if (dateFin.isBefore(dateDebut)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("La date de fin doit être après la date de début !");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Erreur", null, "La date de fin doit être après la date de début !");
             return;
         }
 
-
         // Création et ajout de l'événement
-
         String titre = titreField.getText();
         String lieu = lieuField.getText();
         String description = descriptionField.getText();
@@ -267,9 +241,8 @@ public class ListeEvenementController {
 
         // Réinitialiser les champs après l'ajout
         clearFields();
-
-
     }
+
 
 
     /**************************Modifier un evenement ******************************/
@@ -283,10 +256,7 @@ public class ListeEvenementController {
                     heureField.getText().isEmpty() || dateDebutField.getValue() == null ||
                     dateFinField.getValue() == null || imageField.getText().isEmpty()) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Avertissement");
-                alert.setHeaderText("Tous les champs doivent être remplis !");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.WARNING, "Avertissement", "Tous les champs doivent être remplis !", null);
                 return;
             }
 
@@ -295,19 +265,11 @@ public class ListeEvenementController {
             try {
                 prix = Double.parseDouble(prixField.getText());
                 if (prix < 0) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erreur");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Le prix doit être un nombre positif !");
-                    alert.showAndWait();
+                    showAlert(Alert.AlertType.ERROR, "Erreur", null, "Le prix doit être un nombre positif !");
                     return;
                 }
             } catch (NumberFormatException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("Le prix doit être un nombre valide !");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Erreur", null, "Le prix doit être un nombre valide !");
                 return;
             }
 
@@ -316,33 +278,21 @@ public class ListeEvenementController {
             try {
                 heure = LocalTime.parse(heureField.getText());
             } catch (DateTimeParseException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("L'heure doit être au format HH:mm !");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Erreur", null, "L'heure doit être au format HH:mm !");
                 return;
             }
 
             // Vérification des dates (date de début ne doit pas être avant aujourd'hui)
             LocalDate dateDebut = dateDebutField.getValue();
             if (dateDebut.isBefore(LocalDate.now())) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("La date de début ne peut pas être antérieure à la date d'aujourd'hui !");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Erreur", null, "La date de début ne peut pas être antérieure à la date d'aujourd'hui !");
                 return;
             }
 
             // Vérification de la cohérence des dates (la date de fin doit être après la date de début)
             LocalDate dateFin = dateFinField.getValue();
             if (dateFin.isBefore(dateDebut)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("La date de fin doit être après la date de début !");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Erreur", null, "La date de fin doit être après la date de début !");
                 return;
             }
 
@@ -368,10 +318,7 @@ public class ListeEvenementController {
             }
         } else {
             // Si aucun événement n'est sélectionné
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Avertissement");
-            alert.setHeaderText("Aucun événement sélectionné !");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.WARNING, "Avertissement", "Aucun événement sélectionné !", null);
         }
     }
 
@@ -406,6 +353,14 @@ public class ListeEvenementController {
         imageField.clear();
     }
 
+    /**************Alerte**********************/
+    private void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
+    }
 
     /*********************choisir image png jpg jpeg******************************/
     @FXML
@@ -420,34 +375,9 @@ public class ListeEvenementController {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            try {
-                // Récupérer le nom du fichier sélectionné
-                String filePath = selectedFile.getAbsolutePath();
 
-                // Définir le chemin de destination dans le dossier "images" du projet
-                File destinationDir = new File("src/main/resources/image");
-                if (!destinationDir.exists()) {
-                    destinationDir.mkdirs(); // Créer le dossier s'il n'existe pas
-                }
-
-                File destinationFile = new File(destinationDir, selectedFile.getName());
-
-                // Copier l'image sélectionnée dans le dossier "images"
-                Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                // Afficher uniquement le nom du fichier dans le champ de texte
-                imageField.setText(destinationFile.getAbsolutePath());
-
-
-                System.out.println("Image enregistrée avec succès : " + destinationFile.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erreur");
-                alert.setHeaderText("Impossible d'enregistrer l'image !");
-                alert.setContentText(e.getMessage());
-                alert.showAndWait();
-            }
+                imageField.setText(selectedFile.getAbsolutePath());
+                System.out.println("Image selectionnée: " + selectedFile.getAbsolutePath());
         } else {
             System.out.println("Aucun fichier sélectionné.");
         }

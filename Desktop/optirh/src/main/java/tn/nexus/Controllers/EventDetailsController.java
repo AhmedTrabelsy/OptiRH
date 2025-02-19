@@ -85,34 +85,21 @@ public class EventDetailsController {
 
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
             // Afficher une alerte si des champs sont vides
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Champs vides");
-            alert.setHeaderText(null);
-            alert.setContentText("Veuillez remplir tous les champs avant de réserver !");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.WARNING, "Champs vides", null, "Veuillez remplir tous les champs avant de réserver !");
             return;
         }
 
         // Vérification du format du téléphone
         if (!phone.matches("^\\+216[0-9]{8}$")) { // Numéro de téléphone tunisien (ex : +21612345678)
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Numéro de téléphone invalide");
-            alert.setHeaderText(null);
-            alert.setContentText("Veuillez entrer un numéro de téléphone valide (ex: +21612345678).");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.WARNING, "Numéro de téléphone invalide", null, "Veuillez entrer un numéro de téléphone valide (ex: +21612345678).");
             return;
         }
 
         // Vérification du format de l'email
         if (!email.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Email invalide");
-            alert.setHeaderText(null);
-            alert.setContentText("Veuillez entrer un email valide.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.WARNING, "Email invalide", null, "Veuillez entrer un email valide.");
             return;
         }
-
 
         // Création de l'objet Reservation_evenement
         Reservation_evenement reservation = new Reservation_evenement();
@@ -130,26 +117,27 @@ public class EventDetailsController {
             int result = reservationService.insert(reservation);
             if (result > 0) {
                 // Afficher une confirmation
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle("Réservation confirmée");
-                successAlert.setHeaderText(null);
-                successAlert.setContentText("Votre réservation a été enregistrée avec succès !");
-                successAlert.showAndWait();
+                showAlert(Alert.AlertType.INFORMATION, "Réservation confirmée", null, "Votre réservation a été enregistrée avec succès !");
             } else {
                 // Afficher une erreur en cas d'échec
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Erreur");
-                errorAlert.setHeaderText(null);
-                errorAlert.setContentText("Une erreur est survenue lors de la réservation. Veuillez réessayer.");
-                errorAlert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Erreur", null, "Une erreur est survenue lors de la réservation. Veuillez réessayer.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setTitle("Erreur SQL");
-            errorAlert.setHeaderText(null);
-            errorAlert.setContentText("Une erreur s'est produite lors de l'enregistrement dans la base de données.");
-            errorAlert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Erreur SQL", null, "Une erreur s'est produite lors de l'enregistrement dans la base de données.");
         }
     }
+
+
+
+    /****************Alerte*************************/
+    // Fonction pour afficher une alerte
+    private void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
+    }
+
 }

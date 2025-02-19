@@ -18,7 +18,7 @@ public class EvenementServices implements CRUD<Evenement> {
         // Requête d'insertion sans l'attribut id_evenement
         String req = "INSERT INTO evenement (titre, lieu, description, prix, date_debut, date_fin, image, heure) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        ps = con.prepareStatement(req);
+        ps = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
 
         // Remplir les valeurs des placeholders avec les données de l'événement
         ps.setString(1, evenement.getTitre());
@@ -31,9 +31,20 @@ public class EvenementServices implements CRUD<Evenement> {
         ps.setTime(8, Time.valueOf(evenement.getHeure()));
 
 
-        // Exécuter la requête et retourner le nombre de lignes affectées
-        return ps.executeUpdate();
+        // Exécuter la requête et récupérer les clés générées
+        int rowsAffected = ps.executeUpdate();
 
+        // Si l'insertion a réussi, récupérer l'ID généré
+        if (rowsAffected > 0) {
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    // Assigner l'ID généré à l'objet événement
+                    evenement.setIdEvenement(generatedKeys.getInt(1)); // L'ID généré est dans la première colonne
+                }
+            }
+        }
+
+        return rowsAffected;
 
     }
 

@@ -16,7 +16,7 @@
             <Label text="Nos Événements"
                    style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
             <Button text="My Reservation"
-                    style="-fx-font-size: 16px; -fx-padding: 10px 20px; -fx-background-color: #28a745; -fx-text-fill: white;"
+                    style="-fx-font-size: 16px; -fx-padding: 10px 20px; -fx-background-color: #007b8f; -fx-text-fill: white;"
                     fx:id="myReservationButton" onAction="#handleMyReservation"/>
         </HBox>
     </top>
@@ -24,7 +24,7 @@
     <!-- Conteneur des cartes d'événements -->
     <center>
         <FlowPane fx:id="eventContainer" hgap="20" vgap="20"
-                  style="-fx-background-color: #f8f9fa; -fx-padding: 20px;"
+                  style="-fx-background-color: #ffffff; -fx-padding: 20px;"
                   prefWidth="800" prefHeight="600"/>
     </center>
 

@@ -43,7 +43,7 @@ public class EventFrontController {
 
         for (Evenement event : events) {
             VBox card = new VBox(10);
-            card.setStyle("-fx-padding: 10px; -fx-border-color: #ccc; -fx-border-radius: 10px; -fx-background-color: white; -fx-alignment: center;");
+            card.setStyle("-fx-padding: 10px; -fx-border-color: #007b8f; -fx-border-radius: 10px; -fx-background-color: white; -fx-alignment: center;");
 
             ImageView imageView = new ImageView();
             imageView.setFitWidth(200);
@@ -59,6 +59,7 @@ public class EventFrontController {
             titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
             Button detailsButton = new Button("Show Details");
+            detailsButton.setStyle("-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8px;");
             detailsButton.setOnAction(e -> openEventDetails(event));
 
             card.getChildren().addAll(imageView, titleLabel, detailsButton);

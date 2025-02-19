@@ -81,7 +81,12 @@ public class ReservationListController {
                             } else {
                                 // Créer les boutons Modifier et Supprimer
                                 Button editButton = new Button("Modifier");
+                                editButton.setStyle("-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8px;");
+
                                 Button deleteButton = new Button("Supprimer");
+                                deleteButton.setStyle("-fx-background-color: #ff4d4d; -fx-text-fill: white; -fx-background-radius: 8px;");
+
+
 
                                 // Actions sur les boutons
                                 editButton.setOnAction(event -> handleEditAction(getTableRow().getItem()));
@@ -208,19 +213,23 @@ public class ReservationListController {
                 dialogStage.showAndWait();
             } else {
                 // Gérer le cas où aucune réservation n'est trouvée
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Aucune réservation");
-                alert.setHeaderText("Aucune réservation trouvée pour l'utilisateur.");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.WARNING, "Aucune réservation", "Aucune réservation trouvée pour l'utilisateur.", null);
             }
 
         } catch (IOException | SQLException e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText("Impossible d'ouvrir la fenêtre de modification");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir la fenêtre de modification", null);
         }
     }
+
+    private void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
+    }
+
+
 
 }

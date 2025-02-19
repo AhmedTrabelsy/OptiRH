@@ -78,6 +78,11 @@ public class ReservationEditController {
         try {
             reservationService.update(reservation);
             System.out.println("Réservation mise à jour avec succès !");
+            nomField.clear();
+            prenomField.clear();
+            telephoneField.clear();
+            emailField.clear();
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erreur lors de la mise à jour !");
@@ -101,4 +106,6 @@ public class ReservationEditController {
         emailField.clear();
 
     }
+
+
 }

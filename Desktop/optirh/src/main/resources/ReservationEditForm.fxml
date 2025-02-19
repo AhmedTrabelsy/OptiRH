@@ -24,6 +24,10 @@
     <Label layoutX="50.0" layoutY="180.0" text="Email" />
     <TextField fx:id="emailField" layoutX="150.0" layoutY="180.0" prefWidth="200.0" />
 
-    <Button layoutX="150.0" layoutY="220.0" onAction="#handleSaveAction" text="Sauvegarder" />
-   <Button fx:id="ClearButton" layoutX="259.0" layoutY="220.0" onAction="#handleclear" text="Clear" />
+    <Button layoutX="150.0" layoutY="220.0" onAction="#handleSaveAction"
+            text="Sauvegarder" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8px;" />
+
+    <Button fx:id="ClearButton" layoutX="259.0" layoutY="220.0" onAction="#handleclear"
+            text="Clear" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8px;" />
+
 </AnchorPane>

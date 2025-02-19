@@ -52,7 +52,7 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
             preparedStatement.setString(3, reservationEvenement.getTelephone());
             preparedStatement.setString(4, reservationEvenement.getEmail());
             preparedStatement.setDate(5, java.sql.Date.valueOf(reservationEvenement.getDateReservation()));
-            preparedStatement.setInt(6, reservationEvenement.getIdParticipation());  // Utiliser l'ID de participation pour identifier la ligne à mettre à jour
+            preparedStatement.setInt(6, reservationEvenement.getIdParticipation());
 
             // Exécuter la mise à jour
             rowsAffected = preparedStatement.executeUpdate();
