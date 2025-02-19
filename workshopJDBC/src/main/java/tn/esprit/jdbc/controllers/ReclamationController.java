@@ -59,7 +59,7 @@ public class ReclamationController {
                 btn.setOnAction(event -> {
                     Reclamation reclamation = getTableView().getItems().get(getIndex());
                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/reponseForm.fxml"));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ReponseForm.fxml"));
                         Parent root = loader.load();
                         ReponseController controller = loader.getController();
                         controller.setReclamationId(reclamation.getId());
@@ -85,6 +85,16 @@ public class ReclamationController {
         });
 
         reclamationsTable.getColumns().add(actionColumn);
+
+        // Ajouter un écouteur de sélection à la TableView
+        reclamationsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                // Mettre à jour les champs avec les valeurs de la réclamation sélectionnée
+                descriptionField.setText(newSelection.getDescription());
+                statusField.setValue(newSelection.getStatus());
+                dateField.setValue(newSelection.getDate().toLocalDate());
+            }
+        });
     }
 
     @FXML

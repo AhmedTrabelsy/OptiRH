@@ -17,10 +17,10 @@
     <Label layoutX="14.0" layoutY="160.0" text="Date" />
     <DatePicker fx:id="dateField" layoutX="14.0" layoutY="180.0" promptText="Date" />
 
-    <Button layoutX="14.0" layoutY="300.0" onAction="#ajouterReponse" text="Ajouter" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
-    <Button layoutX="100.0" layoutY="300.0" onAction="#modifierReponse" text="Modifier" style="-fx-background-color: #2196F3; -fx-text-fill: white;" />
-    <Button layoutX="190.0" layoutY="300.0" onAction="#supprimerReponse" text="Supprimer" style="-fx-background-color: #F44336; -fx-text-fill: white;" />
-    <Button layoutX="280.0" layoutY="300.0" onAction="#clearFields" text="Clear" style="-fx-background-color: #FF9800; -fx-text-fill: white;" />
+    <Button layoutX="14.0" layoutY="300.0" onAction="#ajouterReponse" text="Ajouter" style="-fx-background-color: #007B8FFF; -fx-text-fill: white;" />
+    <Button layoutX="100.0" layoutY="300.0" onAction="#modifierReponse" text="Modifier" style="-fx-background-color: #007B8FFF; -fx-text-fill: white;" />
+    <Button layoutX="190.0" layoutY="300.0" onAction="#supprimerReponse" text="Supprimer" style="-fx-background-color: #007B8FFF; -fx-text-fill: white;" />
+    <Button layoutX="280.0" layoutY="300.0" onAction="#clearFields" text="Clear" style="-fx-background-color: #007B8FFF; -fx-text-fill: white;" />
 
     <TableView fx:id="reponsesTable" layoutX="14.0" layoutY="350.0" prefHeight="200" prefWidth="572.0">
         <columns>
