@@ -32,4 +32,7 @@ public class DBConnection {
 
         return instance;
     }
+    public Connection getcon(){
+        return con;
+    }
 }

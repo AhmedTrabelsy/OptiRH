@@ -25,27 +25,27 @@ public class Trajet {
             this.id = id;
         }
 
-        public String getdesponibilite() {
+        public String getDisponibilite() {
             return disponibilite;
         }
 
-        public void setdesponibilite(String disponibilite) {
+        public void setDisponibilite(String disponibilite) {
             this.disponibilite = disponibilite;
         }
 
-        public String gettype() {
+        public String getType() {
             return type;
         }
 
-        public void settype(String type) {
+        public void setType(String type) {
             this.type = type;
         }
 
-        public String getstation() {
+        public String getStation() {
             return station;
         }
 
-        public void setstation(String station) {
+        public void setStation(String station) {
             this.station = station;
         }
 

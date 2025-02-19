@@ -6,15 +6,18 @@ public class Vehicule {
     private String disponibilite;
     private String type;
     private int nbrplace;
+    private int trajetId;
 
     public Vehicule() {
     }
 
-    public Vehicule(int id, String disponibilite, String type, int nbrplace) {
+    public Vehicule(int id, String disponibilite, String type, int nbrplace, int trajetId) {
         this.id = id;
         this.disponibilite = disponibilite;
         this.type = type;
         this.nbrplace = nbrplace;
+        this.trajetId = trajetId;
+
     }
 
     public int getId() {
@@ -25,28 +28,35 @@ public class Vehicule {
         this.id = id;
     }
 
-    public String getdesponibilite() {
+    public String getDisponibilite() {
         return disponibilite;
     }
 
-    public void setdesponibilite(String disponibilite) {
+    public void setDisponibilite(String disponibilite) {
         this.disponibilite = disponibilite;
     }
 
-    public String gettype() {
+    public String getType() {
         return type;
     }
 
-    public void settype(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public int getnbrplace() {
+    public int getNbrplace() {
         return nbrplace;
     }
 
-    public void setnbrplace(int nbrplace) {
+    public void setNbrplace(int nbrplace) {
         this.nbrplace = nbrplace;
+    }
+    public int getTrajetId() {
+        return trajetId;
+    }
+
+    public void setTrajetId(int trajetId) {
+        this.trajetId = trajetId;
     }
 
     @Override
