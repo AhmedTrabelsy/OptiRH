@@ -15,8 +15,7 @@ import java.util.List;
 public class ReponseViewController {
     @FXML
     private TableView<Reponse> reponsesTable;
-    @FXML
-    private TableColumn<Reponse, Integer> idColumn;
+
     @FXML
     private TableColumn<Reponse, String> descriptionColumn;
     @FXML
@@ -32,7 +31,7 @@ public class ReponseViewController {
 
     @FXML
     public void initialize() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
     }

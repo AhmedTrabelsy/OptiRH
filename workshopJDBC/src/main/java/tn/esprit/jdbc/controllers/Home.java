@@ -17,7 +17,7 @@ public class Home extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            String fxmlPath = "/listereclamation.fxml";
+            String fxmlPath = "/listereclamationfront.fxml";
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
             Scene scene = new Scene(root);
             stage.setScene(scene);

@@ -38,7 +38,7 @@ public class ReclamationfrontController {
     private final ReclamationService reclamationService = new ReclamationService();
 
     public void initialize() throws SQLException {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
