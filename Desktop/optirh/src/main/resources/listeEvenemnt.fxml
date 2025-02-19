@@ -14,43 +14,40 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.TextArea?>
 <AnchorPane prefHeight="723.0" prefWidth="1272.0" style="-fx-background-color: #f4f4f4; -fx-padding: 30;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.ListeEvenementController">
 
                 <!--Bare du champs avec les boutton choisir image et clear-->
     <AnchorPane layoutX="258.0" layoutY="155.0" prefHeight="477.0" prefWidth="249.0">
-        <TextField fx:id="titreField" layoutX="14.0" layoutY="29.0" promptText="Titre" />
-        <TextField fx:id="lieuField" layoutX="14.0" layoutY="77.0" promptText="Lieu" />
-        <TextField fx:id="descriptionField" layoutX="14.0" layoutY="139.0" promptText="Description" />
-        <TextField fx:id="prixField" layoutX="14.0" layoutY="190.0" promptText="Prix" />
-        <DatePicker fx:id="dateDebutField" layoutX="14.0" layoutY="241.0" promptText="Date Début" />
-        <DatePicker fx:id="dateFinField" layoutX="14.0" layoutY="292.0" promptText="Date Fin" />
-        <TextField fx:id="heureField" layoutX="14.0" layoutY="350.0" promptText="Heure" />
+        <TextField fx:id="titreField" layoutX="-20.0" layoutY="3.0" promptText="Titre" />
+        <TextField fx:id="lieuField" layoutX="-20.0" layoutY="50.0" promptText="Lieu" />
+        <TextArea fx:id="descriptionField" layoutX="-20.0" layoutY="100.0" promptText="Description" wrapText="true" prefHeight="100.0" prefWidth="300.0" />
+
+        <TextField fx:id="prixField" layoutX="-20.0" layoutY="230.0" promptText="Prix" />
+        <DatePicker fx:id="dateDebutField" layoutX="-20.0" layoutY="280.0" promptText="Date Début" />
+        <DatePicker fx:id="dateFinField" layoutX="-20.0" layoutY="330.0" promptText="Date Fin" />
+        <TextField fx:id="heureField" layoutX="-20.0" layoutY="380.0" promptText="Heure" />
         <Button layoutX="10.0" layoutY="481.0" onAction="#ajouterEvenement" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8;" text="Ajouter" />
         <Button layoutX="189.0" layoutY="481.0" onAction="#modifierEvenement" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8;" text="Modifier" />
         <Button layoutX="89.0" layoutY="481.0" onAction="#supprimerEvenement" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8;" text="Supprimer" />
 
-        <TextField fx:id="imageField" layoutX="14.0" layoutY="407.0" promptText="Image" />
-      <Label layoutX="17.0" layoutY="6.0" prefHeight="18.0" prefWidth="42.0" text="Titre:" />
-      <Label layoutX="17.0" layoutY="55.0" text="Lieux:" />
-      <Label layoutX="17.0" layoutY="111.0" text="Description:" />
-      <Label layoutX="17.0" layoutY="165.0" text="Prix:" />
-      <Label layoutX="17.0" layoutY="216.0" text="Date Debut :" />
-      <Label layoutX="17.0" layoutY="267.0" text="Date Fin:" />
-      <Label layoutX="17.0" layoutY="324.0" text="Heure:" />
-      <Label layoutX="17.0" layoutY="383.0" text="Image :" />
+        <TextField fx:id="imageField" layoutX="14.0" layoutY="430.0" promptText="Image" />
+      <Label layoutX="-20.0" layoutY="-15.0" prefHeight="18.0" prefWidth="42.0" text="Titre:" />
+      <Label layoutX="-20.0" layoutY="30.0" text="Lieux:" />
+      <Label layoutX="-20.0" layoutY="80.0" text="Description:" />
+      <Label layoutX="-20.0" layoutY="210.0" text="Prix:" />
+      <Label layoutX="-20.0" layoutY="260.0" text="Date Debut :" />
+      <Label layoutX="-20.0" layoutY="310.0" text="Date Fin:" />
+      <Label layoutX="-20.0" layoutY="360.0" text="Heure:" />
+      <Label layoutX="-20.0" layoutY="410.0" text="Image :" />
         <Button layoutX="206.0" layoutY="51.0" mnemonicParsing="false" onAction="#clearFields" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8;" text="Clear" />
-        <Button fx:id="imageButton" layoutX="193.0" layoutY="407.0" onAction="#choisirImage" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8;" text="Choisir" />
-
-                </AnchorPane>
+        <Button fx:id="imageButton" layoutX="193.0" layoutY="430.0" onAction="#choisirImage" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8;" text="Choisir" />
+    </AnchorPane>
 
                          <!-- TableView pour afficher la liste des événements -->
     <TableView fx:id="eventsTable" layoutX="542.0" layoutY="116.0" prefHeight="183.0" prefWidth="700.0">
         <columns>
-         <TableColumn fx:id="idColumn" prefWidth="27.20001220703125" text="ID">
-            <cellValueFactory>
-               <PropertyValueFactory property="titre" />
-            </cellValueFactory>
-         </TableColumn>
+
 
                                  <!-- Colonne pour le titre de l'événement -->
             <TableColumn fx:id="titleColumn" prefWidth="83.20001220703125" text="Titre">
@@ -67,7 +64,7 @@
             </TableColumn>
 
                                  <!-- Colonne pour la description de l'événement -->
-            <TableColumn fx:id="descriptionColumn" prefWidth="119.20001220703125" text="Description">
+            <TableColumn fx:id="descriptionColumn" prefWidth="160.20001220703125"  text="Description">
                 <cellValueFactory>
                     <PropertyValueFactory property="description" />
                 </cellValueFactory>
@@ -110,18 +107,17 @@
         </columns>
     </TableView>
 
-            
+
                 <!--Tableau pour afficher toutes les reservation-->
    <TableView fx:id="Reservation_Tab" layoutX="542.0" layoutY="313.0" prefHeight="192.0" prefWidth="700.0">
      <columns>
-       <TableColumn fx:id="idP_Column" prefWidth="35.20001220703125" text="idP" />
-       <TableColumn fx:id="Id_UserColumn" prefWidth="49.5999755859375" text="Id_User" />
-         <TableColumn fx:id="id_evenmentColumn" prefWidth="84.79998779296875" text="id_evenment" />
-         <TableColumn fx:id="FirstnameColumn" prefWidth="64.800048828125" text="Prenom" />
-         <TableColumn fx:id="LastNameColumn" prefWidth="88.0" text="Nom" />
+
+         <TableColumn fx:id="titre1" prefWidth="90.79998779296875" text="Titre" />
+         <TableColumn fx:id="FirstnameColumn" prefWidth="94.800048828125" text="Prenom" />
+         <TableColumn fx:id="LastNameColumn" prefWidth="94.0" text="Nom" />
          <TableColumn fx:id="PhoneColumn" prefWidth="145.60003662109375" text="Telephone" />
          <TableColumn fx:id="EmailColumn" prefWidth="92.800048828125" text="email" />
-         <TableColumn fx:id="DateReservationColumn" prefWidth="137.60001220703123" text="DateReservation" />
+         <TableColumn fx:id="DateReservationColumn" prefWidth="180.60001220703123" text="DateReservation" />
      </columns>
    </TableView>
    <Label layoutX="291.0" layoutY="98.0" text="Formulaire">

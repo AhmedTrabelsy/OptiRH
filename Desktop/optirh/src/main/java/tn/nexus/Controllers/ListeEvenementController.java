@@ -26,8 +26,7 @@ public class ListeEvenementController {
 
     @FXML
     private TableColumn<Reservation_evenement, ?> DateReservationColumn;
-    @FXML
-    private TableColumn<Reservation_evenement, ?> idP_Column;
+
 
     @FXML
     private TableColumn<Reservation_evenement, ?> EmailColumn;
@@ -35,8 +34,7 @@ public class ListeEvenementController {
     @FXML
     private TableColumn<Reservation_evenement, ?> FirstnameColumn;
 
-    @FXML
-    private TableColumn<Reservation_evenement, ?> Id_UserColumn;
+
 
     @FXML
     private TableColumn<Reservation_evenement, ?> LastNameColumn;
@@ -54,7 +52,8 @@ public class ListeEvenementController {
     private TableColumn<?, ?> descriptionColumn;
 
     @FXML
-    private TextField descriptionField;
+    private TextArea descriptionField;  // Utilisez TextArea au lieu de TextField
+
 
     @FXML
     private TableColumn<?, ?> endDateColumn;
@@ -95,11 +94,11 @@ public class ListeEvenementController {
     @FXML
     private TableColumn<?, ?> titleColumn;
 
-    @FXML
-    private TableColumn<Evenement, Integer> idColumn;
+
 
     @FXML
-    private TableColumn<?, ?> id_evenmentColumn;
+    private TableColumn<Reservation_evenement, String> titre1;
+
 
     @FXML
     private TextField titreField;
@@ -113,9 +112,8 @@ public class ListeEvenementController {
     public void initialize() {
         try {
             // Initialisation des colonnes pour les réservations
-            idP_Column.setCellValueFactory(new PropertyValueFactory<>("idParticipation"));
-            Id_UserColumn.setCellValueFactory(new PropertyValueFactory<>("idUser"));
-            id_evenmentColumn.setCellValueFactory(new PropertyValueFactory<>("idEvenement"));
+            List<Reservation_evenement> reservationList = servicereservation.showAll();
+            titre1.setCellValueFactory(new PropertyValueFactory<>("titre"));
             FirstnameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
             LastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
             PhoneColumn.setCellValueFactory(new PropertyValueFactory<>("telephone"));
@@ -123,8 +121,7 @@ public class ListeEvenementController {
             DateReservationColumn.setCellValueFactory(new PropertyValueFactory<>("dateReservation"));
 
             // Récupération des réservations depuis le service
-            List<Reservation_evenement> reservationList = servicereservation.showAll();
-
+           System.out.println(reservationList);
             // Vérification si la liste des réservations n'est pas vide
             if (reservationList != null && !reservationList.isEmpty()) {
                 ObservableList<Reservation_evenement> observableList = FXCollections.observableArrayList(reservationList);
@@ -134,7 +131,7 @@ public class ListeEvenementController {
             }
 
             // Initialisation des colonnes pour les événements
-            idColumn.setCellValueFactory(new PropertyValueFactory<>("idEvenement"));
+
             titleColumn.setCellValueFactory(new PropertyValueFactory<>("titre"));
             descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
             locationColumn.setCellValueFactory(new PropertyValueFactory<>("lieu"));

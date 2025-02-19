@@ -16,10 +16,9 @@
         <TextField fx:id="firstNameField" prefHeight="26.0" prefWidth="59.0" />
 
         <Label text="Last Name:" />
-        <TextField fx:id="lastNameField" />
-
+        <TextField fx:id="lastNameField" editable="false" />
         <Label text="Email:" />
-        <TextField fx:id="emailField" />
+        <TextField fx:id="emailField" editable="false"/>
 
         <Label text="Phone:" />
         <TextField fx:id="phoneField" />

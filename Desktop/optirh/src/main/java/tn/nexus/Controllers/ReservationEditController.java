@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import tn.nexus.Entities.Reservation_evenement;
+import tn.nexus.Entities.User;
 import tn.nexus.Services.Reservation_evenementServices;
 
 import java.sql.SQLException;
@@ -27,15 +28,19 @@ public class ReservationEditController {
     private Reservation_evenement reservation;
     private Reservation_evenementServices reservationService = new Reservation_evenementServices();
 
+    User u1 = new User(1,"ikbel","ikbel.hamdi@esprit.tn","ikbelhamdi123","Admin","Esprit");
+
 
     // Méthode pour initialiser les données de la réservation
     public void initData(Reservation_evenement reservation) {
         this.reservation = reservation;
         // Utiliser les bons getters et setters de l'entité
-        nomField.setText(reservation.getLastName());
         prenomField.setText(reservation.getFirstName());
         telephoneField.setText(reservation.getTelephone());
-        emailField.setText(reservation.getEmail());
+        emailField.setText(u1.getEmail());
+        nomField.setText(u1.getNom());
+
+
     }
 
     // Méthode pour sauvegarder les modifications
@@ -43,13 +48,11 @@ public class ReservationEditController {
     @FXML
     private void handleSaveAction() {
         // Récupérer les valeurs des champs
-        String lastName = nomField.getText();
         String firstName = prenomField.getText();
         String telephone = telephoneField.getText();
-        String email = emailField.getText();
 
         // Vérifier si les champs ne sont pas vides
-        if (lastName.isEmpty() || firstName.isEmpty() || telephone.isEmpty() || email.isEmpty()) {
+        if ( firstName.isEmpty() || telephone.isEmpty() ) {
             // Afficher une alerte si l'un des champs est vide
             showAlert("Erreur", "Tous les champs doivent être remplis !");
             return;
@@ -61,18 +64,26 @@ public class ReservationEditController {
             return;
         }
 
-        // Vérifier si l'email est valide
-        if (!email.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
-            showAlert("Erreur", "L'email est invalide.");
+        // Vérification que le prénom contient uniquement des lettres et a une longueur correcte
+        if (!firstName.matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]{2,30}$")) {
+            showAlert("Prénom invalide", "Le prénom ne doit contenir que des lettres et doit avoir entre 2 et 30 caractères.");
             return;
         }
 
+
+        // Vérifier si l'email est valide
+       /* if (!email.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
+            showAlert("Erreur", "L'email est invalide.");
+            return;
+        }*/
+
         // Si tout est valide, mettre à jour la réservation avec les valeurs des champs
-        reservation.setLastName(lastName);
+
         reservation.setFirstName(firstName);
         reservation.setTelephone(telephone);
-        reservation.setEmail(email);
+        reservation.setEmail(u1.getEmail());
+        reservation.setLastName(u1.getNom());
 
         // Appeler la méthode de mise à jour dans la base de données
         try {
@@ -88,6 +99,8 @@ public class ReservationEditController {
             System.out.println("Erreur lors de la mise à jour !");
         }
     }
+
+
 
     // Méthode pour afficher des alertes
     private void showAlert(String title, String message) {

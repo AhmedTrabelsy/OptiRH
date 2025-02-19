@@ -20,6 +20,8 @@ import tn.nexus.Entities.Reservation_evenement;
 import tn.nexus.Services.EvenementServices;
 import tn.nexus.Services.Reservation_evenementServices;
 
+import tn.nexus.Entities.User;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Duration;
@@ -48,10 +50,14 @@ public class ReservationListController {
     private Reservation_evenementServices reservationService = new Reservation_evenementServices();
     private EvenementServices evenementService = new EvenementServices();
 
+    User u1 = new User(1,"ikbel","ikbel.hamdi@esprit.tn","ikbelhamdi123","Admin","Esprit");
+
+
     @FXML
     public void initialize() {
         try {
-            List<Reservation_evenement> reservations = reservationService.getReservatiobByuserID();
+
+            List<Reservation_evenement> reservations = reservationService.getReservatiobByuserID(u1);
             ObservableList<Reservation_evenement> observableReservations = FXCollections.observableArrayList(reservations);
 
             // Associer date de réservation directement
@@ -151,7 +157,7 @@ public class ReservationListController {
                 // Sinon, procéder à la suppression
                 reservationService.delete(reservation);
                 System.out.println("Réservation supprimée avec succès !");
-                refreshReservationList();
+                refreshReservationList(u1);
             } else {
                 // Si l'événement est introuvable
                 showAlert("Erreur", "Événement non trouvé.");
@@ -169,10 +175,10 @@ public class ReservationListController {
         alert.showAndWait();
     }
 
-    private void refreshReservationList() {
+    private void refreshReservationList(User u1) {
         try {
             // Récupérer à nouveau la liste des réservations
-            List<Reservation_evenement> reservationList = reservationService.getReservatiobByuserID();
+            List<Reservation_evenement> reservationList = reservationService.getReservatiobByuserID(u1);
 
             // Mettre à jour la TableView avec les nouvelles données
             reservationTable.setItems(FXCollections.observableArrayList(reservationList));
@@ -186,7 +192,7 @@ public class ReservationListController {
     private void handleEditAction(Reservation_evenement reservation) {
         try {
             // Récupérer la liste des réservations pour un utilisateur donné
-            List<Reservation_evenement> reservationList = reservationService.getReservatiobByuserID2();
+            List<Reservation_evenement> reservationList = reservationService.getReservatiobByuserID(u1);
 
             // Vérifier si la liste contient des éléments
             if (!reservationList.isEmpty()) {

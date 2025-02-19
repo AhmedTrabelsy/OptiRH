@@ -2,6 +2,7 @@ package tn.nexus.Services;
 
 import tn.nexus.Entities.Evenement;
 import tn.nexus.Entities.Reservation_evenement;
+import tn.nexus.Entities.User;
 import tn.nexus.Utils.DBConnection;
 
 import java.sql.*;
@@ -16,7 +17,6 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
 
     @Override
     public int insert(Reservation_evenement reservationEvenement) throws SQLException {
-        // Requête d'insertion sans id_participation (clé primaire auto-incrémentée)
         String req = "INSERT INTO `reservation_evenement`(`id_user`, `id_evenement`, `first_name`, `last_name`, `email`, `telephone`, `date_reservation`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         ps = con.prepareStatement(req);
@@ -87,25 +87,28 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
     @Override
     public List<Reservation_evenement> showAll() throws SQLException {
         List<Reservation_evenement> reservations = new ArrayList<>();
-        String req = "SELECT * FROM reservation_evenement";
+        // Jointure entre reservation_evenement et evenement
+
+        String req = "SELECT r.*, e.titre " +
+                "FROM reservation_evenement r " +
+                "JOIN evenement e ON r.id_evenement = e.id_evenement"; // JOIN pour lier les deux tables
 
         try (PreparedStatement ps = con.prepareStatement(req)) {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                Reservation_evenement reservation = new Reservation_evenement();
-                reservation.setIdParticipation(rs.getInt("id_participation"));
-                reservation.setIdUser(rs.getInt("id_user"));
-                reservation.setIdEvenement(rs.getInt("id_evenement"));
-                reservation.setFirstName(rs.getString("first_name"));
-                reservation.setLastName(rs.getString("last_name"));
-                reservation.setEmail(rs.getString("email"));
-                reservation.setTelephone(rs.getString("telephone"));
-                Date dateReservation = rs.getDate("date_reservation");
-                if (dateReservation != null) {
-                    reservation.setDateReservation(dateReservation.toLocalDate());
-                }
+                String titre = rs.getString("titre");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String email = rs.getString("email");
+                String telephone = rs.getString("telephone");
+
+                LocalDate DATE=rs.getDate("date_reservation").toLocalDate();
+
+                Reservation_evenement reservation = new Reservation_evenement(titre,firstName,lastName,email,telephone,DATE);
+
                 reservations.add(reservation);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -118,7 +121,7 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
 
 
 
-
+/*
     public List<Reservation_evenement> getReservatiobByuserID() throws SQLException {
         List<Reservation_evenement> reservations = new ArrayList<>();
 
@@ -142,26 +145,35 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
         return reservations;
 
     }
+*/
+public List<Reservation_evenement> getReservatiobByuserID(User user) throws SQLException {
+    List<Reservation_evenement> reservations = new ArrayList<>();
 
-    public List<Reservation_evenement> getReservatiobByuserID2() throws SQLException {
-        List<Reservation_evenement> reservations = new ArrayList<>();
+    // Requête SQL avec paramètre pour l'ID de l'utilisateur
+    String query = "SELECT r.id_participation, r.id_user, r.id_evenement, r.date_reservation, " +
+            "r.last_name, r.first_name, r.telephone, r.email " +
+            "FROM reservation_evenement r " +
+            "WHERE r.id_user ="+user.getId(); // id_user est le paramètre
 
-        String query = "SELECT r.id_participation, r.id_user, r.id_evenement, r.date_reservation, " +
-                "r.last_name, r.first_name, r.telephone, r.email " +
-                "FROM reservation_evenement r " +
-                "WHERE r.id_user = 1"; // id_user fixé à 1
+    try (PreparedStatement stmt = con.prepareStatement(query)) {
+        // Définir l'ID de l'utilisateur comme paramètre de la requête
+        //stmt.setInt(1, user.getId()); // On suppose que l'objet User a une méthode getId()
 
-        try (PreparedStatement stmt = con.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-
+        // Exécuter la requête et récupérer les résultats
+        try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Reservation_evenement reservation = new Reservation_evenement();
                 reservation.setIdParticipation(rs.getInt("id_participation"));
                 reservation.setIdUser(rs.getInt("id_user"));
                 reservation.setIdEvenement(rs.getInt("id_evenement"));
-                reservation.setDateReservation(rs.getDate("date_reservation").toLocalDate());
 
-                // Récupérer les informations de l'utilisateur et les ajouter à la réservation
+                // Vérifier que la date n'est pas null avant de la convertir
+                Date dateReservation = rs.getDate("date_reservation");
+                if (dateReservation != null) {
+                    reservation.setDateReservation(dateReservation.toLocalDate());
+                }
+
+                // Récupérer les informations de l'utilisateur
                 reservation.setLastName(rs.getString("last_name"));
                 reservation.setFirstName(rs.getString("first_name"));
                 reservation.setTelephone(rs.getString("telephone"));
@@ -170,9 +182,11 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
                 reservations.add(reservation);
             }
         }
-
-        return reservations;
     }
+
+    return reservations;
+}
+
 
 
 

@@ -10,6 +10,8 @@ import javafx.scene.image.ImageView;
 import tn.nexus.Entities.Evenement;
 import tn.nexus.Entities.Reservation_evenement;
 
+import tn.nexus.Entities.User;
+
 import tn.nexus.Services.Reservation_evenementServices;
 
 import java.io.File;
@@ -58,6 +60,10 @@ public class EventDetailsController {
     private Evenement currentEvent;
     private Reservation_evenementServices reservationService = new Reservation_evenementServices();
 
+
+    User u1 = new User(1,"ikbel","ikbel.hamdi@esprit.tn","ikbelhamdi123","Admin","Esprit");
+
+
     public void setEventData(Evenement event) {
         this.currentEvent = event;
         titleLabel.setText(event.getTitre());
@@ -67,7 +73,8 @@ public class EventDetailsController {
         PrixData.setText(String.valueOf(event.getPrix()));
         HeureData.setText(String.valueOf(event.getHeure()));
         LieuxData.setText(String.valueOf(event.getLieu()));
-
+        lastNameField.setText(u1.getNom());
+        emailField.setText(u1.getEmail());
         File file = new File(event.getImage());
         if (file.exists()) {
             eventImage.setImage(new Image(file.toURI().toString()));
@@ -75,17 +82,23 @@ public class EventDetailsController {
     }
 
 
+
+
     @FXML
     void handleReservation(ActionEvent event) {
 
+
         String firstName = firstNameField.getText().trim();
-        String lastName = lastNameField.getText().trim();
-        String email = emailField.getText().trim();
         String phone = phoneField.getText().trim();
 
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+        if (firstName.isEmpty()   || phone.isEmpty()) {
             // Afficher une alerte si des champs sont vides
             showAlert(Alert.AlertType.WARNING, "Champs vides", null, "Veuillez remplir tous les champs avant de réserver !");
+            return;
+        }
+
+        if (!firstName.matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]{2,30}$")) {
+            showAlert(Alert.AlertType.WARNING, "Prénom invalide", null, "Le prénom ne doit contenir que des lettres et doit avoir entre 2 et 30 caractères.");
             return;
         }
 
@@ -95,19 +108,15 @@ public class EventDetailsController {
             return;
         }
 
-        // Vérification du format de l'email
-        if (!email.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
-            showAlert(Alert.AlertType.WARNING, "Email invalide", null, "Veuillez entrer un email valide.");
-            return;
-        }
+
 
         // Création de l'objet Reservation_evenement
         Reservation_evenement reservation = new Reservation_evenement();
         reservation.setIdUser(1); // ID utilisateur fixe
         reservation.setIdEvenement(currentEvent.getIdEvenement()); // ID de l'événement
         reservation.setFirstName(firstName);
-        reservation.setLastName(lastName);
-        reservation.setEmail(email);
+        reservation.setLastName(u1.getNom());
+        reservation.setEmail(u1.getEmail());
         reservation.setTelephone(phone);
         reservation.setDateReservation(LocalDate.now()); // Date actuelle
 

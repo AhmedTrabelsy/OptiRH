@@ -14,36 +14,52 @@ public class Reservation_evenement {
     private String email;
     private String telephone;
     private LocalDate dateReservation;
-
+   private  String TitreEvenement;
     // Constructeurs
     public Reservation_evenement() {}
 
-    public Reservation_evenement( int idParticipation ,int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
+//    public Reservation_evenement( int idParticipation ,int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
+//
+//        this.idParticipation = idParticipation;
+//        this.idUser = idUser;
+//        this.idEvenement = idEvenement;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.email = email;
+//        this.telephone = telephone;
+//        this.dateReservation = dateReservation;
+//
+//    }
 
-        this.idParticipation = idParticipation;
-        this.idUser = idUser;
-        this.idEvenement = idEvenement;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.telephone = telephone;
-        this.dateReservation = dateReservation;
-
-    }
-
-
-
-
-    public Reservation_evenement( int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
-
-        this.idUser = idUser;
-        this.idEvenement = idEvenement;
+    public Reservation_evenement( String titre, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
+        this.TitreEvenement = titre;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.telephone = telephone;
         this.dateReservation = dateReservation;
     }
+
+
+
+    public String getTitre() {
+        return TitreEvenement;
+    }
+
+    public void setTitre(String titre) {
+        this.TitreEvenement = titre;
+    }
+
+//    public Reservation_evenement(int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
+//
+//        this.idUser = idUser;
+//        this.idEvenement = idEvenement;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.email = email;
+//        this.telephone = telephone;
+//        this.dateReservation = dateReservation;
+//    }
     public Reservation_evenement (String lastName, String firstName, String telephone, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -120,9 +136,8 @@ public class Reservation_evenement {
     @Override
     public String toString() {
         return "ReservationEvenement{" +
-                "idParticipation=" + idParticipation +
-                ", idUser=" + idUser +
-                ", idEvenement=" + idEvenement +
+                " TitreEvenement='" + TitreEvenement + '\'' +
+
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
