@@ -56,11 +56,15 @@ public class MissionService implements CRUD <Mission> {
 
     @Override
     public int delete(Mission mission) throws SQLException {
-        String query = "DELETE FROM mission WHERE id = ?";
-        PreparedStatement ps = cnx.prepareStatement(query);
-        ps.setInt(1, mission.getId()); // Utiliser l'ID de la mission pour la suppression
+        if (mission == null) {
+            throw new IllegalArgumentException("La mission ne peut pas être null.");
+        }
 
-        return ps.executeUpdate();
+        String query = "DELETE FROM mission WHERE id = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(query)) {
+            ps.setInt(1, mission.getId());
+            return ps.executeUpdate();
+        }
     }
 
     @Override

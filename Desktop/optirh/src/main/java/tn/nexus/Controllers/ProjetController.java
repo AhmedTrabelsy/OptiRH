@@ -141,16 +141,20 @@ public class ProjetController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailProjet.fxml"));
             Parent root = loader.load();
 
+            // Récupérer le contrôleur et passer l'objet Projet
             DetailProjetController detailController = loader.getController();
-            detailController.setProjet(projet); // Passer l'objet Projet au contrôleur
+            detailController.setProjet(projet);
 
-            Stage stage = (Stage) typeProjetField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            // Ouvrir dans une nouvelle fenêtre (Stage)
+            Stage detailStage = new Stage();
+            detailStage.setTitle("Détail du Projet");
+            detailStage.setScene(new Scene(root));
+            detailStage.show();
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Erreur", "Impossible de charger la page des détails du projet.");
         }
     }
+
 
 }

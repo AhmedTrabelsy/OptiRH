@@ -197,14 +197,27 @@ public class DetailProjetController {
     @FXML
     private void handleSupprimerMission(ActionEvent event) {
         try {
+            // Récupérer l'élément sélectionné dans la ListView
             String selectedMission = missionsListView.getSelectionModel().getSelectedItem();
+
             if (selectedMission != null) {
-                Mission mission = missionService.getById(projet.getId()); // Vous devez implémenter cette méthode dans MissionService
-                missionService.delete(mission);
+                // Extraire l'ID de la mission à partir de l'élément sélectionné
+                int missionId = extractMissionIdFromListView(selectedMission);
 
-                afficherMissions();
+                // Récupérer la mission à partir de son ID
+                Mission mission = missionService.getById(missionId);
 
-                showAlert("Succès", "Mission supprimée avec succès.");
+                if (mission != null) {
+                    // Supprimer la mission
+                    missionService.delete(mission);
+
+                    // Mettre à jour l'affichage des missions
+                    afficherMissions();
+
+                    showAlert("Succès", "Mission supprimée avec succès.");
+                } else {
+                    showAlert("Erreur", "La mission sélectionnée n'existe pas.");
+                }
             } else {
                 showAlert("Erreur", "Aucune mission sélectionnée.");
             }

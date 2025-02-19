@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="10" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.ProjetController">
+<VBox prefHeight="450.0" prefWidth="688.0" spacing="10" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.ProjetController">
     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="66.0" prefWidth="786.0" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Ajouter Projet">
         <font>
             <Font name="Arial" size="16.0" />
@@ -75,7 +75,7 @@
             <Font name="Berlin Sans FB" size="16.0" />
         </font></Label>
     <ListView fx:id="missionsListView" prefHeight="63.0" prefWidth="663.0" />
-    <HBox alignment="CENTER" prefHeight="43.0" prefWidth="663.0">
+    <HBox alignment="CENTER" prefHeight="0.0" prefWidth="699.0">
         <children>
 
             <Button onAction="#enregistrerProjet" prefHeight="0.0" prefWidth="281.0" text="Enregistrer Projet" />
