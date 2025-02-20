@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import tn.nexus.Entities.Reservation_evenement;
 import tn.nexus.Entities.User;
 import tn.nexus.Services.Reservation_evenementServices;
@@ -14,7 +15,7 @@ import java.sql.SQLException;
 public class ReservationEditController {
 
     @FXML
-    private Button ClearButton;
+    private Button annuler;
 
     @FXML
     private TextField nomField;
@@ -32,9 +33,9 @@ public class ReservationEditController {
 
 
     // Méthode pour initialiser les données de la réservation
-    public void initData(Reservation_evenement reservation) {
+    public void initData(Reservation_evenement reservation) throws SQLException {
         this.reservation = reservation;
-        // Utiliser les bons getters et setters de l'entité
+        reservationService.getReservatiobByuserID(u1);
         prenomField.setText(reservation.getFirstName());
         telephoneField.setText(reservation.getTelephone());
         emailField.setText(u1.getEmail());
@@ -48,11 +49,11 @@ public class ReservationEditController {
     @FXML
     private void handleSaveAction() {
         // Récupérer les valeurs des champs
-        String firstName = prenomField.getText();
+        String lastName =  prenomField.getText();
         String telephone = telephoneField.getText();
 
         // Vérifier si les champs ne sont pas vides
-        if ( firstName.isEmpty() || telephone.isEmpty() ) {
+        if ( lastName.isEmpty() || telephone.isEmpty() ) {
             // Afficher une alerte si l'un des champs est vide
             showAlert("Erreur", "Tous les champs doivent être remplis !");
             return;
@@ -65,7 +66,7 @@ public class ReservationEditController {
         }
 
         // Vérification que le prénom contient uniquement des lettres et a une longueur correcte
-        if (!firstName.matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]{2,30}$")) {
+        if (!lastName.matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]{2,30}$")) {
             showAlert("Prénom invalide", "Le prénom ne doit contenir que des lettres et doit avoir entre 2 et 30 caractères.");
             return;
         }
@@ -80,19 +81,21 @@ public class ReservationEditController {
 
         // Si tout est valide, mettre à jour la réservation avec les valeurs des champs
 
-        reservation.setFirstName(firstName);
+        reservation.setFirstName(lastName);
         reservation.setTelephone(telephone);
         reservation.setEmail(u1.getEmail());
         reservation.setLastName(u1.getNom());
 
+
         // Appeler la méthode de mise à jour dans la base de données
         try {
+
+
             reservationService.update(reservation);
+
             System.out.println("Réservation mise à jour avec succès !");
-            nomField.clear();
-            prenomField.clear();
-            telephoneField.clear();
-            emailField.clear();
+            fermerModale();
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -113,12 +116,22 @@ public class ReservationEditController {
 
 
     public void handleclear(ActionEvent actionEvent) {
-        nomField.clear();
         prenomField.clear();
         telephoneField.clear();
-        emailField.clear();
 
     }
+
+    @FXML
+    public void fermerModale() {
+        // Fermer la fenêtre modale
+        Stage stage = (Stage) nomField.getScene().getWindow();
+        stage.close();
+    }
+    @FXML
+    private void annuler() {
+        fermerModale();
+    }
+
 
 
 }

@@ -31,7 +31,7 @@
         <Button layoutX="189.0" layoutY="481.0" onAction="#modifierEvenement" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8;" text="Modifier" />
         <Button layoutX="89.0" layoutY="481.0" onAction="#supprimerEvenement" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8;" text="Supprimer" />
 
-        <TextField fx:id="imageField" layoutX="14.0" layoutY="430.0" promptText="Image" />
+        <TextField fx:id="imageField" layoutX="-20.0" layoutY="430.0" promptText="Image" />
       <Label layoutX="-20.0" layoutY="-15.0" prefHeight="18.0" prefWidth="42.0" text="Titre:" />
       <Label layoutX="-20.0" layoutY="30.0" text="Lieux:" />
       <Label layoutX="-20.0" layoutY="80.0" text="Description:" />

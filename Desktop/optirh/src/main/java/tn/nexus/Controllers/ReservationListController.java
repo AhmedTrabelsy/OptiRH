@@ -213,7 +213,7 @@ public class ReservationListController {
 
                 // Passer la réservation à la nouvelle fenêtre
                 ReservationEditController controller = loader.getController();
-                controller.initData(reservationDetails); // Passer les informations récupérées
+                controller.initData(reservation); // Passer les informations récupérées
 
                 // Afficher la fenêtre
                 dialogStage.showAndWait();

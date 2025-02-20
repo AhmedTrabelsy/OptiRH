@@ -13,7 +13,7 @@
         </font>
     </Label>
     <Label layoutX="50.0" layoutY="60.0" text="Nom" />
-    <TextField fx:id="nomField" layoutX="150.0" layoutY="60.0" prefWidth="200.0" editable="false"/>
+    <TextField fx:id="nomField" editable="false" layoutX="150.0" layoutY="60.0" prefWidth="200.0" />
 
     <Label layoutX="50.0" layoutY="100.0" text="Prénom" />
     <TextField fx:id="prenomField" layoutX="150.0" layoutY="100.0" prefWidth="200.0" />
@@ -22,12 +22,10 @@
     <TextField fx:id="telephoneField" layoutX="150.0" layoutY="140.0" prefWidth="200.0" />
 
     <Label layoutX="50.0" layoutY="180.0" text="Email" />
-    <TextField fx:id="emailField" layoutX="150.0" layoutY="180.0" prefWidth="200.0" editable="false"/>
+    <TextField fx:id="emailField" editable="false" layoutX="150.0" layoutY="180.0" prefWidth="200.0" />
 
-    <Button layoutX="150.0" layoutY="220.0" onAction="#handleSaveAction"
-            text="Sauvegarder" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8px;" />
+    <Button layoutX="150.0" layoutY="220.0" onAction="#handleSaveAction" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8px;" text="Sauvegarder" />
 
-    <Button fx:id="ClearButton" layoutX="259.0" layoutY="220.0" onAction="#handleclear"
-            text="Clear" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8px;" />
+    <Button fx:id="annuler" layoutX="259.0" layoutY="220.0" onAction="#annuler" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-background-radius: 8px;" text="Annuler" />
 
 </AnchorPane>

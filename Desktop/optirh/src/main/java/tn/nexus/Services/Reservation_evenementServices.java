@@ -34,6 +34,7 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
         ps.setString(6, reservationEvenement.getTelephone());
         ps.setDate(7, Date.valueOf(reservationEvenement.getDateReservation()));
 
+
         // Exécuter la requête et retourner le nombre de lignes affectées
         return ps.executeUpdate();
     }
@@ -64,7 +65,6 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
 
         return rowsAffected;
     }
-
     @Override
     public int delete(Reservation_evenement reservationEvenement) throws SQLException {
         String query = "DELETE FROM reservation_evenement WHERE id_participation = ?";
@@ -121,72 +121,71 @@ public class Reservation_evenementServices implements CRUD<Reservation_evenement
 
 
 
-/*
-    public List<Reservation_evenement> getReservatiobByuserID() throws SQLException {
+    /*
+        public List<Reservation_evenement> getReservatiobByuserID() throws SQLException {
+            List<Reservation_evenement> reservations = new ArrayList<>();
+
+            String query = "SELECT id_participation, id_user, id_evenement, date_reservation " +
+                    "FROM reservation_evenement WHERE id_user = 1"; // Filtrer par user
+
+            try (PreparedStatement stmt = con.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    Reservation_evenement reservation = new Reservation_evenement();
+                    reservation.setIdParticipation(rs.getInt("id_participation"));
+                    reservation.setIdUser(rs.getInt("id_user"));
+                    reservation.setIdEvenement(rs.getInt("id_evenement"));
+                    reservation.setDateReservation(rs.getDate("date_reservation").toLocalDate());
+
+                    reservations.add(reservation);
+                }
+            }
+
+            return reservations;
+
+        }
+    */
+    public List<Reservation_evenement> getReservatiobByuserID(User user) throws SQLException {
         List<Reservation_evenement> reservations = new ArrayList<>();
 
-        String query = "SELECT id_participation, id_user, id_evenement, date_reservation " +
-                "FROM reservation_evenement WHERE id_user = 1"; // Filtrer par user
+        // Requête SQL avec paramètre pour l'ID de l'utilisateur
+        String query = "SELECT r.id_participation, r.id_user, r.id_evenement, r.date_reservation, " +
+                "r.last_name, r.first_name, r.telephone, r.email " +
+                "FROM reservation_evenement r " +
+                "WHERE r.id_user ="+user.getId(); // id_user est le paramètre
 
-        try (PreparedStatement stmt = con.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            // Définir l'ID de l'utilisateur comme paramètre de la requête
+            //stmt.setInt(1, user.getId()); // On suppose que l'objet User a une méthode getId()
 
-            while (rs.next()) {
-                Reservation_evenement reservation = new Reservation_evenement();
-                reservation.setIdParticipation(rs.getInt("id_participation"));
-                reservation.setIdUser(rs.getInt("id_user"));
-                reservation.setIdEvenement(rs.getInt("id_evenement"));
-                reservation.setDateReservation(rs.getDate("date_reservation").toLocalDate());
+            // Exécuter la requête et récupérer les résultats
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Reservation_evenement reservation = new Reservation_evenement();
+                    reservation.setIdParticipation(rs.getInt("id_participation"));
+                    reservation.setIdUser(rs.getInt("id_user"));
+                    reservation.setIdEvenement(rs.getInt("id_evenement"));
 
-                reservations.add(reservation);
+                    // Vérifier que la date n'est pas null avant de la convertir
+                    Date dateReservation = rs.getDate("date_reservation");
+                    if (dateReservation != null) {
+                        reservation.setDateReservation(dateReservation.toLocalDate());
+                    }
+
+                    // Récupérer les informations de l'utilisateur
+                    reservation.setLastName(rs.getString("last_name"));
+                    reservation.setFirstName(rs.getString("first_name"));
+                    reservation.setTelephone(rs.getString("telephone"));
+                    reservation.setEmail(rs.getString("email"));
+
+                    reservations.add(reservation);
+                }
             }
         }
 
         return reservations;
-
     }
-*/
-public List<Reservation_evenement> getReservatiobByuserID(User user) throws SQLException {
-    List<Reservation_evenement> reservations = new ArrayList<>();
-
-    // Requête SQL avec paramètre pour l'ID de l'utilisateur
-    String query = "SELECT r.id_participation, r.id_user, r.id_evenement, r.date_reservation, " +
-            "r.last_name, r.first_name, r.telephone, r.email " +
-            "FROM reservation_evenement r " +
-            "WHERE r.id_user ="+user.getId(); // id_user est le paramètre
-
-    try (PreparedStatement stmt = con.prepareStatement(query)) {
-        // Définir l'ID de l'utilisateur comme paramètre de la requête
-        //stmt.setInt(1, user.getId()); // On suppose que l'objet User a une méthode getId()
-
-        // Exécuter la requête et récupérer les résultats
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                Reservation_evenement reservation = new Reservation_evenement();
-                reservation.setIdParticipation(rs.getInt("id_participation"));
-                reservation.setIdUser(rs.getInt("id_user"));
-                reservation.setIdEvenement(rs.getInt("id_evenement"));
-
-                // Vérifier que la date n'est pas null avant de la convertir
-                Date dateReservation = rs.getDate("date_reservation");
-                if (dateReservation != null) {
-                    reservation.setDateReservation(dateReservation.toLocalDate());
-                }
-
-                // Récupérer les informations de l'utilisateur
-                reservation.setLastName(rs.getString("last_name"));
-                reservation.setFirstName(rs.getString("first_name"));
-                reservation.setTelephone(rs.getString("telephone"));
-                reservation.setEmail(rs.getString("email"));
-
-                reservations.add(reservation);
-            }
-        }
-    }
-
-    return reservations;
-}
-
 
 
 

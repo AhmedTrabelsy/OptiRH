@@ -186,6 +186,28 @@ public class ListeEvenementController {
             return;
         }
 
+        // Vérification du titre
+        String titretest = titreField.getText();
+        if (titretest.length() > 10) {
+            showAlert(Alert.AlertType.ERROR, "Avertissement", "Le titre ne doit pas dépasser 10 caractères.", null);
+            return;
+        }
+        if (!titretest.matches("[a-zA-Z0-9 ]+")) {
+            showAlert(Alert.AlertType.ERROR, "Avertissement", "Le titre ne doit contenir que des lettres et des chiffres.", null);
+            return;
+        }
+
+// Vérification du lieu
+        String lieutest = lieuField.getText();
+        if (lieutest.length() > 10) {
+            showAlert(Alert.AlertType.ERROR, "Avertissement", "Le lieu ne doit pas dépasser 10 caractères.", null);
+            return;
+        }
+        if (!lieutest.matches("[a-zA-Z0-9 ]+")) {
+            showAlert(Alert.AlertType.ERROR, "Avertissement", "Le lieu ne doit contenir que des lettres et des chiffres.", null);
+            return;
+        }
+
         // Vérification du prix (nombre positif)
         double prix;
         try {
@@ -267,6 +289,28 @@ public class ListeEvenementController {
                 }
             } catch (NumberFormatException e) {
                 showAlert(Alert.AlertType.ERROR, "Erreur", null, "Le prix doit être un nombre valide !");
+                return;
+            }
+
+            // Vérification du titre
+            String titretest = titreField.getText();
+            if (titretest.length() > 10) {
+                showAlert(Alert.AlertType.ERROR, "Avertissement", "Le titre ne doit pas dépasser 10 caractères.", null);
+                return;
+            }
+            if (!titretest.matches("[a-zA-Z0-9 ]+")) {
+                showAlert(Alert.AlertType.ERROR, "Avertissement", "Le titre ne doit contenir que des lettres et des chiffres.", null);
+                return;
+            }
+
+// Vérification du lieu
+            String lieutest = lieuField.getText();
+            if (lieutest.length() > 10) {
+                showAlert(Alert.AlertType.ERROR, "Avertissement", "Le lieu ne doit pas dépasser 10 caractères.", null);
+                return;
+            }
+            if (!lieutest.matches("[a-zA-Z0-9 ]+")) {
+                showAlert(Alert.AlertType.ERROR, "Avertissement", "Le lieu ne doit contenir que des lettres et des chiffres.", null);
                 return;
             }
 

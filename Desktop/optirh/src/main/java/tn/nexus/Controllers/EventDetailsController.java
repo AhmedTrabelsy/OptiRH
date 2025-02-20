@@ -63,7 +63,7 @@ public class EventDetailsController {
 
     User u1 = new User(1,"ikbel","ikbel.hamdi@esprit.tn","ikbelhamdi123","Admin","Esprit");
 
-
+/*******************get data******************/
     public void setEventData(Evenement event) {
         this.currentEvent = event;
         titleLabel.setText(event.getTitre());
@@ -73,7 +73,7 @@ public class EventDetailsController {
         PrixData.setText(String.valueOf(event.getPrix()));
         HeureData.setText(String.valueOf(event.getHeure()));
         LieuxData.setText(String.valueOf(event.getLieu()));
-        lastNameField.setText(u1.getNom());
+        firstNameField.setText(u1.getNom());
         emailField.setText(u1.getEmail());
         File file = new File(event.getImage());
         if (file.exists()) {
@@ -83,13 +83,13 @@ public class EventDetailsController {
 
 
 
-
+/****************Bouttn reserver**************************/
     @FXML
     void handleReservation(ActionEvent event) {
 
 
-        String firstName = firstNameField.getText().trim();
-        String phone = phoneField.getText().trim();
+        String firstName = lastNameField.getText();
+        String phone = phoneField.getText();
 
         if (firstName.isEmpty()   || phone.isEmpty()) {
             // Afficher une alerte si des champs sont vides
@@ -103,7 +103,7 @@ public class EventDetailsController {
         }
 
         // Vérification du format du téléphone
-        if (!phone.matches("^\\+216[0-9]{8}$")) { // Numéro de téléphone tunisien (ex : +21612345678)
+        if (!phone.matches("^\\+\\d{11,14}$")) { // Numéro de téléphone tunisien (ex : +21612345678)
             showAlert(Alert.AlertType.WARNING, "Numéro de téléphone invalide", null, "Veuillez entrer un numéro de téléphone valide (ex: +21612345678).");
             return;
         }

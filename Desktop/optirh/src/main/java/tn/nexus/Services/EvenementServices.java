@@ -89,14 +89,14 @@ public class EvenementServices implements CRUD<Evenement> {
     public List<Evenement> showAll() throws SQLException {
         List<Evenement> events = new ArrayList<>();
         String req = "SELECT * FROM `evenement`";
-        st = con.createStatement();
-        ResultSet rs = st.executeQuery(req);
+
+        // Utilisation de PreparedStatement au lieu de Statement
+        ps = con.prepareStatement(req);
+        ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
             Evenement evenement = new Evenement();
-
-            // Récupération des données à partir du ResultSet
-            evenement.setIdEvenement(rs.getInt("id_evenement")); // Assurez-vous que les noms de colonne correspondent
+            evenement.setIdEvenement(rs.getInt("id_evenement"));
             evenement.setTitre(rs.getString("titre"));
 
             // Conversion de la date en LocalDate
@@ -110,26 +110,23 @@ public class EvenementServices implements CRUD<Evenement> {
                 evenement.setDateFin(dateFin.toLocalDate());
             }
 
-            // Récupération des autres attributs
             evenement.setPrix(rs.getDouble("prix"));
             evenement.setDescription(rs.getString("description"));
             evenement.setLieu(rs.getString("lieu"));
 
-            // Conversion de l'heure en LocalTime (si applicable)
+            // Conversion de l'heure en LocalTime
             Time heure = rs.getTime("heure");
             if (heure != null) {
                 evenement.setHeure(heure.toLocalTime());
             }
 
-            // Récupération de l'image (chemin ou URL)
             evenement.setImage(rs.getString("image"));
-
-            // Ajout de l'événement à la liste
             events.add(evenement);
         }
 
         return events;
     }
+
 
 
     public Evenement getEvenementById(int idEvenement) throws SQLException {

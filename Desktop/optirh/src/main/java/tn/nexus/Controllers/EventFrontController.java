@@ -74,29 +74,36 @@ public class EventFrontController {
             stage.setScene(new Scene(loader.load()));
             stage.setTitle("Event Details");
 
+
             EventDetailsController controller = loader.getController();
             controller.setEventData(event);
-
             stage.show();
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    private void handleMyReservation(ActionEvent event) {  // Vérifie bien que ActionEvent event est présent
+    private void handleMyReservation(ActionEvent event) {
         try {
-            // Charger la nouvelle scène
+            // Charger la nouvelle vue
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/reservation_list.fxml"));
             Parent reservationView = loader.load();
 
-            // Obtenir la fenêtre actuelle et changer la scène
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(reservationView);
-            stage.setScene(scene);
-            stage.show();
+            // Créer un nouveau Stage
+            Stage newStage = new Stage();
+            newStage.setScene(new Scene(reservationView));
+
+            newStage.setTitle("Mes Réservations");
+            newStage.show();
+
+
         } catch (IOException e) {
             e.printStackTrace();  // Afficher l'erreur dans la console
         }
     }
+
 }

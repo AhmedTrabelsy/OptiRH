@@ -10,15 +10,15 @@
 
 <AnchorPane prefHeight="574.0" prefWidth="629.0" style="-fx-padding: 20px; -fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.EventDetailsController">
 
-    <VBox alignment="center" layoutX="328.0" layoutY="119.0" prefHeight="354.0" prefWidth="284.0" spacing="10">
+    <VBox alignment="center" layoutX="347.0" layoutY="119.0" prefHeight="314.0" prefWidth="265.0" spacing="10">
 
         <Label text="First Name:" />
-        <TextField fx:id="firstNameField" prefHeight="26.0" prefWidth="59.0" />
+        <TextField fx:id="firstNameField" prefHeight="26.0" prefWidth="59.0" editable="false" />
 
         <Label text="Last Name:" />
-        <TextField fx:id="lastNameField" editable="false" />
+        <TextField fx:id="lastNameField"  />
         <Label text="Email:" />
-        <TextField fx:id="emailField" editable="false"/>
+        <TextField fx:id="emailField" editable="false" />
 
         <Label text="Phone:" />
         <TextField fx:id="phoneField" />
@@ -39,7 +39,7 @@
    <Label layoutX="30.0" layoutY="327.0" prefHeight="18.0" prefWidth="52.0" text="DateFin:" />
    <Label layoutX="32.0" layoutY="368.0" text="Heure:" />
    <Label layoutX="33.0" layoutY="408.0" text="Prix:" />
-   <Label fx:id="DescriptionData" layoutX="104.0" layoutY="441.0" prefHeight="81.0" prefWidth="278.0" text="DescriptionData" />
+   <Label fx:id="DescriptionData" layoutX="104.0" layoutY="439.0" prefHeight="84.0" prefWidth="506.0" text="DescriptionData" />
    <Label fx:id="DateDebutData" layoutX="100.0" layoutY="287.0" text="DateDebutData" />
    <Label fx:id="DateFinData" layoutX="97.0" layoutY="327.0" text="DateFinData" />
    <Label fx:id="HeureData" layoutX="73.0" layoutY="368.0" text="HeureData" />

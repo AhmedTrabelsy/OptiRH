@@ -1,8 +1,7 @@
 package tn.nexus.Entities;
 
 import java.time.LocalDate;
-
-import tn.nexus.Entities.Evenement;
+import java.util.Date;
 
 public class Reservation_evenement {
 
@@ -14,7 +13,9 @@ public class Reservation_evenement {
     private String email;
     private String telephone;
     private LocalDate dateReservation;
-   private  String TitreEvenement;
+    private  String TitreEvenement;
+    private LocalDate Date_debut;
+
     // Constructeurs
     public Reservation_evenement() {}
 
@@ -31,13 +32,25 @@ public class Reservation_evenement {
 //
 //    }
 
-    public Reservation_evenement( String titre, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
+   public Reservation_evenement( String titre, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
         this.TitreEvenement = titre;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.telephone = telephone;
         this.dateReservation = dateReservation;
+    }
+
+    public Reservation_evenement(int idParticipation,int idEvent,int telephone,String email,String firstName,String lastName,LocalDate dateReservation,String titre,LocalDate dateDebut) {
+        this.idParticipation = idParticipation;
+        this.idUser = idEvent;
+        this.idEvenement = idEvent;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateReservation = dateReservation;
+        this.TitreEvenement = titre;
+        this.Date_debut = dateDebut;
+
     }
 
 
@@ -49,6 +62,14 @@ public class Reservation_evenement {
     public void setTitre(String titre) {
         this.TitreEvenement = titre;
     }
+
+    public LocalDate getDateDebut() {
+        return Date_debut;
+    }
+    public void setDateDebut(LocalDate dateDebut) {
+        this.Date_debut = dateDebut;
+    }
+
 
 //    public Reservation_evenement(int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
 //
