@@ -2,11 +2,13 @@ package tn.nexus.Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import tn.nexus.Entities.Evenement;
 import tn.nexus.Entities.Reservation_evenement;
 
@@ -83,32 +85,26 @@ public class EventDetailsController {
 
 
 
-/****************Bouttn reserver**************************/
     @FXML
     void handleReservation(ActionEvent event) {
-
-
         String firstName = lastNameField.getText();
         String phone = phoneField.getText();
 
-        if (firstName.isEmpty()   || phone.isEmpty()) {
-            // Afficher une alerte si des champs sont vides
+        if (firstName.isEmpty() || phone.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Champs vides", null, "Veuillez remplir tous les champs avant de réserver !");
             return;
         }
 
         if (!firstName.matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]{2,30}$")) {
-            showAlert(Alert.AlertType.WARNING, "Prénom invalide", null, "Le prénom ne doit contenir que des lettres et doit avoir entre 2 et 30 caractères.");
+            showAlert(Alert.AlertType.WARNING, "Prénom invalide", null, "Le prénom doit contenir uniquement des lettres et avoir entre 2 et 30 caractères.");
             return;
         }
 
         // Vérification du format du téléphone
-        if (!phone.matches("^\\+\\d{11,14}$")) { // Numéro de téléphone tunisien (ex : +21612345678)
+        if (!phone.matches("^\\+\\d{11,14}$")) {
             showAlert(Alert.AlertType.WARNING, "Numéro de téléphone invalide", null, "Veuillez entrer un numéro de téléphone valide (ex: +21612345678).");
             return;
         }
-
-
 
         // Création de l'objet Reservation_evenement
         Reservation_evenement reservation = new Reservation_evenement();
@@ -120,15 +116,23 @@ public class EventDetailsController {
         reservation.setTelephone(phone);
         reservation.setDateReservation(LocalDate.now()); // Date actuelle
 
-        // Insertion dans la base de données
+        // Service de réservation
         Reservation_evenementServices reservationService = new Reservation_evenementServices();
+
         try {
+            // Vérifier si l'utilisateur a déjà réservé cet événement
+            if (reservationService.isReservationExists(1, currentEvent.getIdEvenement())) {
+                showAlert(Alert.AlertType.ERROR, "Réservation existante", null, "Vous avez déjà réservé cet événement !");
+                return; // Stopper le processus
+            }
+
+            // Tenter l'insertion
             int result = reservationService.insert(reservation);
             if (result > 0) {
-                // Afficher une confirmation
                 showAlert(Alert.AlertType.INFORMATION, "Réservation confirmée", null, "Votre réservation a été enregistrée avec succès !");
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.close();
             } else {
-                // Afficher une erreur en cas d'échec
                 showAlert(Alert.AlertType.ERROR, "Erreur", null, "Une erreur est survenue lors de la réservation. Veuillez réessayer.");
             }
         } catch (SQLException e) {
@@ -136,6 +140,7 @@ public class EventDetailsController {
             showAlert(Alert.AlertType.ERROR, "Erreur SQL", null, "Une erreur s'est produite lors de l'enregistrement dans la base de données.");
         }
     }
+
 
 
 

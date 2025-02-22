@@ -1,7 +1,6 @@
 package tn.nexus.Entities;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Reservation_evenement {
 
@@ -13,27 +12,14 @@ public class Reservation_evenement {
     private String email;
     private String telephone;
     private LocalDate dateReservation;
-    private  String TitreEvenement;
-    private LocalDate Date_debut;
+    private String titreEvenement;
+    private LocalDate dateDebut;
 
-    // Constructeurs
+    // Constructeur par défaut
     public Reservation_evenement() {}
 
-//    public Reservation_evenement( int idParticipation ,int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
-//
-//        this.idParticipation = idParticipation;
-//        this.idUser = idUser;
-//        this.idEvenement = idEvenement;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.email = email;
-//        this.telephone = telephone;
-//        this.dateReservation = dateReservation;
-//
-//    }
-
-   public Reservation_evenement( String titre, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
-        this.TitreEvenement = titre;
+    // Constructeur utilisé pour créer une réservation avec les informations de base d'un utilisateur
+    public Reservation_evenement(String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -41,53 +27,37 @@ public class Reservation_evenement {
         this.dateReservation = dateReservation;
     }
 
-    public Reservation_evenement(int idParticipation,int idEvent,int telephone,String email,String firstName,String lastName,LocalDate dateReservation,String titre,LocalDate dateDebut) {
+    // Constructeur utilisé pour afficher une réservation avec le titre de l'événement
+    public Reservation_evenement(String titreEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
+        this.titreEvenement = titreEvenement;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.telephone = telephone;
+        this.dateReservation = dateReservation;
+    }
+
+    // Constructeur utilisé pour gérer une réservation complète avec tous les détails
+    public Reservation_evenement(int idParticipation, int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation, String titreEvenement, LocalDate dateDebut) {
         this.idParticipation = idParticipation;
-        this.idUser = idEvent;
-        this.idEvenement = idEvent;
+        this.idUser = idUser;
+        this.idEvenement = idEvenement;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.telephone = telephone;
         this.dateReservation = dateReservation;
-        this.TitreEvenement = titre;
-        this.Date_debut = dateDebut;
-
+        this.titreEvenement = titreEvenement;
+        this.dateDebut = dateDebut;
     }
 
-
-
-    public String getTitre() {
-        return TitreEvenement;
-    }
-
-    public void setTitre(String titre) {
-        this.TitreEvenement = titre;
-    }
-
-    public LocalDate getDateDebut() {
-        return Date_debut;
-    }
-    public void setDateDebut(LocalDate dateDebut) {
-        this.Date_debut = dateDebut;
-    }
-
-
-//    public Reservation_evenement(int idUser, int idEvenement, String firstName, String lastName, String email, String telephone, LocalDate dateReservation) {
-//
-//        this.idUser = idUser;
-//        this.idEvenement = idEvenement;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.email = email;
-//        this.telephone = telephone;
-//        this.dateReservation = dateReservation;
-//    }
-    public Reservation_evenement (String lastName, String firstName, String telephone, String email) {
+    // Constructeur utilisé pour des afficher la liste des reservation pour chaque evenement
+   /* public Reservation_evenement(String lastName, String firstName, String telephone, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.telephone = telephone;
         this.email = email;
-    }
-
+    }*/
 
     // Getters et Setters
     public int getIdParticipation() {
@@ -154,11 +124,26 @@ public class Reservation_evenement {
         this.dateReservation = dateReservation;
     }
 
+    public String getTitreEvenement() {
+        return titreEvenement;
+    }
+
+    public void setTitreEvenement(String titreEvenement) {
+        this.titreEvenement = titreEvenement;
+    }
+
+    public LocalDate getDateDebut() {
+        return dateDebut;
+    }
+
+    public void setDateDebut(LocalDate dateDebut) {
+        this.dateDebut = dateDebut;
+    }
+
     @Override
     public String toString() {
         return "ReservationEvenement{" +
-                " TitreEvenement='" + TitreEvenement + '\'' +
-
+                "titreEvenement='" + titreEvenement + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

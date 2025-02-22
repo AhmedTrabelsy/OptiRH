@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -7,32 +8,37 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="681.0" prefWidth="909.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.ReservationListController">
-    <TableView fx:id="reservationTable" layoutX="127.0" layoutY="93.0" prefHeight="475.0" prefWidth="654.0">
+<AnchorPane prefHeight="700.0" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.nexus.Controllers.ReservationListController">
+
+    <!-- Titre de la page -->
+    <Label layoutX="300.0" layoutY="30.0" text="📅 Mes Réservations"
+           style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+    <!-- Tableau des réservations -->
+    <TableView fx:id="reservationTable" layoutX="100.0" layoutY="90.0" prefHeight="500.0" prefWidth="700.0">
         <columns>
-            <TableColumn fx:id="TitreColumn" prefWidth="200" text="Titre">
+            <TableColumn fx:id="TitreColumn" prefWidth="250" text="📖 Titre">
                 <cellValueFactory>
                     <PropertyValueFactory property="titre" />
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="DateEventColumn" prefWidth="150" text="Date">
+            <TableColumn fx:id="DateEventColumn" prefWidth="150" text="📅 Date">
                 <cellValueFactory>
                     <PropertyValueFactory property="dateEvenement" />
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="BookingTimeColumn" prefWidth="150" text="Heure de Réservation">
+            <TableColumn fx:id="BookingTimeColumn" prefWidth="150" text="⏰ Heure de Réservation">
                 <cellValueFactory>
                     <PropertyValueFactory property="bookingTime" />
                 </cellValueFactory>
             </TableColumn>
-            <!-- Colonne pour les actions de Modifier et Supprimer -->
-            <TableColumn fx:id="ActionColumn" prefWidth="150" text="Actions" />
 
+            <!-- Colonne pour les actions Modifier / Supprimer -->
+            <TableColumn fx:id="ActionColumn" prefWidth="150" text="✏️ Actions" />
         </columns>
     </TableView>
-    <Label layoutX="305.0" layoutY="28.0" text="Mes Reservations">
-        <font>
-            <Font size="37.0" />
-        </font>
-    </Label>
+
 </AnchorPane>
