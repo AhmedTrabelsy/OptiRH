@@ -6,36 +6,32 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.AjouterEvenementController">
+<AnchorPane prefHeight="500.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.AjouterEvenementController">
 
     <!-- Titre Principal -->
-    <Label layoutX="150.0" layoutY="20.0" text="Ajouter Un Événement" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+    <Label layoutX="151.0" layoutY="14.0" style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Ajouter Un Événement" />
 
     <!-- Champs de saisie -->
-    <TextField fx:id="titreField" layoutX="40.0" layoutY="80.0" prefWidth="250.0" promptText="Titre" />
-    <TextField fx:id="lieuField" layoutX="310.0" layoutY="80.0" prefWidth="250.0" promptText="Lieu" />
+    <TextField fx:id="titreField" layoutX="40.0" layoutY="71.0" prefWidth="250.0" promptText="Titre" />
+    <TextField fx:id="lieuField" layoutX="310.0" layoutY="71.0" prefWidth="250.0" promptText="Lieu" />
 
-    <TextArea fx:id="descriptionField" layoutX="40.0" layoutY="130.0" prefWidth="520.0" prefHeight="90.0"
-              promptText="Description" wrapText="true" />
+    <TextArea fx:id="descriptionField" layoutX="40.0" layoutY="121.0" prefHeight="62.0" prefWidth="520.0" promptText="Description" wrapText="true" />
 
-    <TextField fx:id="prixField" layoutX="40.0" layoutY="240.0" prefWidth="200.0" promptText="Prix (en TND)" />
-    <TextField fx:id="heureField" layoutX="310.0" layoutY="240.0" prefWidth="250.0" promptText="Heure (ex: 14:00)" />
+    <TextField fx:id="prixField" layoutX="40.0" layoutY="205.0" prefWidth="200.0" promptText="Prix (en TND)" />
+    <TextField fx:id="heureField" layoutX="310.0" layoutY="205.0" prefWidth="250.0" promptText="Heure (ex: 14:00)" />
 
-    <DatePicker fx:id="dateDebutField" layoutX="40.0" layoutY="290.0" prefWidth="200.0" promptText="Date Début" />
-    <DatePicker fx:id="dateFinField" layoutX="310.0" layoutY="290.0" prefWidth="250.0" promptText="Date Fin" />
+    <DatePicker fx:id="dateDebutField" layoutX="40.0" layoutY="255.0" prefWidth="200.0" promptText="Date Début" />
+    <DatePicker fx:id="dateFinField" layoutX="310.0" layoutY="255.0" prefWidth="250.0" promptText="Date Fin" />
 
-    <TextField fx:id="imageField" layoutX="40.0" layoutY="340.0" prefWidth="380.0" promptText="Image (URL ou fichier)" />
-    <Button fx:id="imageButton" layoutX="440.0" layoutY="340.0" text="📷 Choisir"
-            onAction="#choisirImage" style="-fx-background-color: #005f73; -fx-text-fill: white; -fx-background-radius: 8;" />
+    <TextField fx:id="imageField" layoutX="40.0" layoutY="362.0" prefWidth="380.0" promptText="Image (URL ou fichier)" />
+    <Button fx:id="imageButton" layoutX="440.0" layoutY="362.0" onAction="#choisirImage" style="-fx-background-color: #005f73; -fx-text-fill: white; -fx-background-radius: 8;" text="📷 Choisir" />
 
     <!-- Boutons d'action -->
-    <Button layoutX="160.0" layoutY="420.0" text="➕ Ajouter"
-            onAction="#ajouterEvenement" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" />
+    <Button layoutX="116.0" layoutY="420.0" onAction="#ajouterEvenement" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="➕ Ajouter" />
 
-    <Button layoutX="320.0" layoutY="420.0" text="🗑 Effacer"
-            onAction="#clearFields" style="-fx-background-color: #d62828; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" />
+    <Button layoutX="344.0" layoutY="420.0" onAction="#clearFields" style="-fx-background-color: #d62828; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="🗑 Effacer" />
+   <TextField fx:id="latitudeField" layoutX="42.0" layoutY="306.0" prefHeight="26.0" prefWidth="200.0" promptText="Latitude" />
+   <TextField fx:id="longitudeField" layoutX="313.0" layoutY="306.0" prefHeight="26.0" prefWidth="250.0" promptText="Longitude" />
 
 </AnchorPane>

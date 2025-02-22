@@ -1,6 +1,7 @@
 package tn.nexus.Entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Evenement {
@@ -14,11 +15,14 @@ public class Evenement {
     private LocalDate dateFin;
     private String image;
     private LocalTime heure;
+    private double longitude;
+    private double latitude;
+    private StatusEvenement status;
 
     // Constructeurs
     public Evenement() {}
 
-    public Evenement( String titre, String lieu,String description, double prix, LocalDate dateDebut, LocalDate dateFin, String image, LocalTime heure) {
+    public Evenement( String titre, String lieu,String description, double prix, LocalDate dateDebut, LocalDate dateFin, String image, LocalTime heure,double Longitude,double Latitude) {
 
         this.titre = titre;
         this.lieu = lieu;
@@ -28,6 +32,9 @@ public class Evenement {
         this.dateFin = dateFin;
         this.image = image;
         this.heure = heure;
+        this.longitude = Longitude;
+        this.latitude = Latitude;
+
     }
 
     public Evenement(int idEvenement, String titre, String description, String lieu, double prix, LocalDate dateDebut, LocalDate dateFin, LocalTime heure, String image) {
@@ -50,6 +57,27 @@ public class Evenement {
 
 
     // Getters et Setters
+    public StatusEvenement getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEvenement status) {
+        this.status = status;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+    public double getLongitude() {
+        return longitude;
+    }
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public int getIdEvenement() {
         return idEvenement;
     }
@@ -134,4 +162,18 @@ public class Evenement {
                 ", heure=" + heure +
                 '}';
     }
+
+    public void calculerStatus() {
+        LocalDate today = LocalDate.now(); // Convertir now en LocalDate
+
+        if (dateDebut.isBefore(today) && dateFin.isAfter(today)) {
+            this.status = StatusEvenement.EN_COURS;
+        } else if (dateFin.isBefore(today)) {
+            this.status = StatusEvenement.TERMINE;
+        } else {
+            this.status = StatusEvenement.A_VENIR;
+        }
+    }
+
+
 }

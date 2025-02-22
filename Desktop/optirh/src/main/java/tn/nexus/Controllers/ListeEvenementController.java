@@ -21,6 +21,14 @@ import java.util.List;
 public class ListeEvenementController {
 
     @FXML
+    private TableColumn<Evenement, Double> longitudeColumn;
+    @FXML
+    private TableColumn<Evenement, Double> latitudeColumn;
+    @FXML
+    private TableColumn<Evenement, String> statusColumn;
+
+
+    @FXML
     private TextField searchField;
     @FXML
     private Button Ajouter_Evenement;
@@ -59,6 +67,9 @@ public class ListeEvenementController {
         endDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("heure"));
         imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
+        longitudeColumn.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+        latitudeColumn.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         refreshTable(); // Charger les événements dans la table
 

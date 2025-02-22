@@ -1,5 +1,6 @@
 package tn.nexus.Services;
 import tn.nexus.Entities.Evenement;
+import tn.nexus.Entities.StatusEvenement;
 import tn.nexus.Utils.DBConnection;
 
 import java.sql.*;
@@ -15,8 +16,12 @@ public class EvenementServices implements CRUD<Evenement> {
     @Override
     public int insert(Evenement evenement) throws SQLException {
 
-        // Requête d'insertion sans l'attribut id_evenement
-        String req = "INSERT INTO evenement (titre, lieu, description, prix, date_debut, date_fin, image, heure) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // Calculer le statut avant l'insertion
+        evenement.calculerStatus();
+
+        // Requête d'insertion
+        String req = "INSERT INTO evenement (titre, lieu, description, prix, date_debut, date_fin, image, heure, latitude, longitude, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         ps = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
 
@@ -29,7 +34,9 @@ public class EvenementServices implements CRUD<Evenement> {
         ps.setDate(6, Date.valueOf(evenement.getDateFin()));
         ps.setString(7, evenement.getImage());
         ps.setTime(8, Time.valueOf(evenement.getHeure()));
-
+        ps.setDouble(9, evenement.getLatitude());
+        ps.setDouble(10, evenement.getLongitude());
+        ps.setString(11, evenement.getStatus().getLabel()); // Ajout de la valeur ENUM correctement formatée
 
         // Exécuter la requête et récupérer les clés générées
         int rowsAffected = ps.executeUpdate();
@@ -38,19 +45,20 @@ public class EvenementServices implements CRUD<Evenement> {
         if (rowsAffected > 0) {
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    // Assigner l'ID généré à l'objet événement
                     evenement.setIdEvenement(generatedKeys.getInt(1)); // L'ID généré est dans la première colonne
                 }
             }
         }
 
-        return rowsAffected;
+        // Mettre à jour les statuts après l'insertion
+        mettreAJourStatutEvenements();
 
+        return rowsAffected;
     }
 
     @Override
     public int update(Evenement evenement) throws SQLException {
-        String req = "UPDATE evenement SET titre = ?, lieu = ?, description = ?, prix = ?, date_debut = ?, date_fin = ?, heure = ?, image = ? WHERE id_evenement = ?";
+        String req =  "UPDATE evenement SET titre = ?, lieu = ?, description = ?, prix = ?, date_debut = ?, date_fin = ?, heure = ?, image = ?, latitude = ?, longitude = ? " + "WHERE id_evenement = ?";
 
         try (PreparedStatement ps = con.prepareStatement(req)) {
             // Associer les valeurs des paramètres à l'objet Evenement
@@ -62,7 +70,11 @@ public class EvenementServices implements CRUD<Evenement> {
             ps.setDate(6, Date.valueOf(evenement.getDateFin()));    // Convertir LocalDate en Date
             ps.setTime(7, Time.valueOf(evenement.getHeure()));      // Convertir LocalTime en Time
             ps.setString(8, evenement.getImage());
-            ps.setInt(9, evenement.getIdEvenement());  // Utiliser l'ID pour identifier l'événement à mettre à jour
+            ps.setDouble(9, evenement.getLatitude());
+            ps.setDouble(10, evenement.getLongitude());
+            ps.setString(11, evenement.getStatus().getLabel()); // Mettre à jour le statut
+
+            ps.setInt(12, evenement.getIdEvenement());  // Utiliser l'ID pour identifier l'événement à mettre à jour
 
             // Exécuter la mise à jour
             return ps.executeUpdate();  // Retourne le nombre de lignes affectées
@@ -121,6 +133,10 @@ public class EvenementServices implements CRUD<Evenement> {
             }
 
             evenement.setImage(rs.getString("image"));
+            evenement.setLatitude(rs.getDouble("latitude"));
+            evenement.setLongitude(rs.getDouble("longitude"));
+            evenement.setStatus(StatusEvenement.fromString(rs.getString("status"))); // ✅ Convertir String → Enum
+
             events.add(evenement);
         }
 
@@ -130,17 +146,54 @@ public class EvenementServices implements CRUD<Evenement> {
 
 
     public Evenement getEvenementById(int idEvenement) throws SQLException {
-        String query = "SELECT titre, date_debut FROM evenement WHERE id_evenement = ?";
+        String query = "SELECT * FROM evenement WHERE id_evenement = ?";
 
         try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setInt(1, idEvenement);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new Evenement(idEvenement, rs.getString("titre"), rs.getDate("date_debut").toLocalDate());
+                Evenement evenement = new Evenement();
+                evenement.setIdEvenement(rs.getInt("id_evenement"));
+                evenement.setTitre(rs.getString("titre"));
+                evenement.setLieu(rs.getString("lieu"));
+                evenement.setDescription(rs.getString("description"));
+                evenement.setPrix(rs.getDouble("prix"));
+                evenement.setDateDebut(rs.getDate("date_debut").toLocalDate());
+                evenement.setDateFin(rs.getDate("date_fin").toLocalDate());
+                evenement.setImage(rs.getString("image"));
+                evenement.setHeure(rs.getTime("heure").toLocalTime());
+                evenement.setLatitude(rs.getDouble("latitude"));
+                evenement.setLongitude(rs.getDouble("longitude"));
+                evenement.setStatus(StatusEvenement.fromString(rs.getString("status")));  // ✅ Convertir String → Enum
+
+                return evenement;
             }
         }
 
         return null;
     }
+
+
+    public void mettreAJourStatutEvenements() {
+        String sql = "UPDATE evenement SET status = " +
+                "CASE " +
+                "WHEN date_debut <= NOW() AND date_fin >= NOW() THEN 'en cours' " +
+                "WHEN date_fin < NOW() THEN 'terminé' " +
+                "ELSE 'à venir' " +
+                "END " +
+                "WHERE (status != 'en cours' AND date_debut <= NOW() AND date_fin >= NOW()) " +
+                "OR (status != 'terminé' AND date_fin < NOW()) " +
+                "OR (status != 'à venir' AND date_debut > NOW())";
+
+        try (PreparedStatement statement = con.prepareStatement(sql)) {
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println(rowsUpdated + " événements mis à jour !");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
