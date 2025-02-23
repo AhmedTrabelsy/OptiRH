@@ -14,7 +14,7 @@ public class DemandeService implements CRUD<Demande> {
 
     @Override
     public int insert(Demande demande) throws SQLException {
-        String req = "INSERT INTO `demande`(`statut`, `date`, `description`, `utilisateur_id`, `offre_id`, `fichier_piece_jointe`) VALUES (?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO `demande`(`statut`, `date`, `description`, `utilisateur_id`, `offre_id`, `fichier_piece_jointe`, `nom_complet`, `email`, `telephone`, `adresse`, `date_debut_disponible`, `situation_actuelle`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         ps = cnx.prepareStatement(req);
         ps.setString(1, Demande.Statut.EN_ATTENTE.name());
@@ -23,16 +23,19 @@ public class DemandeService implements CRUD<Demande> {
         ps.setInt(4, demande.getUtilisateurId());
         ps.setInt(5, demande.getOffreId());
         ps.setString(6, demande.getFichierPieceJointe());
-
-
-
+        ps.setString(7, demande.getNomComplet());
+        ps.setString(8, demande.getEmail());
+        ps.setString(9, demande.getTelephone());
+        ps.setString(10, demande.getAdresse());
+        ps.setDate(11, demande.getDateDebutDisponible());
+        ps.setString(12, demande.getSituationActuelle());
 
         return ps.executeUpdate();
     }
 
     @Override
     public int update(Demande demande) throws SQLException {
-        String req = "UPDATE `demande` SET `statut` = ?, `date` = ?, `description` = ?, `utilisateur_id` = ?, `offre_id` = ?, `fichier_piece_jointe` = ? WHERE `id` = ?";
+        String req = "UPDATE `demande` SET `statut` = ?, `date` = ?, `description` = ?, `utilisateur_id` = ?, `offre_id` = ?, `fichier_piece_jointe` = ?, `nom_complet` = ?, `email` = ?, `telephone` = ?, `adresse` = ?, `date_debut_disponible` = ?, `situation_actuelle` = ? WHERE `id` = ?";
 
         ps = cnx.prepareStatement(req);
         ps.setString(1, demande.getStatut().name());
@@ -41,7 +44,13 @@ public class DemandeService implements CRUD<Demande> {
         ps.setInt(4, demande.getUtilisateurId());
         ps.setInt(5, demande.getOffreId());
         ps.setString(6, demande.getFichierPieceJointe());
-        ps.setInt(7, demande.getId());
+        ps.setString(7, demande.getNomComplet());
+        ps.setString(8, demande.getEmail());
+        ps.setString(9, demande.getTelephone());
+        ps.setString(10, demande.getAdresse());
+        ps.setDate(11, demande.getDateDebutDisponible());
+        ps.setString(12, demande.getSituationActuelle());
+        ps.setInt(13, demande.getId());
 
         return ps.executeUpdate();
     }
@@ -72,6 +81,12 @@ public class DemandeService implements CRUD<Demande> {
             d.setUtilisateurId(rs.getInt("utilisateur_id"));
             d.setOffreId(rs.getInt("offre_id"));
             d.setFichierPieceJointe(rs.getString("fichier_piece_jointe"));
+            d.setNomComplet(rs.getString("nom_complet"));
+            d.setEmail(rs.getString("email"));
+            d.setTelephone(rs.getString("telephone"));
+            d.setAdresse(rs.getString("adresse"));
+            d.setDateDebutDisponible(rs.getDate("date_debut_disponible"));
+            d.setSituationActuelle(rs.getString("situation_actuelle"));
 
             temp.add(d);
         }

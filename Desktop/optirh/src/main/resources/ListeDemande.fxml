@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.ListeDemandeController">
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.nexus.Controllers.ListeDemandeController"
+            stylesheets="@styles/style.css"> <!-- Ajout du fichier CSS -->
+
     <top>
         <HBox spacing="10">
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <Label text="Liste des Demandes" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-            <Button text="Ajouter une demande" onAction="#handleAjouter" />
         </HBox>
-
     </top>
+
     <center>
-        <TableView fx:id="tableDemandes">
-            <columns>
-                <TableColumn text="ID" fx:id="colId" />
-                <TableColumn text="Statut" fx:id="colStatut" />
-                <TableColumn text="Date" fx:id="colDate" />
-                <TableColumn text="Description" fx:id="colDescription" />
-                <TableColumn fx:id="colFichier" text="CV"/>
-                <TableColumn text="Actions" fx:id="colActions" />
-            </columns>
-        </TableView>
+        <VBox spacing="10" fillWidth="true">
+            <TableView fx:id="tableDemandes" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn text="ID" fx:id="colId" />
+                    <TableColumn text="Statut" fx:id="colStatut" />
+                    <TableColumn text="Date" fx:id="colDate" />
+                    <TableColumn text="Nom Complet" fx:id="colNomComplet" />
+                    <TableColumn text="Email" fx:id="colEmail" />
+                    <TableColumn text="Téléphone" fx:id="colTelephone" />
+                    <TableColumn text="Adresse" fx:id="colAdresse" />
+                    <TableColumn text="Date de Début Disponible" fx:id="colDateDebutDisponible" />
+                    <TableColumn text="Situation Actuelle" fx:id="colSituationActuelle" />
+                    <TableColumn text="Description" fx:id="colDescription" />
+                    <TableColumn text="CV" fx:id="colFichier" />
+                    <TableColumn text="Actions" fx:id="colActions" />
+                </columns>
+            </TableView>
+        </VBox>
     </center>
+
 </BorderPane>

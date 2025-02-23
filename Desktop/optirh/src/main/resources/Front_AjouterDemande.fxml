@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.collections.FXCollections?>
+
+<?import java.lang.String?>
+<ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            fx:controller="tn.nexus.Controllers.AjouterDemandeController">
+
+    <content>
+        <VBox spacing="15" alignment="CENTER" prefWidth="450"
+              stylesheets="@styles/style.css">
+
+            <padding>
+                <Insets bottom="20" left="40" right="40" top="30" />
+            </padding>
+
+            <!-- Titre centré -->
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+                   text="Postuler" />
+
+            <!-- Contenu du formulaire -->
+            <VBox spacing="12" alignment="CENTER" prefWidth="400">
+                <!-- Champs regroupés dans des HBox -->
+                <VBox spacing="8" alignment="CENTER_LEFT" prefWidth="400">
+
+                    <!-- Date de la demande -->
+                    <Label text="" styleClass="form-label"/>
+                    <DatePicker fx:id="datePicker" prefWidth="350" editable="false" visible="false" managed="false"/>
+
+                    <!-- Nom Complet -->
+                    <Label text="Nom Complet:" styleClass="form-label"/>
+                    <TextField fx:id="txtNomComplet" promptText="Nom Complet" prefWidth="350"/>
+
+                    <!-- Email -->
+                    <Label text="Email:" styleClass="form-label"/>
+                    <TextField fx:id="txtEmail" promptText="Email" prefWidth="350"/>
+
+                    <!-- Téléphone -->
+                    <Label text="Téléphone:" styleClass="form-label"/>
+                    <TextField fx:id="txtTelephone" promptText="Téléphone" prefWidth="350"/>
+
+                    <!-- Adresse -->
+                    <Label text="Adresse:" styleClass="form-label"/>
+                    <TextField fx:id="txtAdresse" promptText="Adresse" prefWidth="350"/>
+
+                    <!-- Offre -->
+                    <Label text="Offre:" styleClass="form-label"/>
+                    <ComboBox fx:id="comboOffre" prefWidth="350"/>
+
+                    <!-- Date de début disponible -->
+                    <Label text="Date de début disponible:" styleClass="form-label"/>
+                    <DatePicker fx:id="dateDebutDisponiblePicker" prefWidth="350"
+                                promptText="Date Début Disponible"/>
+
+                    <!-- Situation actuelle -->
+                    <Label text="Situation actuelle:" styleClass="form-label"/>
+                    <ComboBox fx:id="comboSituationActuelle" prefWidth="350">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Employé" />
+                                <String fx:value="Sans emploi" />
+                                <String fx:value="Travailleur indépendant" />
+                                <String fx:value="Étudiant" />
+                                <String fx:value="Autre" />
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+
+                    <!-- Choix du fichier -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button onAction="#handleFileUpload" text="Choisir un fichier"
+                                styleClass="file-button" prefWidth="150"/>
+                        <Label fx:id="fileLabel" text="Aucun fichier sélectionné"/>
+                    </HBox>
+
+                    <!-- Description -->
+                    <Label text="Description:" styleClass="form-label"/>
+                    <TextArea fx:id="txtDescription" prefWidth="350" prefHeight="100"
+                              promptText="Entrez la description ici..."/>
+
+                    <!-- Utilisateur ID -->
+                    <Label text="Utilisateur ID:" styleClass="form-label"/>
+                    <TextField fx:id="txtUtilisateurId" prefWidth="350"/>
+                </VBox>
+
+                <!-- Boutons -->
+                <HBox spacing="20" alignment="CENTER" styleClass="button-container">
+                    <Button onAction="#handleEnregistrer" text="Enregistrer"
+                            styleClass="submit-button" prefWidth="120"/>
+                    <Button onAction="#handleAnnuler" text="Annuler"
+                            styleClass="cancel-button" prefWidth="120"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>

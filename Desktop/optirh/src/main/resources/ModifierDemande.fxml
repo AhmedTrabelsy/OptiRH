@@ -6,17 +6,27 @@
 <VBox xmlns="http://javafx.com/javafx/8.0.171"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="tn.nexus.Controllers.ModifierDemandeController"
-      spacing="10">
+      spacing="10"
+      prefWidth="400" prefHeight="400"
+      stylesheets="@styles/style.css">
 
-    <Label text="Modifier une Demande" style="-fx-font-size: 18px;"/>
+    <Label text="Modifier une Demande" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    <ComboBox fx:id="comboStatut" promptText="Statut" VBox.vgrow="ALWAYS"/>
 
-    <TextField fx:id="txtDescription" promptText="Description"/>
-    <DatePicker fx:id="datePicker"/>
-    <ComboBox fx:id="comboStatut"/>
+    <TextField fx:id="txtNomComplet" promptText="Nom Complet" VBox.vgrow="ALWAYS"/>
+    <TextField fx:id="txtEmail" promptText="Email" VBox.vgrow="ALWAYS"/>
+    <TextField fx:id="txtTelephone" promptText="Téléphone" VBox.vgrow="ALWAYS"/>
+    <TextField fx:id="txtAdresse" promptText="Adresse" VBox.vgrow="ALWAYS"/>
+    <DatePicker fx:id="dateDebutDisponiblePicker" promptText="Date de début disponible" VBox.vgrow="ALWAYS"/>
+    <TextField fx:id="txtSituationActuelle" promptText="Situation actuelle" VBox.vgrow="ALWAYS"/>
+
+    <TextField fx:id="txtDescription" promptText="Description" VBox.vgrow="ALWAYS"/>
+    <DatePicker fx:id="datePicker" promptText="Date de la demande" VBox.vgrow="ALWAYS"/>
+
 
     <HBox spacing="10">
-        <Button text="Modifier" onAction="#modifierDemande"/>
-        <Button text="Annuler" onAction="#annuler"/>
+        <Button text="Modifier" onAction="#modifierDemande" HBox.hgrow="ALWAYS"/>
+        <Button text="Annuler" onAction="#annuler" HBox.hgrow="ALWAYS"/>
     </HBox>
 
 </VBox>

@@ -24,9 +24,28 @@ public class AjoutOffreController {
     private ComboBox<String> statutComboBox;
     @FXML
     private DatePicker dateCreationPicker;
+    @FXML
+    private ComboBox<String> modeTravailComboBox;
+    @FXML
+    private ComboBox<String> typeContratComboBox;
+    @FXML
+    private TextField localisationField;
+    @FXML
+    private ComboBox<String> niveauExperienceComboBox;
+    @FXML
+    private TextField nbPostesField;
+    @FXML
+    private DatePicker dateExpirationPicker;
 
     private OffreService offreService = new OffreService();
 
+    @FXML
+    private void initialize() {
+        // Validation du statut par défaut
+        if(statutComboBox.getValue() == null) {
+            statutComboBox.setValue("Brouillon");
+        }
+    }
     // Méthode pour créer l'offre avec validation de saisie et redirection vers la liste
     @FXML
     private void handleCreateOffre(ActionEvent event) {
@@ -34,6 +53,12 @@ public class AjoutOffreController {
         String description = descriptionArea.getText();
         String statut = statutComboBox.getValue();
         LocalDate dateCreation = dateCreationPicker.getValue();
+        String modeTravail = modeTravailComboBox.getValue();
+        String typeContrat = typeContratComboBox.getValue();
+        String localisation = localisationField.getText();
+        String niveauExperience = niveauExperienceComboBox.getValue();
+        int nbPostes = Integer.parseInt(nbPostesField.getText());
+        LocalDate dateExpiration = dateExpirationPicker.getValue();
 
         // Contrôles de saisie
         if (poste.isEmpty()) {
@@ -56,16 +81,42 @@ public class AjoutOffreController {
             showError("Veuillez sélectionner un statut.");
             return;
         }
+        if (modeTravail == null) {
+            showError("Veuillez sélectionner un mode de travail.");
+            return;
+        }
+        if (typeContrat == null) {
+            showError("Veuillez sélectionner un type de contrat.");
+            return;
+        }
+        if (localisation.isEmpty()) {
+            showError("Le champ Localisation ne peut pas être vide.");
+            return;
+        }
+        if (niveauExperience == null) {
+            showError("Veuillez sélectionner un niveau d'expérience.");
+            return;
+        }
+        if (nbPostes <= 0) {
+            showError("Le nombre de postes doit être supérieur à zéro.");
+            return;
+        }
         if (dateCreation == null) {
             showError("Veuillez sélectionner une date de création.");
+            return;
+        }
+        if (dateExpiration == null) {
+            showError("Veuillez sélectionner une date d'expiration.");
             return;
         }
 
         // Convertir la date en LocalDateTime
         LocalDateTime localDateTime = dateCreation.atStartOfDay();
+        LocalDateTime localDateTimeExpiration = dateExpiration.atStartOfDay();
+
 
         // Créer une nouvelle offre
-        Offre offre = new Offre(poste, description, statut, localDateTime);
+        Offre offre = new Offre(poste, description, statut, localDateTime, modeTravail, typeContrat, localisation, niveauExperience, nbPostes, localDateTimeExpiration);
 
         // Appeler le service pour insérer l'offre
         try {

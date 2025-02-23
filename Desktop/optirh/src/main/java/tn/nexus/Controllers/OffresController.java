@@ -3,7 +3,6 @@ package tn.nexus.Controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -32,20 +31,7 @@ public class OffresController implements Initializable {
     private TableView<Offre> tableOffres;
 
     @FXML
-    private TableColumn<Offre, String> colPoste;
-
-    @FXML
-    private TableColumn<Offre, String> colDescription;
-
-    @FXML
-    private TableColumn<Offre, String> colStatut;
-
-    @FXML
-    private TableColumn<Offre, String> colDate;
-    @FXML
-    private TableColumn<Offre, String> colActions;
-
-
+    private TableColumn<Offre, String> colPoste, colDescription, colStatut, colDate, colModeTravail, colTypeContrat, colLocalisation, colNiveauExperience, colNbPostes, colDateExpiration, colActions;
 
     private OffreService offreService = new OffreService();
     private ObservableList<Offre> offresList = FXCollections.observableArrayList();
@@ -57,29 +43,25 @@ public class OffresController implements Initializable {
         colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
         colStatut.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatut()));
         colDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDateCreation().toString()));
+        colModeTravail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getModeTravail()));
+        colTypeContrat.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTypeContrat()));
+        colLocalisation.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocalisation()));
+        colNiveauExperience.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNiveauExperience()));
+        colNbPostes.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getNbPostes())));
+        colDateExpiration.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDateExpiration().toString()));
 
-        // Dans OffresController.java, dans la méthode initialize()
+        tableOffres.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Ajout des boutons Modifier / Supprimer dans la colonne "Actions"
         colActions.setCellFactory(col -> new TableCell<Offre, String>() {
-            private final Button editButton = new Button("Editer");
+            private final Button editButton = new Button("Voir");
             private final Button deleteButton = new Button("Supprimer");
             private final HBox pane = new HBox(editButton, deleteButton);
 
             {
                 pane.setSpacing(10);
-                // Quand on clique sur le bouton Editer
-                editButton.setOnAction(e -> {
-                    // Sélectionner la ligne correspondante
-                    getTableView().getSelectionModel().select(getIndex());
-                    // Appeler la méthode déjà existante pour éditer l'offre
-                    handleEditOffer();
-                });
-
-                // Quand on clique sur le bouton Supprimer
-                deleteButton.setOnAction(e -> {
-                    getTableView().getSelectionModel().select(getIndex());
-                    // Appeler la méthode déjà existante pour supprimer l'offre
-                    handleDeleteOffer();
-                });
+                editButton.setOnAction(e -> handleEditOffer(getTableView().getItems().get(getIndex())));
+                deleteButton.setOnAction(e -> handleDeleteOffer(getTableView().getItems().get(getIndex())));
             }
 
             @Override
@@ -93,8 +75,7 @@ public class OffresController implements Initializable {
             }
         });
 
-
-        // Charger toutes les offres depuis la base de données
+        // Charger les offres
         loadOffres();
     }
 
@@ -112,23 +93,14 @@ public class OffresController implements Initializable {
     @FXML
     private void handleSearch() {
         String query = searchField.getText().trim();
-
-        // Contrôle de saisie : vérifier que le champ n'est pas vide
         if (query.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Champ vide", "Champ de recherche vide", "Veuillez saisir un poste à rechercher.");
-            // Réinitialiser la table avec toutes les offres
             tableOffres.setItems(offresList);
             return;
         }
 
-        // Filtrer la liste des offres en fonction du critère saisi (exemple : le nom du poste)
         ObservableList<Offre> filteredList = offresList.filtered(offre ->
                 offre.getPoste().toLowerCase().contains(query.toLowerCase())
         );
-
-        if (filteredList.isEmpty()) {
-            showAlert(Alert.AlertType.INFORMATION, "Aucune offre", "Aucune offre trouvée", "Aucune offre ne correspond à votre recherche.");
-        }
 
         tableOffres.setItems(filteredList);
     }
@@ -136,61 +108,48 @@ public class OffresController implements Initializable {
     @FXML
     private void handleAddOffer() {
         try {
-            // Charge le fichier FXML de la page d'ajout d'offre
             Parent root = FXMLLoader.load(getClass().getResource("/AjoutOffre.fxml"));
-            Scene scene = new Scene(root);
-            // Récupère la fenêtre actuelle pour y placer la nouvelle scène
             Stage stage = (Stage) tableOffres.getScene().getWindow();
-            stage.setScene(scene);
+            stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException ex) {
-            ex.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur de chargement de la page d'ajout", ex.getMessage());
         }
     }
 
-    @FXML
-    private void handleDeleteOffer() {
-        Offre selectedOffre = tableOffres.getSelectionModel().getSelectedItem();
-
-        if (selectedOffre == null) {
+    private void handleDeleteOffer(Offre offre) {
+        if (offre == null) {
             showAlert(Alert.AlertType.WARNING, "Sélection invalide", "Aucune offre sélectionnée", "Veuillez sélectionner une offre à supprimer.");
             return;
         }
 
         try {
-            int result = offreService.delete(selectedOffre);
+            int result = offreService.delete(offre);
             if (result > 0) {
-                offresList.remove(selectedOffre); // Retirer l'offre de la liste
+                offresList.remove(offre);
                 showAlert(Alert.AlertType.INFORMATION, "Succès", "Suppression réussie", "L'offre a été supprimée.");
             } else {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Suppression échouée", "Une erreur est survenue lors de la suppression.");
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Suppression échouée", "Une erreur est survenue.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la suppression", e.getMessage());
         }
     }
 
-    @FXML
-    private void handleEditOffer() {
-        Offre selectedOffre = tableOffres.getSelectionModel().getSelectedItem();
-
-        if (selectedOffre == null) {
+    private void handleEditOffer(Offre offre) {
+        if (offre == null) {
             showAlert(Alert.AlertType.WARNING, "Sélection invalide", "Aucune offre sélectionnée", "Veuillez sélectionner une offre à modifier.");
             return;
         }
 
         try {
-            // Charge la page d'édition avec l'offre sélectionnée
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/EditOffre.fxml"));
             Parent root = loader.load();
             EditOffreController controller = loader.getController();
-            controller.initData(selectedOffre);  // Initialisation avec l'offre à modifier
+            controller.initData(offre);
 
-            Scene scene = new Scene(root);
             Stage stage = (Stage) tableOffres.getScene().getWindow();
-            stage.setScene(scene);
+            stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

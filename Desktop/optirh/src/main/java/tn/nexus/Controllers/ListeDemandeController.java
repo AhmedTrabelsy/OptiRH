@@ -26,10 +26,15 @@ public class ListeDemandeController {
     @FXML private TableColumn<Demande, Demande.Statut> colStatut;
     @FXML private TableColumn<Demande, String> colDescription;
     @FXML private TableColumn<Demande, String> colDate;
+    @FXML private TableColumn<Demande, String> colNomComplet;
+    @FXML private TableColumn<Demande, String> colEmail;
+    @FXML private TableColumn<Demande, String> colTelephone;
+    @FXML private TableColumn<Demande, String> colAdresse;
+    @FXML private TableColumn<Demande, String> colDateDebutDisponible;
+    @FXML private TableColumn<Demande, String> colSituationActuelle;
     @FXML private TableColumn<Demande, Void> colActions; // Pour les boutons
 
-    @FXML
-    private TableColumn<Demande, String> colFichier;
+    @FXML private TableColumn<Demande, String> colFichier;
 
     private DemandeService demandeService = new DemandeService();
 
@@ -44,9 +49,15 @@ public class ListeDemandeController {
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colNomComplet.setCellValueFactory(new PropertyValueFactory<>("nomComplet"));
+        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        colTelephone.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        colAdresse.setCellValueFactory(new PropertyValueFactory<>("adresse"));
+        colDateDebutDisponible.setCellValueFactory(new PropertyValueFactory<>("dateDebutDisponible"));
+        colSituationActuelle.setCellValueFactory(new PropertyValueFactory<>("situationActuelle"));
 
         colActions.setCellFactory(param -> new TableCell<>() {
-            private final Button btnModifier = new Button("Modifier");
+            private final Button btnModifier = new Button("Voir");
             private final Button btnSupprimer = new Button("Supprimer");
             private final HBox container = new HBox(5, btnModifier, btnSupprimer);
 
@@ -65,6 +76,7 @@ public class ListeDemandeController {
                 }
             }
         });
+
         colFichier.setCellValueFactory(new PropertyValueFactory<>("fichierPieceJointe"));
 
         colFichier.setCellFactory(column -> new TableCell<>() {
@@ -92,20 +104,6 @@ public class ListeDemandeController {
         }
     }
 
-    @FXML
-    private void handleAjouter() throws IOException {
-        URL fxmlLocation = getClass().getResource("/AjouterDemande.fxml");
-        System.out.println("FXML location: " + fxmlLocation);
-        if (fxmlLocation == null) {
-            throw new IOException("Fichier AjouterDemande.fxml introuvable !");
-        }
-        System.out.println("Bouton Ajouter cliqué !");
-        Parent root = FXMLLoader.load(fxmlLocation);
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.showAndWait();
-        chargerDemandes(); // Rafraîchir la liste après ajout
-    }
 
     private void handleModifier(Demande demande) {
         try {
@@ -132,7 +130,6 @@ public class ListeDemandeController {
         }
     }
 
-
     private void handleSupprimer(Demande demande) {
         try {
             demandeService.delete(demande);
@@ -141,6 +138,7 @@ public class ListeDemandeController {
             e.printStackTrace();
         }
     }
+
     private void openFile(String filePath) {
         File file = new File(filePath);
         if (file.exists()) {
@@ -153,5 +151,4 @@ public class ListeDemandeController {
             System.out.println("Fichier introuvable !");
         }
     }
-
 }

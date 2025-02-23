@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.nexus.Controllers.OffresListController"
+            stylesheets="@styles/style.css">
+
+    <!-- Barre de recherche -->
+    <HBox spacing="10" alignment="CENTER" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+        <TextField fx:id="searchField" promptText="Rechercher une offre..." />
+        <Button text="Rechercher" onAction="#handleSearch" />
+    </HBox>
+
+    <!-- Liste des offres avec gestion manuelle du placeholder -->
+    <ScrollPane fitToWidth="true" AnchorPane.topAnchor="60" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="60">
+        <content>
+            <StackPane>
+                <!-- Contenu principal -->
+                <VBox fx:id="offresList" spacing="10" alignment="CENTER"/>
+
+                <!-- Message "Aucune offre" conditionnel -->
+                <Label text="Aucune offre active disponible"
+                       styleClass="empty-list-label"
+                       managed="${controller.emptyList}"
+                       visible="${controller.emptyList}"/>           </StackPane>
+        </content>
+    </ScrollPane>
+
+</AnchorPane>

@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="tn.nexus.Controllers.OffresController"
-            prefWidth="800" prefHeight="500">
+<AnchorPane prefHeight="600" prefWidth="1000" stylesheets="@styles/offresStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.OffresController">
 
-    <!-- Titre de la page -->
-    <Label text="Liste des Offres" style="-fx-font-size: 20; -fx-font-weight: bold;"
-           AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20"/>
-
-    <!-- HBox pour la barre de recherche et bouton Ajouter -->
-    <HBox spacing="10" alignment="CENTER_LEFT"
-          AnchorPane.topAnchor="60" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
-        <TextField fx:id="searchField" promptText="Rechercher une offre..." />
-        <!-- Bouton pour lancer la recherche -->
-        <Button text="Rechercher" onAction="#handleSearch"/>
-        <Button text="Ajouter une offre" fx:id="btnAjouterOffre" onAction="#handleAddOffer"/>
+    <!-- Titre centré -->
+    <HBox alignment="CENTER" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="20">
+        <Label styleClass="header" text="Liste des Offres">
+         <font>
+            <Font size="24.0" />
+         </font></Label>
     </HBox>
 
-    <!-- TableView pour afficher les offres -->
-    <TableView fx:id="tableOffres"
-               AnchorPane.topAnchor="100" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20"
-               AnchorPane.bottomAnchor="20">
+    <!-- Barre de recherche avec espacement amélioré -->
+    <HBox alignment="CENTER_LEFT" spacing="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="80">
+        <TextField fx:id="searchField" promptText="Rechercher une offre..." styleClass="text-field" HBox.hgrow="ALWAYS" />
+        <Button onAction="#handleSearch" styleClass="button" text="Rechercher" />
+        <Button fx:id="btnAjouterOffre" onAction="#handleAddOffer" styleClass="button" text="Ajouter" />
+    </HBox>
+
+    <!-- TableView mise à jour avec nouvelles colonnes -->
+    <TableView fx:id="tableOffres" styleClass="table-view" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="120">
         <columns>
-            <TableColumn fx:id="colPoste" text="Poste"/>
-            <TableColumn fx:id="colDescription" text="Description"/>
-            <TableColumn fx:id="colStatut" text="Statut"/>
-            <TableColumn fx:id="colDate" text="Date de création"/>
-            <TableColumn fx:id="colActions" text="Actions"/>
+            <TableColumn fx:id="colPoste" prefWidth="120" text="Poste" />
+            <TableColumn fx:id="colDescription" prefWidth="180" text="Description" />
+            <TableColumn fx:id="colStatut" prefWidth="100" text="Statut" />
+            <TableColumn fx:id="colDate" prefWidth="130" text="Date de création" />
+            <TableColumn fx:id="colModeTravail" prefWidth="120" text="Mode de Travail" />
+            <TableColumn fx:id="colTypeContrat" prefWidth="120" text="Type de Contrat" />
+            <TableColumn fx:id="colLocalisation" prefWidth="120" text="Localisation" />
+            <TableColumn fx:id="colNiveauExperience" prefWidth="100" text="Expérience" />
+            <TableColumn fx:id="colNbPostes" prefWidth="80" text="Nb Postes" />
+            <TableColumn fx:id="colDateExpiration" prefWidth="130" text="Date Expiration" />
+            <TableColumn fx:id="colActions" prefWidth="250" text="Actions" />
         </columns>
     </TableView>
 
