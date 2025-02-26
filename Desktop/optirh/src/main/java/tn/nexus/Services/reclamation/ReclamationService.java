@@ -1,7 +1,9 @@
-package tn.nexus.Services;
+package tn.nexus.Services.reclamation;
 
-import tn.nexus.Entities.Reclamation;
+import tn.nexus.Entities.reclamation.Reclamation;
+import tn.nexus.Services.CRUD;
 import tn.nexus.Utils.DBConnection;
+
 
 import java.sql.*;
 import java.util.ArrayList;

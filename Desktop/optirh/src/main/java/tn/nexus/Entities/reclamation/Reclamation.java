@@ -1,4 +1,5 @@
-package tn.nexus.Entities;
+package tn.nexus.Entities.reclamation;
+
 
 import java.sql.Date;
 

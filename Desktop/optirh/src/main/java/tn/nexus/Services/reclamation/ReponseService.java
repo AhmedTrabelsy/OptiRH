@@ -1,6 +1,7 @@
-package tn.nexus.Services;
+package tn.nexus.Services.reclamation;
 
-import tn.nexus.Entities.Reponse;
+import tn.nexus.Entities.reclamation.Reponse;
+import tn.nexus.Services.CRUD;
 import tn.nexus.Utils.DBConnection;
 
 
