@@ -112,6 +112,10 @@ public class ReclamationController implements Initializable, WrapWithSideBar {
             showAlert(Alert.AlertType.WARNING, "La description doit contenir au moins 2 caractères !");
             return;
         }
+        if (dateField.getValue() == null || dateField.getValue().isBefore(LocalDate.now())) {
+            showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner une date valide (aujourd'hui ou plus tard).");
+            return;
+        }
 
         String status = statusField.getValue() != null ? statusField.getValue() : "En attente";
         if (dateField.getValue() == null) {

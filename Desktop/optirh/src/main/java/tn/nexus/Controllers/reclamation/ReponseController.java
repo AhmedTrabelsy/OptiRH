@@ -9,6 +9,7 @@ import tn.nexus.Entities.reclamation.Reponse;
 import tn.nexus.Services.reclamation.ReponseService;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class ReponseController {
@@ -65,7 +66,10 @@ public class ReponseController {
             showAlert(Alert.AlertType.WARNING, "La date ne peut pas être vide !");
             return;
         }
-
+        if (dateField.getValue() == null || dateField.getValue().isBefore(LocalDate.now())) {
+            showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner une date valide (aujourd'hui ou plus tard).");
+            return;
+        }
         try {
             Reponse reponse = new Reponse(
                     0,
