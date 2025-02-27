@@ -47,7 +47,10 @@ public class ReclamationfrontController {
         ObservableList<Reclamation> observableReclamationList = FXCollections.observableArrayList(reclamationList);
         reclamationsTable.setItems(observableReclamationList);
 
-        statusField.getItems().addAll("En attente", "En cours", "Résolue");
+        statusField.setItems(FXCollections.observableArrayList("En attente", "En cours", "Résolue"));
+        if(statusField.getValue() == null) {
+            statusField.setValue("en attente");
+        }
 
         // Ajouter une colonne d'action avec un bouton "Réponse"
         TableColumn<Reclamation, Void> actionColumn = new TableColumn<>("Action");
@@ -99,8 +102,8 @@ public class ReclamationfrontController {
             showAlert(Alert.AlertType.WARNING, "Le statut ne peut pas être vide !");
             return;
         }
-        if (dateField.getValue() == null) {
-            showAlert(Alert.AlertType.WARNING, "La date ne peut pas être vide !");
+        if (dateField.getValue() == null || dateField.getValue().isBefore(LocalDate.now())) {
+            showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner une date valide (aujourd'hui ou plus tard).");
             return;
         }
 
@@ -135,8 +138,9 @@ public class ReclamationfrontController {
                 showAlert(Alert.AlertType.WARNING, "Le statut ne peut pas être vide !");
                 return;
             }
-            if (dateField.getValue() == null) {
-                showAlert(Alert.AlertType.WARNING, "La date ne peut pas être vide !");
+
+            if (dateField.getValue() == null || dateField.getValue().isBefore(LocalDate.now())) {
+                showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner une date valide (aujourd'hui ou plus tard).");
                 return;
             }
 

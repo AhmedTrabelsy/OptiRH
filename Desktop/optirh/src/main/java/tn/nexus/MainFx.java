@@ -31,7 +31,7 @@ public class MainFx extends Application {
 
         // FXMLLoader loader = new
         // FXMLLoader(getClass().getResource("/formations/AjouterFormation.fxml"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/reclamation/listereclamationfront.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/reclamation/listereclamation.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
 

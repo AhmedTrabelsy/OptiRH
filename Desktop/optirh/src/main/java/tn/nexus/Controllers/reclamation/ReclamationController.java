@@ -33,12 +33,6 @@ public class ReclamationController implements Initializable, WrapWithSideBar {
     private TableColumn<Reclamation, String> statusColumn;
     @FXML
     private TableColumn<Reclamation, LocalDate> dateColumn;
-    @FXML
-    private TextField descriptionField;
-    @FXML
-    private DatePicker dateField;
-    @FXML
-    private ComboBox<String> statusField;
 
     private final ReclamationService reclamationService = new ReclamationService();
 
@@ -56,17 +50,12 @@ public class ReclamationController implements Initializable, WrapWithSideBar {
             ObservableList<Reclamation> observableReclamationList = FXCollections.observableArrayList(reclamationList);
             reclamationsTable.setItems(observableReclamationList);
 
-            // Remplissage de la ComboBox
-            statusField.setItems(FXCollections.observableArrayList("En attente", "En cours", "Résolue"));
-            if(statusField.getValue() == null) {
-                statusField.setValue("en attente");
-            }
-
             // Ajout d'une colonne "Action" avec un bouton "Réponse"
             TableColumn<Reclamation, Void> actionColumn = new TableColumn<>("Action");
             actionColumn.setCellFactory(param -> new TableCell<>() {
                 private final Button btn = new Button("Réponse");
                 {
+                    btn.setStyle("-fx-background-color: #007BFF; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
                     btn.setOnAction(event -> {
                         Reclamation reclamation = getTableView().getItems().get(getIndex());
                         try {
@@ -90,84 +79,12 @@ public class ReclamationController implements Initializable, WrapWithSideBar {
                     setGraphic(empty ? null : btn);
                 }
             });
+
+            // Ajouter la colonne "Action" à la table
             reclamationsTable.getColumns().add(actionColumn);
 
-            // Listener de sélection de table
-            reclamationsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                if (newSelection != null) {
-                    descriptionField.setText(newSelection.getDescription());
-                    statusField.setValue(newSelection.getStatus());
-                    dateField.setValue(newSelection.getDate().toLocalDate());
-                }
-            });
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    public void ajouterReclamation() throws SQLException {
-        String description = descriptionField.getText();
-        if (description == null || description.trim().length() < 2) {
-            showAlert(Alert.AlertType.WARNING, "La description doit contenir au moins 2 caractères !");
-            return;
-        }
-        if (dateField.getValue() == null || dateField.getValue().isBefore(LocalDate.now())) {
-            showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner une date valide (aujourd'hui ou plus tard).");
-            return;
-        }
-
-        String status = statusField.getValue() != null ? statusField.getValue() : "En attente";
-        if (dateField.getValue() == null) {
-            showAlert(Alert.AlertType.WARNING, "La date ne peut pas être vide !");
-            return;
-        }
-
-        Reclamation reclamation = new Reclamation(description, status, java.sql.Date.valueOf(dateField.getValue()), 1);
-        reclamationService.insert(reclamation);
-        reclamationsTable.getItems().add(reclamation);
-        clearFields();
-    }
-
-    @FXML
-    public void modifierReclamation() throws SQLException {
-        Reclamation selectedReclamation = reclamationsTable.getSelectionModel().getSelectedItem();
-        if (selectedReclamation != null) {
-            selectedReclamation.setDescription(descriptionField.getText());
-            selectedReclamation.setStatus(statusField.getValue());
-            selectedReclamation.setDate(java.sql.Date.valueOf(dateField.getValue()));
-            reclamationService.update(selectedReclamation);
-            reclamationsTable.refresh();
-            clearFields();
-        } else {
-            showAlert(Alert.AlertType.WARNING, "Aucune réclamation sélectionnée !");
-        }
-    }
-
-    @FXML
-    public void supprimerReclamation() throws SQLException {
-        Reclamation selectedReclamation = reclamationsTable.getSelectionModel().getSelectedItem();
-        if (selectedReclamation != null) {
-            int rowsAffected = reclamationService.delete(selectedReclamation);
-            reclamationsTable.getItems().remove(selectedReclamation);
-            showAlert(rowsAffected > 0 ? Alert.AlertType.INFORMATION : Alert.AlertType.WARNING, "Suppression effectuée");
-        } else {
-            showAlert(Alert.AlertType.WARNING, "Aucune réclamation sélectionnée !");
-        }
-    }
-
-    @FXML
-    public void clearFields() {
-        descriptionField.clear();
-        dateField.setValue(null);
-        statusField.setValue(null);
-    }
-
-    private void showAlert(Alert.AlertType type, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle("Information");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }
