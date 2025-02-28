@@ -153,22 +153,43 @@ public class ReclamationfrontController {
         reclamationService.insert(reclamation);
         observableReclamationList.add(reclamation);
         clearFields();
-
-        // Envoyer un e-mail à l'administrateur
         String subject = "Nouvelle Réclamation Ajoutée";
         String content = "<html>" +
-                "<body style='font-family: Arial, sans-serif;'>" +
-                "<div style='background-color: #007B8F; padding: 20px; color: white; text-align: center;'>" +
-                "<img src='https://example.com/logo.png' alt='Logo' style='width: 100px;'>" +
-                "<h1>Nouvelle Réclamation Ajoutée</h1>" +
+                "<body style='font-family: Arial, sans-serif; background: linear-gradient(to bottom, #000428, #004e92); padding: 20px; color: white;'>" +
+                "<div style='max-width: 600px; margin: auto; background: rgba(255, 255, 255, 0.1); border-radius: 30px; " +
+                "box-shadow: 0px 0px 40px rgba(0, 191, 255, 0.5); overflow: hidden; backdrop-filter: blur(10px);'>" +
+
+                // En-tête avec nouvelle couleur de barre et logo géant
+                "<div style='background: linear-gradient(to right, #ff6f61, #ff9a9e); padding: 50px; text-align: center; position: relative;'>" +
+                "<div style='position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255, 111, 97, 0.3), rgba(255, 154, 158, 0));'></div>" +
+                "<img src='https://i.imgur.com/uA7E20n.png' alt='Logo' style='width: 250px; display: block; margin: auto; filter: drop-shadow(0px 0px 20px rgba(0, 191, 255, 0.8));'>" +
+                "<h1 style='color: white; margin-top: 20px; font-size: 40px; font-weight: bold; text-shadow: 0px 0px 15px rgba(0, 191, 255, 0.8);'>Nouvelle Réclamation Ajoutée</h1>" +
                 "</div>" +
-                "<div style='padding: 20px;'>" +
-                "<p><strong>Description:</strong> " + reclamation.getDescription() + "</p>" +
-                "<p><strong>Statut:</strong> " + reclamation.getStatus() + "</p>" +
-                "<p><strong>Date:</strong> " + reclamation.getDate() + "</p>" +
+
+                // Contenu avec effets néon et couleurs vibrantes
+                "<div style='padding: 30px; text-align: left;'>" +
+                "<div style='background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 20px; box-shadow: 0px 0px 20px rgba(0, 191, 255, 0.3); backdrop-filter: blur(10px);'>" +
+
+                "<p style='font-size: 20px; color: white; margin-bottom: 20px;'>" +
+                "<strong style='background: linear-gradient(to right, #ff416c, #ff4b2b); color: white; padding: 10px 15px; border-radius: 10px; box-shadow: 0px 0px 15px rgba(255, 65, 108, 0.8); display: inline-block;'>Description :</strong> " +
+                "<span style='margin-left: 10px; text-shadow: 0px 0px 10px rgba(0, 191, 255, 0.8);'>yuppy yuppopoo</span></p>" +
+
+                "<p style='font-size: 20px; color: white; margin-bottom: 20px;'>" +
+                "<strong style='background: linear-gradient(to right, #00cdac, #02aab0); color: white; padding: 10px 15px; border-radius: 10px; box-shadow: 0px 0px 15px rgba(0, 205, 172, 0.8); display: inline-block;'>Statut :</strong> " +
+                "<span style='color: #00cdac; font-weight: bold; margin-left: 10px; text-shadow: 0px 0px 10px rgba(0, 205, 172, 0.8);'>En attente</span></p>" +
+
+                "<p style='font-size: 20px; color: white;'>" +
+                "<strong style='background: linear-gradient(to right, #ff9a9e, #fad0c4); color: white; padding: 10px 15px; border-radius: 10px; box-shadow: 0px 0px 15px rgba(255, 154, 158, 0.8); display: inline-block;'>Date :</strong> " +
+                "<span style='margin-left: 10px; text-shadow: 0px 0px 10px rgba(0, 191, 255, 0.8);'>2025-03-02</span></p>" +
+
                 "</div>" +
+                "</div>" +
+
+                "</div>" + // Fin du conteneur principal
                 "</body>" +
                 "</html>";
+
+
 
         EmailService.sendEmail(subject, content);
     }
