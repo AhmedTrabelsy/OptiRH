@@ -33,22 +33,31 @@ public class ReponseViewController {
     private TableColumn<Reponse, Date> dateColumn;
 
     @FXML
-    private ImageView qrCodeImageView; // Assurez-vous que cette ligne est présente
+    private ImageView qrCodeImageView; // ImageView pour afficher le QR code
 
     private int reclamationId;
     private final ReponseService reponseService = new ReponseService();
 
+    /**
+     * Définit l'ID de la réclamation et charge les réponses associées.
+     *
+     * @param reclamationId L'ID de la réclamation.
+     */
     public void setReclamationId(int reclamationId) {
         this.reclamationId = reclamationId;
         loadReponses();
     }
 
+    /**
+     * Initialise le contrôleur.
+     */
     @FXML
     public void initialize() {
+        // Liaison des colonnes du tableau avec les propriétés de l'objet Reponse
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-        // Ajoutez un listener pour générer le QR code lorsqu'une réponse est sélectionnée
+        // Ajout d'un listener pour générer un QR code lorsqu'une réponse est sélectionnée
         reponsesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 generateQRCode(newSelection.getDescription());
@@ -56,6 +65,9 @@ public class ReponseViewController {
         });
     }
 
+    /**
+     * Charge les réponses associées à la réclamation.
+     */
     private void loadReponses() {
         try {
             List<Reponse> reponses = reponseService.getReponsesByReclamationId(reclamationId);
@@ -66,17 +78,27 @@ public class ReponseViewController {
         }
     }
 
+    /**
+     * Génère un QR code à partir du texte donné et l'affiche dans l'ImageView.
+     *
+     * @param text Le texte à encoder dans le QR code.
+     */
     private void generateQRCode(String text) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         int width = 200;
         int height = 200;
         try {
+            // Génération du QR code
             BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+
+            // Conversion du QR code en image JavaFX
             ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
             Image qrImage = new Image(inputStream);
-            qrCodeImageView.setImage(qrImage); // Définir l'image dans l'ImageView
+
+            // Affichage du QR code dans l'ImageView
+            qrCodeImageView.setImage(qrImage);
         } catch (WriterException | IOException e) {
             e.printStackTrace();
         }
