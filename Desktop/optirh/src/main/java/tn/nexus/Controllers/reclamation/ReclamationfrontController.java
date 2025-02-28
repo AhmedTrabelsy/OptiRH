@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import tn.nexus.Entities.reclamation.Reclamation;
+import tn.nexus.Services.reclamation.EmailService;
 import tn.nexus.Services.reclamation.ReclamationService;
 
 import java.io.IOException;
@@ -130,6 +131,7 @@ public class ReclamationfrontController {
         });
     }
 
+
     @FXML
     public void ajouterReclamation() throws SQLException {
         if (descriptionField.getText().isEmpty() || statusField.getValue() == null || dateField.getValue() == null) {
@@ -151,6 +153,24 @@ public class ReclamationfrontController {
         reclamationService.insert(reclamation);
         observableReclamationList.add(reclamation);
         clearFields();
+
+        // Envoyer un e-mail à l'administrateur
+        String subject = "Nouvelle Réclamation Ajoutée";
+        String content = "<html>" +
+                "<body style='font-family: Arial, sans-serif;'>" +
+                "<div style='background-color: #007B8F; padding: 20px; color: white; text-align: center;'>" +
+                "<img src='https://example.com/logo.png' alt='Logo' style='width: 100px;'>" +
+                "<h1>Nouvelle Réclamation Ajoutée</h1>" +
+                "</div>" +
+                "<div style='padding: 20px;'>" +
+                "<p><strong>Description:</strong> " + reclamation.getDescription() + "</p>" +
+                "<p><strong>Statut:</strong> " + reclamation.getStatus() + "</p>" +
+                "<p><strong>Date:</strong> " + reclamation.getDate() + "</p>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+
+        EmailService.sendEmail(subject, content);
     }
 
     @FXML
