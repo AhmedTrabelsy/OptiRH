@@ -4,10 +4,11 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.ImageView?>
+
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.nexus.Controllers.reclamation.ReponseViewController">
     <TableView fx:id="reponsesTable" layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="600.0">
         <columns>
-
             <TableColumn fx:id="descriptionColumn" text="Description">
                 <cellValueFactory>
                     <PropertyValueFactory property="description" />
@@ -20,4 +21,7 @@
             </TableColumn>
         </columns>
     </TableView>
+
+    <!-- Ajoutez cette partie pour l'ImageView du QR code -->
+    <ImageView fx:id="qrCodeImageView" layoutX="620.0" layoutY="10.0" fitHeight="200.0" fitWidth="200.0" />
 </AnchorPane>

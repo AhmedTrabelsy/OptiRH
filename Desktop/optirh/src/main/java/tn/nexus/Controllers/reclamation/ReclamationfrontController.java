@@ -5,11 +5,16 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import tn.nexus.Entities.reclamation.Reclamation;
 import tn.nexus.Services.reclamation.ReclamationService;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -43,12 +48,15 @@ public class ReclamationfrontController {
             return;
         }
 
+        // Configuration des colonnes de la table
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
 
+        // Chargement des données
         observableReclamationList = FXCollections.observableArrayList(reclamationService.showAll());
 
+        // Configuration des filtres
         statusField.setItems(FXCollections.observableArrayList("En attente", "En cours", "Résolue"));
         filterStatusField.setItems(FXCollections.observableArrayList("Tous", "En attente", "En cours", "Résolue"));
         filterStatusField.setValue("Tous");
@@ -60,6 +68,54 @@ public class ReclamationfrontController {
         SortedList<Reclamation> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(reclamationsTable.comparatorProperty());
         reclamationsTable.setItems(sortedData);
+
+        // Ajouter la colonne "Réponse"
+        addResponseButtonToTable();
+    }
+
+    private void addResponseButtonToTable() {
+        // Ajouter une colonne "Action" avec un bouton "Réponse"
+        TableColumn<Reclamation, Void> actionColumn = new TableColumn<>("Action");
+        actionColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button btn = new Button("Réponse");
+
+            {
+                btn.setStyle("-fx-background-color: #007BFF; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
+                btn.setOnAction(event -> {
+                    Reclamation reclamation = getTableView().getItems().get(getIndex());
+                    openReponseView(reclamation);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btn);
+            }
+        });
+
+        // Ajouter la colonne "Action" à la table
+        reclamationsTable.getColumns().add(actionColumn);
+    }
+
+    private void openReponseView(Reclamation reclamation) {
+        try {
+            // Charger la vue de réponse (fichier FXML)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/reclamation/reponsefront.fxml"));
+            Parent root = loader.load();
+
+            // Passer l'ID de la réclamation à la vue de réponse
+            ReponseViewController controller = loader.getController();
+            controller.setReclamationId(reclamation.getId());
+
+            // Afficher la fenêtre de réponse dans une nouvelle scène
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Répondre à la réclamation");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void applyFilters(FilteredList<Reclamation> filteredData) {
