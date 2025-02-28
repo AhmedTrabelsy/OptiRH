@@ -2,26 +2,21 @@ package tn.nexus.Controllers.reclamation;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 import tn.nexus.Entities.reclamation.Reclamation;
 import tn.nexus.Services.reclamation.ReclamationService;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Objects;
 
 public class ReclamationfrontController {
     @FXML
     private TableView<Reclamation> reclamationsTable;
-    @FXML
-    private TableColumn<Reclamation, Integer> idColumn;
     @FXML
     private TableColumn<Reclamation, String> descriptionColumn;
     @FXML
@@ -34,147 +29,108 @@ public class ReclamationfrontController {
     private DatePicker dateField;
     @FXML
     private ComboBox<String> statusField;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private ComboBox<String> filterStatusField;
 
     private final ReclamationService reclamationService = new ReclamationService();
+    private ObservableList<Reclamation> observableReclamationList;
 
     public void initialize() throws SQLException {
+        if (reclamationsTable == null || descriptionColumn == null || statusColumn == null || dateColumn == null) {
+            System.err.println("FXML components are not properly injected.");
+            return;
+        }
 
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-        List<Reclamation> reclamationList = reclamationService.showAll();
-        ObservableList<Reclamation> observableReclamationList = FXCollections.observableArrayList(reclamationList);
-        reclamationsTable.setItems(observableReclamationList);
+        observableReclamationList = FXCollections.observableArrayList(reclamationService.showAll());
 
         statusField.setItems(FXCollections.observableArrayList("En attente", "En cours", "Résolue"));
-        if(statusField.getValue() == null) {
-            statusField.setValue("en attente");
-        }
+        filterStatusField.setItems(FXCollections.observableArrayList("Tous", "En attente", "En cours", "Résolue"));
+        filterStatusField.setValue("Tous");
 
-        // Ajouter une colonne d'action avec un bouton "Réponse"
-        TableColumn<Reclamation, Void> actionColumn = new TableColumn<>("Action");
-        actionColumn.setCellFactory(param -> new TableCell<>() {
-            private final Button btn = new Button("Réponse");
+        FilteredList<Reclamation> filteredData = new FilteredList<>(observableReclamationList, p -> true);
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters(filteredData));
+        filterStatusField.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters(filteredData));
 
-            {
-                btn.setOnAction(event -> {
-                    Reclamation reclamation = getTableView().getItems().get(getIndex());
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/reclamation/reponsefront.fxml"));
-                        Parent root = loader.load();
-                        ReponseViewController controller = loader.getController();
-                        controller.setReclamationId(reclamation.getId());
-                        Stage stage = new Stage();
-                        stage.setScene(new Scene(root));
-                        stage.setTitle("Les réponses");
-                        stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
+        SortedList<Reclamation> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(reclamationsTable.comparatorProperty());
+        reclamationsTable.setItems(sortedData);
+    }
 
+    private void applyFilters(FilteredList<Reclamation> filteredData) {
+        String searchKeyword = searchField.getText().toLowerCase();
+        String selectedStatus = filterStatusField.getValue();
 
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(btn);
-                }
-            }
+        filteredData.setPredicate(reclamation -> {
+            if (reclamation == null) return false;
+            boolean statusMatches = Objects.equals(selectedStatus, "Tous") || Objects.equals(reclamation.getStatus(), selectedStatus);
+            boolean searchMatches = searchKeyword.isEmpty() || reclamation.getDescription().toLowerCase().contains(searchKeyword);
+            return statusMatches && searchMatches;
         });
-
-        reclamationsTable.getColumns().add(actionColumn);
     }
 
     @FXML
     public void ajouterReclamation() throws SQLException {
-        // Vérifier si les champs sont vides ou nuls
-        if (descriptionField.getText() == null || descriptionField.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "La description ne peut pas être vide !");
-            return;
-        }
-        if (statusField.getValue() == null || statusField.getValue().trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Le statut ne peut pas être vide !");
-            return;
-        }
-        if (dateField.getValue() == null || dateField.getValue().isBefore(LocalDate.now())) {
-            showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner une date valide (aujourd'hui ou plus tard).");
+        if (descriptionField.getText().isEmpty() || statusField.getValue() == null || dateField.getValue() == null) {
+            showAlert(Alert.AlertType.WARNING, "Veuillez remplir tous les champs !");
             return;
         }
 
-        // Créer une nouvelle réclamation
+        if (dateField.getValue().isBefore(LocalDate.now())) {
+            showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner une date valide !");
+            return;
+        }
+
         Reclamation reclamation = new Reclamation(
                 descriptionField.getText(),
                 statusField.getValue(),
                 java.sql.Date.valueOf(dateField.getValue()),
-                1 // Fixe l'utilisateur ID à 1
+                1
         );
-
-        // Insérer la réclamation dans la base de données
         reclamationService.insert(reclamation);
-
-        // Ajouter la réclamation à la TableView
-        reclamationsTable.getItems().add(reclamation);
-
-        // Effacer les champs après l'ajout
+        observableReclamationList.add(reclamation);
         clearFields();
     }
 
     @FXML
     public void modifierReclamation() throws SQLException {
         Reclamation selectedReclamation = reclamationsTable.getSelectionModel().getSelectedItem();
-        if (selectedReclamation != null) {
-            // Vérifier si les champs sont vides ou nuls
-            if (descriptionField.getText() == null || descriptionField.getText().trim().isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, "La description ne peut pas être vide !");
-                return;
-            }
-            if (statusField.getValue() == null || statusField.getValue().trim().isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, "Le statut ne peut pas être vide !");
-                return;
-            }
-
-            if (dateField.getValue() == null || dateField.getValue().isBefore(LocalDate.now())) {
-                showAlert(Alert.AlertType.WARNING, "Veuillez sélectionner une date valide (aujourd'hui ou plus tard).");
-                return;
-            }
-
-            // Mettre à jour la réclamation sélectionnée
-            selectedReclamation.setDescription(descriptionField.getText());
-            selectedReclamation.setStatus(statusField.getValue());
-            selectedReclamation.setDate(java.sql.Date.valueOf(dateField.getValue()));
-
-            // Mettre à jour la réclamation dans la base de données
-            reclamationService.update(selectedReclamation);
-
-            // Rafraîchir la TableView
-            reclamationsTable.refresh();
-
-            // Effacer les champs après la modification
-            clearFields();
-        } else {
+        if (selectedReclamation == null) {
             showAlert(Alert.AlertType.WARNING, "Aucune réclamation sélectionnée !");
+            return;
         }
+
+        if (descriptionField.getText().isEmpty() || statusField.getValue() == null || dateField.getValue() == null) {
+            showAlert(Alert.AlertType.WARNING, "Veuillez remplir tous les champs !");
+            return;
+        }
+
+        selectedReclamation.setDescription(descriptionField.getText());
+        selectedReclamation.setStatus(statusField.getValue());
+        selectedReclamation.setDate(java.sql.Date.valueOf(dateField.getValue()));
+        reclamationService.update(selectedReclamation);
+        reclamationsTable.refresh();
+        clearFields();
     }
 
     @FXML
     public void supprimerReclamation() throws SQLException {
         Reclamation selectedReclamation = reclamationsTable.getSelectionModel().getSelectedItem();
-        if (selectedReclamation != null) {
-            int rowsAffected = reclamationService.delete(selectedReclamation);
-            reclamationsTable.getItems().remove(selectedReclamation);
-            if (rowsAffected > 0) {
-                showAlert(Alert.AlertType.INFORMATION, "Réclamation supprimée avec succès !");
-            } else {
-                showAlert(Alert.AlertType.WARNING, "La suppression a échoué !");
-            }
-        } else {
+        if (selectedReclamation == null) {
             showAlert(Alert.AlertType.WARNING, "Aucune réclamation sélectionnée !");
+            return;
+        }
+
+        if (reclamationService.delete(selectedReclamation) > 0) {
+            observableReclamationList.remove(selectedReclamation);
+            showAlert(Alert.AlertType.INFORMATION, "Réclamation supprimée !");
+        } else {
+            showAlert(Alert.AlertType.WARNING, "Échec de la suppression !");
         }
     }
 

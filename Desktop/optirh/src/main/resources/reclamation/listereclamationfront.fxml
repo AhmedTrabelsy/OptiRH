@@ -50,6 +50,10 @@
 
             </AnchorPane>
 
+            <!-- Ajout du champ de recherche et du filtre -->
+            <TextField fx:id="searchField" layoutX="336.0" layoutY="42.0" promptText="Rechercher par description..." style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 5;" />
+            <ComboBox fx:id="filterStatusField" layoutX="550.0" layoutY="42.0" promptText="Filtrer par statut" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 5;" />
+
             <TableView fx:id="reclamationsTable" layoutX="336.0" layoutY="74.0" prefHeight="400" prefWidth="637.0" style="-fx-background-color: rgba(255, 255, 255, 0.8); -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0);">
                 <columns>
                     <TableColumn fx:id="descriptionColumn" text="Description">
