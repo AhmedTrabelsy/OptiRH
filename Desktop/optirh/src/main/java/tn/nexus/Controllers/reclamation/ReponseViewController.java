@@ -60,7 +60,10 @@ public class ReponseViewController {
         // Ajout d'un listener pour générer un QR code lorsqu'une réponse est sélectionnée
         reponsesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                generateQRCode(newSelection.getDescription());
+                // Convertir java.util.Date en java.sql.Date
+                java.util.Date utilDate = newSelection.getDate();
+                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+                generateQRCode(newSelection.getDescription(), sqlDate);
             }
         });
     }
@@ -79,17 +82,21 @@ public class ReponseViewController {
     }
 
     /**
-     * Génère un QR code à partir du texte donné et l'affiche dans l'ImageView.
+     * Génère un QR code à partir de la description et de la date données, et l'affiche dans l'ImageView.
      *
-     * @param text Le texte à encoder dans le QR code.
+     * @param description La description à encoder dans le QR code.
+     * @param date La date à encoder dans le QR code (java.sql.Date).
      */
-    private void generateQRCode(String text) {
+    private void generateQRCode(String description, java.sql.Date date) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         int width = 200;
         int height = 200;
         try {
+            // Combinez la description et la date dans un seul texte
+            String qrText = "Description: " + description + "\nDate: " + date.toString();
+
             // Génération du QR code
-            BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
+            BitMatrix bitMatrix = qrCodeWriter.encode(qrText, BarcodeFormat.QR_CODE, width, height);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
 

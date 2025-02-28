@@ -42,3 +42,29 @@
     -fx-background-color: #0056b3;
     -fx-cursor: hand;
 }
+/* Fichier CSS (styles.css ou dashboard.css) */
+/* Fichier CSS (styles.css ou dashboard.css) */
+
+.delete-button {
+    -fx-background-color: transparent; /* Fond transparent */
+    -fx-border-color: #FF4D4D; /* Bordure rouge */
+    -fx-border-radius: 5;
+    -fx-border-width: 2px;
+    -fx-padding: 10; /* Espace autour de l'icône */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
+
+.delete-button:hover {
+    -fx-background-color: #FF4D4D; /* Fond rouge au survol */
+    -fx-border-color: #FF4D4D; /* Bordure rouge au survol */
+}
+
+.delete-button:pressed {
+    -fx-background-color: #FF3333; /* Fond rouge plus foncé lors du clic */
+    -fx-border-color: #FF3333; /* Bordure rouge plus foncée lors du clic */
+}
+
+.delete-button .image-view {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0); /* Ombre pour l'icône */
+}

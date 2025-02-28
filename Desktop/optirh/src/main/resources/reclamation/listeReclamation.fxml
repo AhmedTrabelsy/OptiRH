@@ -4,11 +4,11 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.FontWeight?>
 <?import javafx.scene.paint.Color?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.effect.DropShadow?>
 
@@ -30,6 +30,17 @@
                             </children>
                         </HBox>
 
+                        <!-- Champ de recherche et filtre par statut -->
+                        <HBox spacing="10" style="-fx-padding: 15;">
+                            <TextField fx:id="searchField" promptText="Rechercher par description..." style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 5;" />
+                            <ComboBox fx:id="filterStatusField" promptText="Filtrer par statut" style="-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 5;" />
+                        </HBox>
+
+                        <!-- Bouton Supprimer -->
+                        <HBox spacing="10" style="-fx-padding: 15;">
+                            <Button text="Supprimer" onAction="#supprimerReclamation" style="-fx-background-color: #FF0000; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
+                        </HBox>
+
                         <!-- Tableau des réclamations -->
                         <TableView fx:id="reclamationsTable" prefHeight="450.0" prefWidth="997.0" style="-fx-background-color: transparent; -fx-border-radius: 0 0 15 15;">
                             <columns>
@@ -48,12 +59,6 @@
                                         <PropertyValueFactory property="status" />
                                     </cellValueFactory>
                                 </TableColumn>
-                                <!-- Supprimez cette colonne "Action" -->
-                                <!-- <TableColumn text="Action" style="-fx-font-size: 14px; -fx-text-fill: #333333;">
-                                    <cellValueFactory>
-                                        <PropertyValueFactory property="action" />
-                                    </cellValueFactory>
-                                </TableColumn> -->
                             </columns>
                         </TableView>
                     </children>
