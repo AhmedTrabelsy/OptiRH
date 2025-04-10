@@ -5,9 +5,9 @@ steps:
       - '--no-cache'
       - '-t'
       - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
-      - './Web/OptiRH'  # Set build context to ./Web/OptiRH
+      - './Web/OptiRH'
       - '-f'
-      - 'Web/OptiRH/docker/Dockerfile'  # Path to Dockerfile relative to repo root
+      - 'Web/OptiRH/docker/Dockerfile'  
     id: Build
   - name: 'gcr.io/cloud-builders/docker'
     args:
