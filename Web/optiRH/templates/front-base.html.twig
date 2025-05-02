@@ -134,9 +134,11 @@
                                     </nav>
                                 </div>
                                 <!-- Header-btn -->
-                                <div class="header-btn d-none f-right d-lg-block">
-                                    <a href="{{path('app_login')  }}" class="btn head-btn2">Login</a>
-                                </div>
+                                {% if not app.user %}
+                                    <div class="header-btn d-none f-right d-lg-block">
+                                        <a href="{{path('app_login')  }}" class="btn head-btn2">Login</a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- Mobile Menu -->
