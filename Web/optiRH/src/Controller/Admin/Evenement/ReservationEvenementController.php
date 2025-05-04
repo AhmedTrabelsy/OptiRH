@@ -37,6 +37,69 @@ class ReservationEvenementController extends AbstractController
             'reservation_evenements' => $reservationEvenementRepository->findAll(),
         ]);
     }
+
+    /***********Reserver +detaisl+paiment **************/
+     #[Route('/reserver/{id}', name: 'app_reservation_evenement_details', methods: ['GET', 'POST'])]
+     public function reserver (Request $request, Evenement $evenement, EntityManagerInterface $entityManager, SessionInterface $session): Response
+     {
+        $reservation = new ReservationEvenement();
+        $reservation->setEvenement($evenement);
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $reservation->setFirstName($user->getNom());
+        $reservation->setEmail($user->getEmail());
+        $reservation->setUser($user);
+
+        $existingReservation = $entityManager->getRepository(ReservationEvenement::class)
+            ->findOneBy(['user' => $user, 'Evenement' => $evenement]);
+
+        if ($existingReservation) {
+            $this->addFlash('deja_reserve', 'Vous avez déjà réservé pour cet événement.');
+            
+            return $this->redirectToRoute('app_evenement_indexfront');
+        }
+
+        if ($evenement->getNbrPersonnes() == 0) {
+            $this->addFlash('complet', 'Désolé, cet événement est complet.');
+            return $this->redirectToRoute('app_evenement_indexfront');
+        }
+
+        $now = new \DateTime();
+        if ($evenement->getDateDebut() <= $now) {
+            $this->addFlash('date_passee', 'Désolé, l\'événement a déjà commencé.');
+            return $this->redirectToRoute('app_evenement_indexfront');
+        }
+
+        $form = $this->createForm(ReservationEvenementType::class, $reservation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Stocker les données de la réservation en session avant le paiement
+            $reservationData = [
+                'evenement_id' => $evenement->getId(),
+                'user_id' => $user->getId(),
+                'first_name' => $reservation->getFirstName(),
+                'last_name' => $form->get('last_name')->getData(),
+                'email' => $reservation->getEmail(),
+                'telephone' => $form->get('telephone')->getData(),
+            ];
+            $session->set('reservation_data', $reservationData);
+
+            // Rediriger vers la page de paiement Stripe
+            return $this->redirectToRoute('app_reservation_evenement_payment', ['id' => $evenement->getId()]);
+        }
+
+        return $this->render('reservation_evenement/details+form.html.twig', [
+            'form' => $form->createView(),
+            'evenement' => $evenement,
+        ]);
+
+     }
+
     
 
     /*************Reservation+paiement****************/
@@ -161,7 +224,7 @@ class ReservationEvenementController extends AbstractController
 
         $session->remove('reservation_data');
 
-        $message = sprintf(
+        /*$message = sprintf(
             "Bonjour %s, votre réservation pour '%s' le %s à %s est confirmée !",
             $reservation->getFirstName(),
             $evenement->getTitre(),
@@ -173,7 +236,7 @@ class ReservationEvenementController extends AbstractController
             $twilio->sendSms($reservation->getTelephone(), $message);
         } catch (\Exception $e) {
             $this->addFlash('sms', "Erreur lors de l'envoi du SMS : " . $e->getMessage());
-        }
+        }*/
 
         $this->addFlash('paiment', 'Paiement effectué avec succès ! Votre réservation est confirmée.');
         return $this->redirectToRoute('app_evenement_indexfront');

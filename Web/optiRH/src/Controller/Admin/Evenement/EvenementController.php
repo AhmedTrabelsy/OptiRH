@@ -3,6 +3,7 @@
 namespace App\Controller\Admin\Evenement;
 use App\Entity\Evenement\Evenement;
 use App\Entity\Evenement\FavorisEvenement;
+use App\Entity\Evenement\ReservationEvenement;
 use App\Form\Evenement\EvenementType;
 use App\Repository\Evenement\EvenementRepository;
 use App\Service\RecommendationService;
@@ -211,116 +212,126 @@ public function index(EvenementRepository $evenementRepository, Request $request
 
 /****************Affichage liste ds evenement+filtre+recherche pour employee */
 #[Route('/evenements/indexfront', name: 'app_evenement_indexfront', methods: ['GET'])]
-public function showall(
-    EvenementRepository $evenementRepository,
-    EntityManagerInterface $em,
-    Request $request,
-    RecommendationService $recommendationService
-): Response {
-    $searchTerm = $request->query->get('term');
-    $modalite = $request->query->get('modalite');
-    $type = $request->query->get('type');
-    $recommended = $request->query->getBoolean('recommended', false);
-    
-    $user = $this->getUser();
-    $favorisIds = [];
-    
-    if ($user) {
-        $favoris = $em->getRepository(FavorisEvenement::class)->findBy(['id_user' => $user]);
-        foreach ($favoris as $favori) {
-            $favorisIds[] = $favori->getIdEvenement()->getId();
-        }
-    }
-    
-    // Mode recommandé activé et utilisateur connecté
-    if ($recommended && $user) {
-        $recommendedEvents = $recommendationService->getRecommendedEvents($user);
+    public function showall(
+        EvenementRepository $evenementRepository,
+        EntityManagerInterface $em,
+        Request $request,
+        RecommendationService $recommendationService
+    ): Response {
+        $searchTerm = $request->query->get('term');
+        $modalite = $request->query->get('modalite');
+        $type = $request->query->get('type');
+        $recommended = $request->query->getBoolean('recommended', false);
         
-        // Filtrer les événements recommandés si nécessaire
-        if ($searchTerm || $modalite || $type) {
-            $filteredRecommendedEvents = [];
-            
-            foreach ($recommendedEvents as $eventScore) {
-                $event = $eventScore['event'];
-                $match = true;
-                
-                if ($searchTerm && stripos($event->getTitre(), $searchTerm) === false) {
-                    $match = false;
-                }
-                
-                if ($modalite && $event->getModalite() !== $modalite) {
-                    $match = false;
-                }
-                
-                if ($type && $event->getType() !== $type) {
-                    $match = false;
-                }
-                
-                if ($match) {
-                    $filteredRecommendedEvents[] = $eventScore;
-                }
+        $user = $this->getUser();
+        $favorisIds = [];
+        $reservationsIds = [];
+        
+        if ($user) {
+            // Récupérer les favoris de l'utilisateur
+            $favoris = $em->getRepository(FavorisEvenement::class)->findBy(['id_user' => $user]);
+            foreach ($favoris as $favori) {
+                $favorisIds[] = $favori->getIdEvenement()->getId();
             }
             
-            $recommendedEvents = $filteredRecommendedEvents;
+            // Récupérer les réservations de l'utilisateur
+            $reservations = $em->getRepository(ReservationEvenement::class)->findBy(['user' => $user]);
+            foreach ($reservations as $reservation) {
+                $reservationsIds[] = $reservation->getEvenement()->getId();
+            }
         }
         
-        // Extraire uniquement les événements pour l'affichage
-        $evenements = array_map(fn($item) => $item['event'], $recommendedEvents);
-        
-        // Créer un tableau des scores pour l'affichage
-        $scores = [];
-        foreach ($recommendedEvents as $eventScore) {
-            $scores[$eventScore['event']->getId()] = $eventScore['score'];
+        // Mode recommandé activé et utilisateur connecté
+        if ($recommended && $user) {
+            $recommendedEvents = $recommendationService->getRecommendedEvents($user);
+            
+            // Filtrer les événements recommandés si nécessaire
+            if ($searchTerm || $modalite || $type) {
+                $filteredRecommendedEvents = [];
+                
+                foreach ($recommendedEvents as $eventScore) {
+                    $event = $eventScore['event'];
+                    $match = true;
+                    
+                    if ($searchTerm && stripos($event->getTitre(), $searchTerm) === false) {
+                        $match = false;
+                    }
+                    
+                    if ($modalite && $event->getModalite() !== $modalite) {
+                        $match = false;
+                    }
+                    
+                    if ($type && $event->getType() !== $type) {
+                        $match = false;
+                    }
+                    
+                    if ($match) {
+                        $filteredRecommendedEvents[] = $eventScore;
+                    }
+                }
+                
+                $recommendedEvents = $filteredRecommendedEvents;
+            }
+            
+            // Extraire uniquement les événements pour l'affichage
+            $evenements = array_map(fn($item) => $item['event'], $recommendedEvents);
+            
+            // Créer un tableau des scores pour l'affichage
+            $scores = [];
+            foreach ($recommendedEvents as $eventScore) {
+                $scores[$eventScore['event']->getId()] = $eventScore['score'];
+            }
+            
+            if ($request->isXmlHttpRequest()) {
+                return $this->render('evenement/card.html.twig', [
+                    'evenements' => $evenements,
+                    'favorisIds' => $favorisIds,
+                    'reservationsIds' => $reservationsIds,
+                    'scores' => $scores,
+                    'isRecommended' => true
+                ]);
+            }
+        } else {
+            // Mode normal - tous les événements
+            $evenements = $evenementRepository->findByCombinedFilters($searchTerm, $modalite, $type);
+            
+            if ($request->isXmlHttpRequest()) {
+                return $this->render('evenement/card.html.twig', [
+                    'evenements' => $evenements,
+                    'favorisIds' => $favorisIds,
+                    'reservationsIds' => $reservationsIds,
+                ]);
+            }
         }
         
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('evenement/card.html.twig', [
-                'evenements' => $evenements,
-                'favorisIds' => $favorisIds,
-                'scores' => $scores,
-                'isRecommended' => true
-            ]);
-        }
-    } else {
-        // Mode normal - tous les événements
-        $evenements = $evenementRepository->findByCombinedFilters($searchTerm, $modalite, $type);
+        // Tri des événements par date de début
+        usort($evenements, function ($a, $b) {
+            return $a->getDateDebut() <=> $b->getDateDebut();
+        });
         
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('evenement/card.html.twig', [
-                'evenements' => $evenements,
-                'favorisIds' => $favorisIds,
-            ]);
+        $closestEvent = null;
+        $now = new \DateTime();
+        
+        // Trouver le premier événement futur ou en cours
+        foreach ($evenements as $evenement) {
+            if ($evenement->getDateDebut() >= $now) {
+                $closestEvent = $evenement;
+                break;
+            }
         }
+        
+        $closestEventImage = $closestEvent?->getImage();
+        
+        return $this->render('evenement/indexfront.html.twig', [
+            'evenements' => $evenements,
+            'favorisIds' => $favorisIds,
+            'reservationsIds' => $reservationsIds,
+            'closestEventImage' => $closestEventImage,
+            'closestEvent' => $closestEvent,
+            'scores' => $scores ?? [],
+            'isRecommended' => $recommended && $user
+        ]);
     }
-    
-    // Tri des événements par date de début
-    usort($evenements, function ($a, $b) {
-        return $a->getDateDebut() <=> $b->getDateDebut();
-    });
-    
-    $closestEvent = null;
-    $now = new \DateTime();
-    
-    // Trouver le premier événement futur ou en cours
-    foreach ($evenements as $evenement) {
-        if ($evenement->getDateDebut() >= $now) {
-            $closestEvent = $evenement;
-            break;
-        }
-    }
-    
-    
-    $closestEventImage = $closestEvent?->getImage();
-    
-    return $this->render('evenement/indexfront.html.twig', [
-        'evenements' => $evenements,
-        'favorisIds' => $favorisIds,
-        'closestEventImage' => $closestEventImage,
-        'closestEvent' => $closestEvent,
-        'scores' => $scores ?? [],
-        'isRecommended' => $recommended && $user
-    ]);
-}
  /**********recom******** */
 
     #[Route('/evenements/recommandes', name: 'evenement_recommended', methods: ['GET'])]

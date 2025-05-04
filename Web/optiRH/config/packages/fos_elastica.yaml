@@ -37,4 +37,5 @@ fos_elastica:
                 driver: orm
                 model: App\Entity\Evenement\Evenement
                 provider: ~
+                listener: ~
                 finder: ~

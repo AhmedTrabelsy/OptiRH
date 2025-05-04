@@ -1,117 +1,576 @@
-<!-- Grille de cartes -->
-            {% for evenement in evenements %}
+<!-- Style personnalisé -->
+<style>
+    .timeline-divider {
+        position: relative;
+        margin: 3rem 0;
+        text-align: center;
+    }
+    .timeline-divider:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--bs-primary), transparent);
+        z-index: -1;
+    }
+    .timeline-divider-text {
+        display: inline-block;
+        padding: 0 2rem;
+        background-color: white;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--bs-primary);
+        border-radius: 50px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .event-section {
+        margin-bottom: 4rem;
+    }
+    
+    .section-title {
+        position: relative;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .section-title:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--bs-primary);
+        border-radius: 3px;
+    }
+    
+    .card {
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        border-radius: 12px !important;
+        overflow: hidden;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    }
+    
+    .card-image {
+        height: 180px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+    
+    .card-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 5px 10px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: white;
+        z-index: 2;
+    }
+    
+    .card-date {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        background: rgba(0,0,0,0.7);
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-align: center;
+        line-height: 1.2;
+    }
+    .card-date .day {
+        font-size: 1.5rem;
+        display: block;
+    }
+    .card-date .month {
+        font-size: 0.8rem;
+        opacity: 0.8;
+        display: block;
+    }
+    .card-date .year {
+        font-size: 0.7rem;
+        opacity: 0.6;
+        display: block;
+    }
+    
+    .favorite-btn {
+    position: absolute;
+    top: 140px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
 
-            <div class="col-xl-3 col-lg-4 col-md-6" data-category="{{ evenement.modalite|lower }} {{ evenement.type|lower }}">
-                <div class="card event-card h-100 border-0 overflow-hidden ">
-                    <!-- Badge de modalite -->
-                    <div class="card-badge {{ evenement.modalite == 'En ligne' ? 'bg-success' : 'bg-info' }}">
-                        {{ evenement.modalite }}
-                    </div>
+.favorite-btn:hover {
+    background: white;
+    transform: scale(1.1);
+}
 
-                    
-                    <!-- Image de l'événement -->
-                    {% if evenement.image %}
-                        <div class="card-image" style="background-image: url('{{ asset(evenement.image) }}')">
-                            <div class="card-date text-white">
-                                <span class="day fw-bold">{{ evenement.dateDebut|date('d') }}</span>
-                                <span class="month">{{ evenement.dateDebut|date('M') }}</span>
-                                <span class="year">{{ evenement.dateDebut|date('Y') }}</span>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="card-image" style="background: var(--secondary-gradient)">
-                            <div class="card-date text-white">
-                                <span class="day fw-bold">{{ evenement.dateDebut|date('d') }}</span>
-                                <span class="month">{{ evenement.dateDebut|date('M') }}</span>
-                                <span class="year">{{ evenement.dateDebut|date('Y') }}</span>
-                            </div>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Contenu de la carte -->
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h3 class="card-title h5 mb-0">{{ evenement.titre }}</h3>
-                            <span class="badge bg-light text-dark">
-                                {{ evenement.prix ? evenement.prix ~ 'DT' : 'Gratuit' }}
-                            </span>
+.favorite-active {
+    color: red; /* Ou une autre couleur pour l'icône rouge */
+}
+    
+    .status-indicator {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        z-index: 2;
+    }
+    .status-upcoming {
+        background: var(--bs-info);
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2);
+    }
+    .status-ongoing {
+        background: var(--bs-success);
+        box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.2);
+        animation: pulse 1.5s infinite;
+    }
+    .status-completed {
+        background: var(--bs-secondary);
+        box-shadow: 0 0 0 4px rgba(108, 117, 125, 0.2);
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+    }
+    
+    .empty-state {
+        background: white;
+        padding: 3rem;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .empty-state i {
+        font-size: 3rem;
+        color: var(--bs-light);
+        margin-bottom: 1rem;
+    }
+</style>
+
+<!-- Section À venir -->
+<div class="event-section">
+    <h2 class="section-title">Événements à venir</h2>
+    <div class="row g-4">
+        {% set upcomingEvents = evenements|filter(e => e.status == 'A_VENIR')|sort((a, b) => a.dateDebut <=> b.dateDebut) %}
+        
+        {% if upcomingEvents|length > 0 %}
+            {% for evenement in upcomingEvents %}
+                <div class="col-xl-3 col-lg-4 col-md-6" data-category="{{ evenement.modalite|lower }} {{ evenement.type|lower }}">
+                    <div class="card event-card h-100 border-0 overflow-hidden">
+                        <div class="status-indicator status-upcoming"></div>
+                        
+                        <!-- Badge de modalite -->
+                        <div class="card-badge {{ evenement.modalite == 'En ligne' ? 'bg-success' : 'bg-info' }}">
+                            {{ evenement.modalite }}
                         </div>
                         
-                        <div class="card-meta mb-3">
-                            <span class="d-block text-muted mb-1">
-                                <i class="mdi mdi-map-marker-outline me-1"></i> 
-                                {{ evenement.lieu }}
-                            </span>
-                            <span class="d-block text-muted">
-                                <i class="mdi mdi-clock-outline me-1"></i>
-                                {% if evenement.heure is not null %}
-                                    {{ evenement.heure|date('H:i') }}h
-                                {% else %}
-                                    Non spécifié
+                        <!-- Image de l'événement -->
+                        {% if evenement.image %}
+                            <div class="card-image" style="background-image: url('{{ asset(evenement.image) }}')">
+                                {% if evenement.nbrPersonnes == 0 %}
+                                    <div class="overlay-soldout position-absolute w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6); top: 0; left: 0;">
+                                        <img src="{{ asset('uploads/evenements/complet.png') }}" alt="Sold Out" class="position-absolute top-50 start-50 translate-middle" style="max-width: 70%;"/>
+                                    </div>
                                 {% endif %}
-                            </span>
-                            <span class="d-block text-muted">
-                                <i class="mdi mdi-account-multiple me-1"></i>
+                                <div class="card-date text-white">
+                                    <span class="day fw-bold">{{ evenement.dateDebut|date('d') }}</span>
+                                    <span class="month">{{ evenement.dateDebut|date('M') }}</span>
+                                    <span class="year">{{ evenement.dateDebut|date('Y') }}</span>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card-image" style="background: var(--secondary-gradient)">
+                                <div class="card-date text-white">
+                                    <span class="day fw-bold">{{ evenement.dateDebut|date('d') }}</span>
+                                    <span class="month">{{ evenement.dateDebut|date('M') }}</span>
+                                    <span class="year">{{ evenement.dateDebut|date('Y') }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Contenu de la carte -->
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h3 class="card-title h5 mb-0">{{ evenement.titre }}</h3>
+                                <span class="badge bg-light text-dark">
+                                    {{ evenement.prix ? evenement.prix ~ 'DT' : 'Gratuit' }}
+                                </span>
+                            </div>
+                            
+                            <div class="card-meta mb-3">
+                                <span class="d-block text-muted mb-1">
+                                    <i class="mdi mdi-map-marker-outline me-1"></i> 
+                                    {{ evenement.lieu }}
+                                </span>
+                                <span class="d-block text-muted">
+                                    <i class="mdi mdi-clock-outline me-1"></i>
+                                    {% if evenement.heure is not null %}
+                                        {{ evenement.heure|date('H:i') }}h
+                                    {% else %}
+                                        Non spécifié
+                                    {% endif %}
+                                </span>
+                                
                                 {% if evenement.nbrPersonnes > 0 %}
-                                    {{ evenement.nbrPersonnes }} place(s) disponible(s)
-                                {% else %}
-                                    <span class="text-danger fw-bold">COMPLET</span>
+                                    <span class="d-block text-muted">
+                                        <i class="mdi mdi-account-multiple me-1"></i>
+                                        {{ evenement.nbrPersonnes }} place(s) disponible(s)
+                                    </span>
                                 {% endif %}
-                            </span>
+                            </div>
                             
-                        </div>
-                         
-                        
-                        <!-- type -->
-                        <div class="mb-3">
-                            {% if evenement.type== 'RH' %}
-                                <span class="badge bg-danger text-white">{{ evenement.type }}</span>
-                            {% elseif evenement.type == 'Technologie & Innovation' %}
-                                <span class="badge bg-success text-white">{{ evenement.type }}</span>
-                            {% elseif evenement.type == 'Loisir' %}
-                                <span class="badge bg-info text-white">{{ evenement.type }}</span>
-                            {% elseif evenement.type == 'Soft Skills' %}
-                                <span class="badge bg-warning text-dark">{{ evenement.type }}</span>
-                            {% elseif evenement.type == 'Finance' %}
-                                <span class="badge" style="background-color: #6f42c1; color: white">{{ evenement.type }}</span>
-                            {% elseif evenement.type == 'Marketing' %}
-                                <span class="badge" style="background-color: #d63384; color: white">{{ evenement.type }}</span>
-                            {% elseif evenement.type == 'Management' %}
-                                <span class="badge" style="background-color: #6610f2; color: white">{{ evenement.type }}</span>
-                            {% else %}
-                                <span class="badge bg-secondary text-white">{{ evenement.type }}</span>
-                            {% endif %}
-                            <button class="favorite-btn" data-event-id="{{ evenement.id }}">
-                                {% if evenement.id in favorisIds %}
-                                    <i class="mdi mdi-heart favorite-active"></i>
+                            <!-- type -->
+                            <div class="mb-3">
+                                {% if evenement.type== 'RH' %}
+                                    <span class="badge bg-danger text-white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Technologie & Innovation' %}
+                                    <span class="badge bg-success text-white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Loisir' %}
+                                    <span class="badge bg-info text-white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Soft Skills' %}
+                                    <span class="badge bg-warning text-dark">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Finance' %}
+                                    <span class="badge" style="background-color: #6f42c1; color: white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Marketing' %}
+                                    <span class="badge" style="background-color: #d63384; color: white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Management' %}
+                                    <span class="badge" style="background-color: #6610f2; color: white">{{ evenement.type }}</span>
                                 {% else %}
-                                    <i class="mdi mdi-heart-outline"></i>
+                                    <span class="badge bg-secondary text-white">{{ evenement.type }}</span>
                                 {% endif %}
-                            </button>
+                                <button class="favorite-btn" data-event-id="{{ evenement.id }}">
+                                    {% if evenement.id in favorisIds %}
+                                        <i class="mdi mdi-heart favorite-active"></i>
+                                    {% else %}
+                                        <i class="mdi mdi-heart-outline"></i>
+                                    {% endif %}
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Actions -->
-                    <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 px-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <!-- Bouton pour ouvrir le modal -->
-                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1 me-1" data-toggle="modal" data-target="#eventModal{{ evenement.id }}">
-                                <i class="mdi mdi-information-outline me-1"></i> Voir Plus
-                            </button>
-                            <a href="{{ path('app_reservation_evenement_new', {id: evenement.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1 me-1">
-                                <i class="mdi mdi-ticket-confirmation me-1"></i> Réserver
-                            </a>
-                            
-
+                        <!-- Actions -->
+                        <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 px-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <!-- Bouton pour ouvrir le modal -->
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1 me-1" data-toggle="modal" data-target="#eventModal{{ evenement.id }}">
+                                    <i class="mdi mdi-information-outline me-1"></i> Détails
+                                </button>
+                                
+                                {% if evenement.id in reservationsIds|default([]) %}
+                                    <!-- Utilisateur a déjà réservé -->
+                                    <span class="text-success flex-grow-1 me-1 text-center">
+                                        <i class="mdi mdi-check-circle me-1"></i> Réservé
+                                    </span>
+                                {% elseif evenement.nbrPersonnes <= 0 %}
+                                    <!-- Événement complet -->
+                                    <span class="text-danger flex-grow-1 me-1 text-center">
+                                        <i class="mdi mdi-close-circle me-1"></i> Complet
+                                    </span>
+                                {% else %}
+                                    <!-- Réservation possible -->
+                                    <a href="{{ path('app_reservation_evenement_new', {id: evenement.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1 me-1">
+                                        <i class="mdi mdi-ticket-confirmation me-1"></i> Réserver
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            {% else %}
-                <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        <i class="mdi mdi-information-outline me-2"></i>
-                        Aucun événement disponible pour le moment.
                     </div>
                 </div>
             {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="mdi mdi-calendar-blank"></i>
+                    <h4>Aucun événement à venir</h4>
+                    <p class="text-muted">Revenez plus tard pour découvrir nos prochains événements</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Divider -->
+<h2 class="section-title">Événements En cours</h2>
+<!-- Section En cours -->
+<div class="event-section">
+    <div class="row g-4">
+        {% set ongoingEvents = evenements|filter(e => e.status == 'EN_COURS')|sort((a, b) => a.dateDebut <=> b.dateDebut) %}
+        
+        {% if ongoingEvents|length > 0 %}
+            {% for evenement in ongoingEvents %}
+                <div class="col-xl-3 col-lg-4 col-md-6" data-category="{{ evenement.modalite|lower }} {{ evenement.type|lower }}">
+                    <div class="card event-card h-100 border-0 overflow-hidden">
+                        <div class="status-indicator status-ongoing"></div>
+                        
+                        <!-- Badge de modalite -->
+                        <div class="card-badge {{ evenement.modalite == 'En ligne' ? 'bg-success' : 'bg-info' }}">
+                            {{ evenement.modalite }}
+                        </div>
+                        
+                        <!-- Image de l'événement -->
+                        {% if evenement.image %}
+                            <div class="card-image" style="background-image: url('{{ asset(evenement.image) }}')">
+                                {% if evenement.nbrPersonnes == 0 %}
+                                    <div class="overlay-soldout position-absolute w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6); top: 0; left: 0;">
+                                        <img src="{{ asset('uploads/evenements/complet.png') }}" alt="Sold Out" class="position-absolute top-50 start-50 translate-middle" style="max-width: 70%;"/>
+                                    </div>
+                                {% endif %}
+                                <div class="card-date text-white">
+                                    <span class="day fw-bold">{{ evenement.dateDebut|date('d') }}</span>
+                                    <span class="month">{{ evenement.dateDebut|date('M') }}</span>
+                                    <span class="year">{{ evenement.dateDebut|date('Y') }}</span>
+                                </div>
+                            </div>
+                        
+                        {% endif %}
+                        
+                        <!-- Contenu de la carte -->
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h3 class="card-title h5 mb-0">{{ evenement.titre }}</h3>
+                                <span class="badge bg-light text-dark">
+                                    {{ evenement.prix ? evenement.prix ~ 'DT' : 'Gratuit' }}
+                                </span>
+                            </div>
+                            
+                            <div class="card-meta mb-3">
+                                <span class="d-block text-muted mb-1">
+                                    <i class="mdi mdi-map-marker-outline me-1"></i> 
+                                    {{ evenement.lieu }}
+                                </span>
+                                <span class="d-block text-muted">
+                                    <i class="mdi mdi-clock-outline me-1"></i>
+                                    {% if evenement.heure is not null %}
+                                        {{ evenement.heure|date('H:i') }}h
+                                    {% else %}
+                                        Non spécifié
+                                    {% endif %}
+                                </span>
+                                
+                                <span class="d-block text-success">
+                                    <i class="mdi mdi-progress-check me-1"></i>
+                                    En cours maintenant
+                                </span>
+                            </div>
+                            
+                            <!-- type -->
+                            <div class="mb-3">
+                                {% if evenement.type== 'RH' %}
+                                    <span class="badge bg-danger text-white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Technologie & Innovation' %}
+                                    <span class="badge bg-success text-white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Loisir' %}
+                                    <span class="badge bg-info text-white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Soft Skills' %}
+                                    <span class="badge bg-warning text-dark">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Finance' %}
+                                    <span class="badge" style="background-color: #6f42c1; color: white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Marketing' %}
+                                    <span class="badge" style="background-color: #d63384; color: white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Management' %}
+                                    <span class="badge" style="background-color: #6610f2; color: white">{{ evenement.type }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary text-white">{{ evenement.type }}</span>
+                                {% endif %}
+                                <button class="favorite-btn" data-event-id="{{ evenement.id }}">
+                                    {% if evenement.id in favorisIds %}
+                                        <i class="mdi mdi-heart favorite-active"></i>
+                                    {% else %}
+                                        <i class="mdi mdi-heart-outline"></i>
+                                    {% endif %}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 px-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1 me-1" data-toggle="modal" data-target="#eventModal{{ evenement.id }}">
+                                    <i class="mdi mdi-information-outline me-1"></i> Détails
+                                </button>
+                                
+                                {% if evenement.id in reservationsIds|default([]) %}
+                                    <span class="text-success flex-grow-1 me-1 text-center">
+                                        <i class="mdi mdi-check-circle me-1"></i> Vous participez
+                                    </span>
+                                
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="mdi mdi-progress-clock"></i>
+                    <h4>Aucun événement en cours</h4>
+                    <p class="text-muted">Il n'y a pas d'événements en cours pour le moment</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Divider -->
+
+<h2 class="section-title">Événements Terminés</h2>
+
+
+<!-- Section Terminés -->
+<div class="event-section">
+    <div class="row g-4">
+        {% set completedEvents = evenements|filter(e => e.status == 'TERMINE') |sort((a, b) => a.dateDebut <=> b.dateDebut)%}
+        
+        {% if completedEvents|length > 0 %}
+            {% for evenement in completedEvents %}
+                <div class="col-xl-3 col-lg-4 col-md-6" data-category="{{ evenement.modalite|lower }} {{ evenement.type|lower }}">
+                    <div class="card event-card h-100 border-0 overflow-hidden">
+                        <div class="status-indicator status-completed"></div>
+                        
+                        <!-- Badge de modalite -->
+                        <div class="card-badge {{ evenement.modalite == 'En ligne' ? 'bg-success' : 'bg-info' }}">
+                            {{ evenement.modalite }}
+                        </div>
+                        
+                        <!-- Image de l'événement -->
+                      
+                            {% if evenement.image %}
+                                <div class="card-image" style="background-image: url('{{ asset(evenement.image) }}')">
+                                        <div class="overlay-soldout position-absolute w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6); top: 0; left: 0;">
+                                            <img src="{{ asset('uploads/evenements/termine.png') }}" alt="Sold Out" class="position-absolute top-50 start-50 translate-middle" style="max-width: 70%;"/>
+                                        </div>
+                                    <div class="card-date text-white">
+                                        <span class="day fw-bold">{{ evenement.dateDebut|date('d') }}</span>
+                                        <span class="month">{{ evenement.dateDebut|date('M') }}</span>
+                                        <span class="year">{{ evenement.dateDebut|date('Y') }}</span>
+                                    </div>
+                                </div>
+                            {% else %}
+                            <div class="card-image" style="background: var(--secondary-gradient); filter: grayscale(30%); opacity: 0.9;">
+                                <div class="card-date text-white">
+                                    <span class="day fw-bold">{{ evenement.dateDebut|date('d') }}</span>
+                                    <span class="month">{{ evenement.dateDebut|date('M') }}</span>
+                                    <span class="year">{{ evenement.dateDebut|date('Y') }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Contenu de la carte -->
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h3 class="card-title h5 mb-0">{{ evenement.titre }}</h3>
+                                <span class="badge bg-light text-dark">
+                                    {{ evenement.prix ? evenement.prix ~ 'DT' : 'Gratuit' }}
+                                </span>
+                            </div>
+                            
+                            <div class="card-meta mb-3">
+                                <span class="d-block text-muted mb-1">
+                                    <i class="mdi mdi-map-marker-outline me-1"></i> 
+                                    {{ evenement.lieu }}
+                                </span>
+                                <span class="d-block text-muted">
+                                    <i class="mdi mdi-clock-outline me-1"></i>
+                                    {% if evenement.heure is not null %}
+                                        {{ evenement.heure|date('H:i') }}h
+                                    {% else %}
+                                        Non spécifié
+                                    {% endif %}
+                                </span>
+                                
+                                <span class="d-block text-secondary">
+                                    <i class="mdi mdi-calendar-check me-1"></i>
+                                    Terminé
+                                </span>
+                            </div>
+                            
+                            <!-- type -->
+                            <div class="mb-3">
+                                {% if evenement.type== 'RH' %}
+                                    <span class="badge bg-danger text-white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Technologie & Innovation' %}
+                                    <span class="badge bg-success text-white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Loisir' %}
+                                    <span class="badge bg-info text-white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Soft Skills' %}
+                                    <span class="badge bg-warning text-dark">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Finance' %}
+                                    <span class="badge" style="background-color: #6f42c1; color: white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Marketing' %}
+                                    <span class="badge" style="background-color: #d63384; color: white">{{ evenement.type }}</span>
+                                {% elseif evenement.type == 'Management' %}
+                                    <span class="badge" style="background-color: #6610f2; color: white">{{ evenement.type }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary text-white">{{ evenement.type }}</span>
+                                {% endif %}
+                                <button class="favorite-btn" data-event-id="{{ evenement.id }}">
+                                    {% if evenement.id in favorisIds %}
+                                        <i class="mdi mdi-heart favorite-active"></i>
+                                    {% else %}
+                                        <i class="mdi mdi-heart-outline"></i>
+                                    {% endif %}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 px-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1 me-1" data-toggle="modal" data-target="#eventModal{{ evenement.id }}">
+                                    <i class="mdi mdi-information-outline me-1"></i> Détails
+                                </button>
+                                
+                                {% if evenement.id in reservationsIds|default([]) %}
+                                    <span class="text-success flex-grow-1 me-1 text-center">
+                                        <i class="mdi mdi-check-circle me-1"></i> Vous avez participé
+                                    </span>
+                                {% else %}
+                                    <span class="text-muted flex-grow-1 me-1 text-center">
+                                        <i class="mdi mdi-history me-1"></i> Événement passé
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="mdi mdi-history"></i>
+                    <h4>Aucun événement terminé</h4>
+                    <p class="text-muted">Aucun événement n'a encore été marqué comme terminé</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

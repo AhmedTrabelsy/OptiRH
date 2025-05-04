@@ -271,6 +271,10 @@
 .favorite-active {
     color: red; /* Ou une autre couleur pour l'icône rouge */
 }
+ a.fw-bold.text-warning.text-decoration-none:hover {
+        color: #ffc107 !important;
+        text-decoration: underline !important;
+    }
 
 
 
@@ -298,7 +302,10 @@
                 <div class="countdown-container animate__animated animate__fadeIn animate__delay-1s">
                     <h5 class="text-white mb-3">
                         Ne ratez pas l'événement 
-                        <span class="fw-bold text-warning">"{{ closestEvent.titre }}"</span> 
+                        <a href="{{ path('app_reservation_evenement_details', {id: closestEvent.id}) }}" class="fw-bold text-warning text-decoration-none" style="transition: all 0.3s ease;">
+                            "{{ closestEvent.titre }}"
+                            <i class="mdi mdi-arrow-right-circle-outline"></i>
+                        </a> 
                         qui commence dans :
                     </h5>
                     <div class="d-flex justify-content-center gap-3" id="countdown">
@@ -494,10 +501,31 @@
                     
                     <!-- Bouton de réservation centré en bas -->
                     <div class="text-center mt-4">
-                        <a href="{{ path('app_reservation_evenement_new', {id: evenement.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill">
-                            <i class="mdi mdi-ticket-confirmation me-1"></i> Réserver
-                        </a>
-                    </div>
+                        {% set now = "now"|date("U") %}
+                        {% set eventDate = evenement.dateDebut|date("U") %}
+                        
+                        {% if eventDate < now %}
+                            <!-- Événement passé -->
+                            <span class="text-muted flex-grow-1 me-1 text-center">
+                                <i class="mdi mdi-calendar-check me-1"></i> Événement passé
+                            </span>
+                        {% elseif evenement.id in reservationsIds|default([]) %}
+                            <!-- Utilisateur a déjà réservé -->
+                            <span class="text-success flex-grow-1 me-1 text-center">
+                                <i class="mdi mdi-check-circle me-1"></i> Déjà réservé
+                            </span>
+                        {% elseif evenement.nbrPersonnes <= 0 %}
+                            <!-- Événement complet -->
+                            <span class="text-danger flex-grow-1 me-1 text-center">
+                                <i class="mdi mdi-close-circle me-1"></i> Complet
+                            </span>
+                        {% else %}
+                            <!-- Réservation possible -->
+                            <a href="{{ path('app_reservation_evenement_new', {id: evenement.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1 me-1">
+                                <i class="mdi mdi-ticket-confirmation me-1"></i> Réserver
+                            </a>
+                        {% endif %}
+                            </div>
                 </div>
             </div>
         </div>
@@ -547,6 +575,21 @@
 
 
 <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+        const eventLink = document.querySelector('a.fw-bold.text-warning');
+        if (eventLink) {
+            eventLink.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.textShadow = '0 0 10px rgba(255, 193, 7, 0.5)';
+            });
+            
+            eventLink.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+                this.style.textShadow = 'none';
+            });
+        }
+    });
 
 // Fonction pour attacher les gestionnaires d'événements aux boutons favoris
 function attachFavoriteEventHandlers() {
@@ -749,6 +792,7 @@ $(document).ready(function() {
     // Charger les événements initiaux avec l'ordre approprié
     loadEvents();
 });
+
 </script>
 
 {% endblock %}
