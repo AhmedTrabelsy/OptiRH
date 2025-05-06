@@ -626,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     start: info.event.start.toISOString(),
                     projectTitle: info.event.extendedProps.projectTitle,
                     isLate: info.event.extendedProps.isLate,
-                    meetLink: info.event.extendedProps.meetLink // Ajout de meetLink
+                    meetLink: info.event.extendedProps.meetLink
                 };
 
                 // Réinitialiser le chatbot
@@ -759,6 +759,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: 'Statut mis à jour avec succès',
                 timer: 1000,
                 showConfirmButton: false
+            }).then(() => {
+                // Fermer la modale
+                const modal = bootstrap.Modal.getInstance(document.getElementById('missionModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                
+                // Rafraîchir la page
+                window.location.reload();
             });
 
             allEvents = allEvents.map(event => 

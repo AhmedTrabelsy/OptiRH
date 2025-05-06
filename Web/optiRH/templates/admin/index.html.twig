@@ -125,6 +125,36 @@
         .stat-card:nth-child(3) .stat-value {
             color: var(--danger-color);
         }
+        @media print {
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                padding: 20px;
+            }
+            .generated-report {
+                padding: 0;
+                max-height: none;
+                overflow: visible;
+            }
+            .analysis-section {
+                page-break-inside: avoid;
+                margin-bottom: 15px;
+            }
+            h3 {
+                page-break-after: avoid;
+            }
+            .chart-container {
+                page-break-inside: avoid;
+            }
+            .no-print {
+                display: none ;
+            }
+            .card-style {
+                box-shadow: none ;
+                border: 1px solid #eee ;
+            }
+        }
 
         /* Charts Section */
         .chart-container {
@@ -804,44 +834,43 @@
     </div>
 
     <!-- Complaints Section -->
-        <h3 class="mt-5"><i class="fas fa-comment-alt"></i> Réclamations</h3>
-
-        <div class="summary-cards">
-            <div class="summary-card">
-                <h5><i class="fas fa-chart-pie"></i> Taux de résolution</h5>
-                <div class="card-value {{ resolutionRate is defined ? (resolutionRate > 75 ? 'positive' : (resolutionRate < 50 ? 'negative' : 'neutral')) : 'neutral' }}">
-                    {{ resolutionRate is defined ? resolutionRate : 0 }}%
-                </div>
-                <p>des réclamations sont résolues</p>
+    <h3 class="mt-5"><i class="fas fa-comment-alt"></i> Réclamations</h3>
+    <div class="summary-cards">
+        <div class="summary-card">
+            <h5><i class="fas fa-chart-pie"></i> Taux de résolution</h5>
+            <div class="card-value {{ resolutionRate is defined ? (resolutionRate > 75 ? 'positive' : (resolutionRate < 50 ? 'negative' : 'neutral')) : 'neutral' }}">
+                {{ resolutionRate is defined ? resolutionRate : 0 }}%
             </div>
-            <div class="summary-card">
-                <h5><i class="fas fa-thermometer-half"></i> Sentiment dominant</h5>
-                <div class="card-value" id="dominant-sentiment">
-                    {% if sentimentData|length > 1 %}
-                        {% set dominantSentiment = sentimentData|slice(1)|sort((a, b) => b[1] <=> a[1])|first %}
-                        <span class="{{ dominantSentiment[0] == 'Positif' ? 'positive' : (dominantSentiment[0] == 'Négatif' ? 'negative' : 'neutral') }}">
-                            {{ dominantSentiment[0] }}
-                        </span>
-                    {% else %}
-                        <span class="neutral">N/A</span>
-                    {% endif %}
-                </div>
-                <p>des réclamations</p>
-            </div>
-            <div class="summary-card">
-                <h5><i class="fas fa-folder-open"></i> Type principal</h5>
-                <div class="card-value" id="dominant-type">
-                    {% if typeData|length > 1 %}
-                        {% set dominantType = typeData|slice(1)|sort((a, b) => b[1] <=> a[1])|first %}
-                        {{ dominantType[0] }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </div>
-                <p>des réclamations</p>
-            </div>
+            <p>des réclamations sont résolues</p>
         </div>
-        
+        <div class="summary-card">
+            <h5><i class="fas fa-thermometer-half"></i> Sentiment dominant</h5>
+            <div class="card-value" id="dominant-sentiment">
+                {% if sentimentData|length > 1 %}
+                    {% set dominantSentiment = sentimentData|slice(1)|sort((a, b) => b[1] <=> a[1])|first %}
+                    <span class="{{ dominantSentiment[0] == 'Positif' ? 'positive' : (dominantSentiment[0] == 'Négatif' ? 'negative' : 'neutral') }}">
+                        {{ dominantSentiment[0] }}
+                    </span>
+                {% else %}
+                    <span class="neutral">N/A</span>
+                {% endif %}
+            </div>
+            <p>des réclamations</p>
+        </div>
+        <div class="summary-card">
+            <h5><i class="fas fa-folder-open"></i> Type principal</h5>
+            <div class="card-value" id="dominant-type">
+                {% if typeData|length > 1 %}
+                    {% set dominantType = typeData|slice(1)|sort((a, b) => b[1] <=> a[1])|first %}
+                    {{ dominantType[0] }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </div>
+            <p>des réclamations</p>
+        </div>
+    </div>
+
     <!-- Projects and Missions Charts -->
     <h3 class="mt-5"><i class="fas fa-chart-bar"></i> Statistiques des Projets et Missions</h3>
     <div class="chart-container">
@@ -875,7 +904,7 @@
             </div>
         </div>
     </div>
-  <div><br><br>
+
     <!-- Late Missions Section -->
     <div class="late-items fade-in">
         <h3><i class="fas fa-exclamation-triangle text-danger me-2"></i> Missions en retard ({{ delayed_missions|length }})</h3>
@@ -989,9 +1018,14 @@
             <h3 class="mb-0">
                 <i class="fas fa-robot me-2"></i> Analyse Intelligente
             </h3>
-            <button id="generateAnalysis" class="btn btn-primary">
-                <i class="fas fa-magic me-1"></i> Générer le Rapport
-            </button>
+            <div>
+                <button id="generateAnalysis" class="btn btn-primary me-2">
+                    <i class="fas fa-magic me-1"></i> Générer le Rapport
+                </button>
+                <button id="exportPdf" class="btn btn-danger" disabled>
+                    <i class="fas fa-file-pdf me-1"></i> Exporter en PDF
+                </button>
+            </div>
         </div>
         <div class="analysis-content" id="geminiAnalysisContent">
             <div class="text-center py-5" id="analysisPlaceholder">
@@ -1000,7 +1034,8 @@
             </div>
         </div>
     </div>
-<div><br></div>
+    <div><br></div>
+
     <!-- Loading Modal -->
     <div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -1031,9 +1066,9 @@
             <div id="morris-bar-demande" style="height: 350px;" class="morris-chart" data-colors="#3AB5CE"></div>
         </div>
     </div>
-    <div class="stats-container">
 
-        <!-- Complaint Charts -->
+    <!-- Complaint Charts -->
+    <div class="stats-container">
         <div class="stats-card">
             <div class="stats-card-header">
                 <i class="fas fa-tasks"></i> Répartition par statut
@@ -1059,7 +1094,6 @@
             <div id="timeline-chart" class="stats-chart"></div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block javascript %}
@@ -1154,7 +1188,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const state = {
         isGeneratingReport: false,
         currentReport: null,
-        morrisCharts: {}
+        morrisCharts: {},
+        pdfEndpoint: '{{ path('admin_export_pdf') }}'
     };
 
     // DOM Elements
@@ -1166,7 +1201,8 @@ document.addEventListener('DOMContentLoaded', function() {
         lateItemsContainer: document.querySelector('.late-items'),
         flowchartDiagram: document.getElementById('flowchart-diagram'),
         dominantSentiment: document.getElementById('dominant-sentiment'),
-        dominantType: document.getElementById('dominant-type')
+        dominantType: document.getElementById('dominant-type'),
+        exportPdfBtn: document.getElementById('exportPdf')
     };
 
     // UI Helpers
@@ -1353,6 +1389,54 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
 
+        exportToPdf: async () => {
+            if (!state.currentReport) {
+                ui.showError('Veuillez d\'abord générer un rapport avant de l\'exporter');
+                return;
+            }
+
+            const loadingSwal = Swal.fire({
+                title: 'Génération du PDF',
+                html: 'Préparation du document en cours...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                const response = await fetch(state.pdfEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        html: state.currentReport,
+                        title: 'Rapport Administratif - ' + new Date().toLocaleDateString('fr-FR')
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la génération du PDF');
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'rapport-admin-' + new Date().toISOString().slice(0, 10) + '.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            } catch (error) {
+                ui.showError(error.message || 'Une erreur est survenue lors de la génération du PDF');
+            } finally {
+                loadingSwal.close();
+            }
+        },
+
         drawMissionCharts: () => {
             // Mission Status Chart
             const statusCtx = document.getElementById('missionStatusChart').getContext('2d');
@@ -1411,7 +1495,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // Mission Timeline Chart - Utilisez maintenant les données réelles
+            // Mission Timeline Chart
             const timelineCtx = document.getElementById('missionTimelineChart').getContext('2d');
             const timelineChart = new Chart(timelineCtx, {
                 type: 'line',
@@ -1855,9 +1939,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await api.generateAnalysis();
                 state.currentReport = data.report;
                 ui.updateReportContent(data.report);
+                elements.exportPdfBtn.disabled = false; // Enable the PDF button
             } catch (error) {
                 ui.showError(error.message || 'Erreur lors de la génération du rapport');
                 state.currentReport = null;
+                elements.exportPdfBtn.disabled = true; // Disable the PDF button on error
             } finally {
                 state.isGeneratingReport = false;
                 ui.hideLoader();
@@ -1868,6 +1954,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event Listeners
     elements.generateBtn.addEventListener('click', () => features.handleReportGeneration(false));
+    elements.exportPdfBtn.addEventListener('click', () => features.exportToPdf());
 
     // Initialize all features with delay to ensure everything is loaded
     setTimeout(() => {

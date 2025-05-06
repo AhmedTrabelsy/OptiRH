@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use Doctrine\ORM\Query;
 use App\Entity\Reclamation;
 use Psr\Log\LoggerInterface;
+use Knp\Snappy\Pdf;
 
 use App\Entity\Demande;
 use App\Entity\Offre;
@@ -787,4 +788,62 @@ class HomeController extends AbstractController
             'timelineDataJson' => json_encode($timelineData)
         ]);
     }
+
+#[Route('/export-analysis-pdf', name: 'admin_export_pdf')]
+
+public function exportAnalysisPdf(Request $request, Pdf $knpSnappyPdf): Response
+{
+    $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+    // Solution hybride pour accepter JSON et FormData
+    if ($request->headers->get('Content-Type') === 'application/json') {
+        $data = json_decode($request->getContent(), true);
+        $html = $data['html'] ?? null;
+    } else {
+        $html = $request->request->get('html');
+    }
+
+    if (empty($html)) {
+        return new JsonResponse(
+            ['error' => 'No HTML content provided'], 
+            400,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    // Configuration PDF avec un style personnalisé
+    $pdfOptions = [
+        'margin-top'    => 15,
+        'margin-bottom' => 15,
+        'margin-left'   => 10,
+        'margin-right'  => 10,
+        'encoding'      => 'UTF-8',
+        'enable-local-file-access' => true,
+        'javascript-delay' => 1000,
+        'header-html'   => $this->renderView('admin/pdf/_header.html.twig'),
+        'footer-html'   => $this->renderView('admin/pdf/_footer.html.twig'),
+        'page-size'     => 'A4',
+        'orientation'   => 'Portrait'
+    ];
+
+    try {
+        // Génération du PDF avec le contenu personnalisé
+        $pdfContent = $knpSnappyPdf->getOutputFromHtml($html, $pdfOptions);
+
+        return new Response(
+            $pdfContent,
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="rapport-admin-'.date('Y-m-d-H-i').'.pdf"'
+            ]
+        );
+    } catch (\Exception $e) {
+        return new JsonResponse(
+            ['error' => 'PDF generation failed: '.$e->getMessage()],
+            500,
+            ['Content-Type' => 'application/json']
+        );
+    }
+}
 }

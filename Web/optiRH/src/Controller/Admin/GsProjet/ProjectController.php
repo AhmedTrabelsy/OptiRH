@@ -460,4 +460,24 @@ private function groupMissionsByStatus(array $missions): array
             'search' => $search,
         ]);
     }
+    #[Route('/{id}/report', name: 'project_report', methods: ['GET'])]
+    public function generateReport(
+        Project $project, 
+        MissionRepository $missionRepository,
+        GeminiAnalysisService $geminiService
+    ): Response {
+        $missions = $missionRepository->findBy(['project' => $project]);
+        
+        try {
+            $report = $geminiService->generateProjectReport($project, $missions);
+            
+            return $this->render('gs-projet/project/report.html.twig', [
+                'project' => $project,
+                'report' => $report // Laissez le template gérer l'affichage selon le type
+            ]);
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Erreur lors de la génération du rapport: '.$e->getMessage());
+            return $this->redirectToRoute('gs-projet_project_show', ['id' => $project->getId()]);
+        }
+    }
 }

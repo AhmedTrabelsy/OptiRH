@@ -15,10 +15,112 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        /* Existing styles for mission cards and other elements */
+        .mission-card {
+            max-width: 100%;
+            overflow: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .mission-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        }
+        .mission-card .card-title {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            line-height: 1.4;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            min-height: 2.8em;
+        }
+        .kanban-list .card {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .kanban-list .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        }
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.3em 0.6em;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-body {
+            padding: 1rem;
+        }
+        .mission-details {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .mission-assignee {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        .loading-overlay .spinner-border {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-width: 0.25em;
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .mission-card .card-title {
+                font-size: 0.9rem;
+                min-height: 2.6em;
+            }
+            .card-body {
+                padding: 0.8rem;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
 <div class="container-fluid">
+   
     <!-- Flash Messages -->
     {% for label, messages in app.flashes %}
         {% for message in messages %}
@@ -60,20 +162,24 @@
                                title="Exporter PDF"
                                aria-label="Exporter le projet en PDF">
                                <i class="ri-file-pdf-line" style="margin-right: 8px; font-size: 18px;"></i> PDF
-              </a>
-               {% if project.meetLink %}
+                            </a>
+                            {% if project.meetLink %}
                             <a href="{{ project.meetLink }}" 
                                class="btn-meet btn-sm rounded-pill"
                                style="background-color: #34C759; color: white; text-decoration: none; padding: 6px 12px; border-radius: 25px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px;"
                                data-project-id="{{ project.id }}"
                                data-meet-link="{{ project.meetLink }}"
                                target="_blank"
-                               title="Rejoindre la réunion  Meet"
-                               aria-label="Rejoindre la réunion  Meet">
+                               title="Rejoindre la réunion Meet"
+                               aria-label="Rejoindre la réunion Meet">
                                <i class="ri-vidicon-line" style="margin-right: 8px; font-size: 18px;"></i> Rejoindre Meet
                             </a>
                             {% endif %}
-
+                            <a href="{{ path('gs-projet_project_project_report', {'id': project.id}) }}" 
+       class="btn btn-sm btn-info rounded-pill"
+       style="background-color: #6f42c1; color: white; text-decoration: none; padding: 6px 12px; border-radius: 25px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px;">
+       <i class="ri-ai-generate me-1"></i> Rapport IA
+    </a>
                         </div>
                     </div>
           
@@ -186,7 +292,7 @@
                                                 ? today.diff(missionEndDate).days 
                                                 : 0 %}
 
-                                            <div class="card mb-3 shadow-sm-hover {% if daysLate > 0 %}border-danger border-start border-3{% endif %}">
+                                            <div class="card mb-3 shadow-sm-hover mission-card {% if daysLate > 0 %}border-danger border-start border-3{% endif %}">
                                                 <div class="card-body">
                                                     <div class="d-flex align-items-start">
                                                         <div class="form-check form-switch me-2">
@@ -197,8 +303,8 @@
                                                                    {{ mission.status == 'Done' ? 'checked' : '' }}
                                                                    aria-label="Marquer la mission {{ mission.titre }} comme terminée">
                                                         </div>
-                                                        <div class="flex-grow-1">
-                                                            <h6 class="card-title mb-1">
+                                                        <div class="flex-grow-1" style="min-width: 0;">
+                                                            <h6 class="card-title" title="{{ mission.titre }}">
                                                                 <a href="{{ path('gs-projet_project_mission_show', {'id': mission.id}) }}" 
                                                                    class="text-dark stretched-link">
                                                                     {{ mission.titre }}
@@ -213,11 +319,11 @@
                                                                 </span>
                                                             </div>
                                                             {% if mission.assignedTo %}
-                                                            <div class="d-flex align-items-center">
-                                                                <small>{{ mission.assignedTo.nom }}</small>
+                                                            <div class="d-flex align-items-center mb-1">
+                                                                <small class="mission-assignee">{{ mission.assignedTo.nom }}</small>
                                                             </div>
                                                             <div>
-                                                                <small class="{% if daysLate > 0 %}text-danger{% else %}text-muted{% endif %}">
+                                                                <small class="mission-details {% if daysLate > 0 %}text-danger{% endif %}">
                                                                     <i class="ri-calendar-line me-1"></i>
                                                                     {{ mission.dateTerminer|date('d/m/Y') }}
                                                                     {% if daysLate > 0 %}
@@ -251,9 +357,13 @@
 
 {% block javascripts %}
 {{ parent() }}
-<!-- Tokens CSRF séparés -->
+<!-- Tokens CSRF -->
 <meta name="csrf-token-meet" content="{{ csrf_token('send_meet_invitations') }}">
 <meta name="csrf-token-mission" content="{{ csrf_token('mission_status') }}">
+
+<!-- JS Dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -275,6 +385,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         .btn-meet:hover {
             opacity: 0.9;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spin {
+            animation: spin 1s linear infinite;
         }
     `;
     document.head.appendChild(style);
@@ -303,41 +420,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(result.message || 'Erreur lors de l\'envoi');
                 }
 
-                // Notification Toast Bootstrap
-                const toast = new bootstrap.Toast(document.createElement('div'));
-                toast._element.className = 'toast align-items-center text-white bg-success';
-                toast._element.innerHTML = `
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <i class="ri-checkbox-circle-fill me-2"></i>
-                            ${result.message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                `;
-                document.body.appendChild(toast._element);
-                toast.show();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Succès',
+                    text: result.message,
+                    confirmButtonText: 'OK'
+                });
 
-                // Ouvrir le lien après 1.5s
                 setTimeout(() => {
                     window.open(meetLink, '_blank');
                 }, 1500);
 
             } catch (error) {
                 console.error('Erreur:', error);
-                const toast = new bootstrap.Toast(document.createElement('div'));
-                toast._element.className = 'toast align-items-center text-white bg-danger';
-                toast._element.innerHTML = `
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <i class="ri-close-circle-fill me-2"></i>
-                            ${error.message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                    </div>
-                `;
-                document.body.appendChild(toast._element);
-                toast.show();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: error.message,
+                    confirmButtonText: 'OK'
+                });
             }
         });
     });
@@ -366,13 +467,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (!response.ok) throw new Error('Échec de la mise à jour');
 
-                // Animation de succès
                 card.classList.add('border-success');
                 setTimeout(() => {
                     card.style.transform = '';
                     card.style.opacity = '';
                     card.classList.remove('border-success');
-                    location.reload(); // Recharger pour mettre à jour les stats
+                    location.reload();
                 }, 1000);
 
             } catch (error) {
@@ -387,8 +487,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Initialisation des tooltips
-    new bootstrap.Tooltip(document.body, {
-        selector: '[data-bs-toggle="tooltip"]'
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 });
 </script>

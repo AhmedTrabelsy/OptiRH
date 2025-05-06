@@ -536,4 +536,143 @@ PROMPT;
         $missionHash = md5(json_encode($missions));
         return sprintf('gemini_analysis_%s_%s', $projectHash, $missionHash);
     }
+/**
+ * Génère un rapport détaillé pour un projet spécifique.
+ */
+public function generateProjectReport(Project $project, array $missions): string
+{
+    $cacheKey = $this->generateProjectReportCacheKey($project, $missions);
+
+    return $this->cache->get($cacheKey, function (ItemInterface $item) use ($project, $missions) {
+        $item->expiresAfter(self::CACHE_TTL);
+
+        try {
+            $response = $this->httpClient->request(
+                'POST',
+                $this->buildApiUrl(),
+                $this->buildProjectReportRequestOptions($project, $missions)
+            );
+
+            $data = json_decode($response->getContent(), true);
+            $this->validateResponse($response, $data);
+
+            return $this->formatProjectReportResponse($this->extractContent($data));
+            
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to generate project report', [
+                'error' => $e->getMessage(),
+                'project' => $project->getId()
+            ]);
+            
+            return $this->formatErrorMessage($e);
+        }
+    });
+}
+
+private function buildProjectReportRequestOptions(Project $project, array $missions): array
+{
+    $missionsSample = array_slice($missions, 0, 3);
+    $sampleData = [];
+    
+    foreach ($missionsSample as $mission) {
+        $sampleData[] = [
+            'Titre' => $mission->getTitre(),
+            'Statut' => $mission->getStatus(),
+            'Date' => $mission->getDateTerminer() ? $mission->getDateTerminer()->format('Y-m-d') : null
+        ];
+    }
+
+    $prompt = $this->buildProjectReportPrompt(
+        $project,
+        count($missions),
+        $sampleData
+    );
+
+    return [
+        'headers' => ['Content-Type' => 'application/json'],
+        'json' => [
+            'contents' => [
+                ['parts' => [['text' => $prompt]]]
+            ],
+            'generationConfig' => [
+                'maxOutputTokens' => 2000,
+                'temperature' => 0.3
+            ]
+        ],
+        'timeout' => self::REQUEST_TIMEOUT
+    ];
+    
+
+}
+
+private function buildProjectReportPrompt(Project $project, int $missionCount, array $missionSamples): string
+{
+    $samples = '';
+    foreach ($missionSamples as $sample) {
+        $samples .= "- " . json_encode($sample) . "\n";
+    }
+
+    return <<<PROMPT
+Générez un rapport professionnel en français pour le projet suivant.
+Focus sur l'analyse des risques et recommandations actionnables.
+
+# Données du projet
+Nom: {$project->getNom()}
+Description: {$project->getDescription()}
+Statut: {$project->getStatus()}
+Missions: {$missionCount}
+
+# Exemples de missions
+{$samples}
+
+# Instructions
+1. Commencez par un résumé exécutif
+2. Analysez les points critiques
+3. Proposez 3-5 recommandations
+4. Limitez à 30 lignes maximum
+PROMPT;
+}
+/**
+ * Formate la réponse du rapport de projet.
+ */
+private function formatProjectReportResponse(string $content): string
+{
+    $content = nl2br(htmlspecialchars($content));
+    $replacements = [
+        '## ' => '</div><div class="project-report-section"><h3>',
+        '### ' => '</div><div class="project-report-subsection"><h4>',
+        "\n- " => '</li><li class="project-report-item">',
+        "\n* " => '</li><li class="project-report-item">',
+        "\n" => '<br>',
+    ];
+
+    $formatted = str_replace(
+        array_keys($replacements),
+        array_values($replacements),
+        $content
+    );
+
+    return '<div class="project-report-container">'
+        . '<div class="project-report-section"><h3>Rapport du projet</h3>'
+        . $formatted
+        . '</div></div>';
+}
+
+/**
+ * Génère une clé de cache pour le rapport de projet.
+ */
+private function generateProjectReportCacheKey(Project $project, array $missions): string
+{
+    $projectHash = md5(json_encode([
+        $project->getId()
+    ]));
+    
+    $missionHashes = array_map(function($mission) {
+        return $mission->getId() . $mission->getUpdatedAt()->getTimestamp();
+    }, $missions);
+    
+    $missionsHash = md5(implode(',', $missionHashes));
+    
+    return sprintf('project_report_%s_%s', $projectHash, $missionsHash);
+}
 }
