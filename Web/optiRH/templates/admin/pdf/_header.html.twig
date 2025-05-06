@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .header {
+            width: 100%;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            height: 60px; /* Taille augmentée de 40px à 60px */
+            width: auto; 
+            align: center; /* Maintient les proportions */
+        }
+        .report-title {
+            font-size: 16px; /* Légèrement plus grand */
+            color: #4e73df;
+            font-weight: bold;
+             text-align: right;
+
+            margin: 0 20px; /* Espacement amélioré */
+        }
+        .date {
+            font-size: 11px; /* Légèrement plus grand */
+            color: #666;
+            min-width: 120px; /* Garantit un espace suffisant */
+        }
+        .page-count {
+            font-size: 10px;
+            color: #666;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="report-title">Rapport Administratif</div>
+
+            <div class="date">{{ "now"|date("d/m/Y H:i") }}</div>
+    <img src="{{ absolute_url(asset('images/logoGris_enhanced.png')) }}" class="logo" alt="Logo OptiRH" >
+
+        </div>
+    </div>
+</body>
+</html>

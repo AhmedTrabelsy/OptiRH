@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .footer {
+            width: 100%;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 5px;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 8px;
+            color: #666;
+            text-align: center;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+        }
+        .page-number {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="footer">
+        <div class="footer-content">
+            <div>OptiRH © {{ "now"|date("Y") }} - Tous droits réservés</div>
+            <div class="page-number">
+                Page <span class="page"></span> sur <span class="topage"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Script pour la numérotation des pages
+        var vars = {};
+        var x = document.location.search.substring(1).split('&');
+        for (var i in x) {
+            var z = x[i].split('=', 2);
+            vars[z[0]] = decodeURIComponent(z[1]);
+        }
+        document.querySelector('.page').textContent = vars.page || 1;
+        document.querySelector('.topage').textContent = vars.topage || 1;
+    </script>
+</body>
+</html>

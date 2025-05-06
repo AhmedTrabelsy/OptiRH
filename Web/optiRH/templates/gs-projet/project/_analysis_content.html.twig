@@ -1,0 +1,13 @@
+{% if analysis is defined and analysis is not empty %}
+    <div class="gemini-analysis">
+        {{ analysis|raw }}
+    </div>
+    <div class="text-muted small mt-3">
+        <i class="ri-time-line"></i> Généré le {{ "now"|date('d/m/Y H:i') }}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="ri-information-line me-2"></i>
+        L'analyse intelligente n'est pas disponible pour le moment.
+    </div>
+{% endif %}
