@@ -103,11 +103,22 @@ La version **web** permet une gestion dématérialisée et centralisée des ress
    symfony server:start
    ```
 
-8. **(Optionnel) Configurer l'application desktop JavaFX**
+8. **Configurer l'application desktop JavaFX**
 
-   - Assurez-vous d'avoir un JDK 17+ installé.
-   - Importez le projet JavaFX dans votre IDE (par exemple, IntelliJ IDEA ou Eclipse).
-   - Compilez et exécutez l'application desktop depuis le module dédié.
+     1. **Cloner le dépôt**
+      ```bash
+          git clone https://github.com/votre-utilisateur/OptiRH.git
+          cd OptiRH
+      ```
+    2. **Configurer la base de données**
+       - Créer une base de données `optirh_db`
+       - Configurer les accès dans `application.properties`
+    
+    3. **Compiler et exécuter l'application**
+      ```bash
+          mvn clean install
+          mvn javafx:run
+      ```
 
 ### Vérifications post-installation
 
@@ -115,16 +126,22 @@ La version **web** permet une gestion dématérialisée et centralisée des ress
 - Testez l'authentification et les fonctionnalités principales (gestion des utilisateurs, offres, etc.).
 - Vérifiez les logs (`var/log/dev.log`) en cas d'erreur.
 
+## 📌 Diagrammes UML & Charte graphique
+- **Diagrammes UML** : Définition des rôles (administrateur, chef de projet, employé...)
+- **Charte graphique** : 
+  - **Couleurs** : Bleu marine & turquoise (stabilité et dynamisme)
+  - **Typographie** : Roboto (clarté et modernité)
+  - **Interfaces UX/UI** : Navigation fluide et intuitive
+
 ## 📝 Notes supplémentaires
 
 - Pour un environnement de production, configurez un serveur web comme **Nginx** ou **Apache**, et assurez-vous que les permissions des dossiers `var/` et `public/` sont correctement définies.
 - Activez les notifications en temps réel en configurant un service de messagerie (par exemple, Mercure ou WebSocket) si nécessaire.
 - Pour des fonctionnalités avancées comme l'analyse des réclamations par IA, intégrez un service tiers (par exemple, une API d'IA ou un modèle local).
 
-## 📬 Contact
-
-Pour toute question ou contribution, ouvrez une issue ou contactez l'équipe via [GitHub](https://github.com/mariem-jls/OptiRH-gestion-rh).
-
+## 📩 Contact
+📧 Email : support@optirh.com  
+🌐 Site Web : [www.optirh.com](https://www.optirh.com)
 ---
 
 *OptiRH - Simplifiez la gestion de vos ressources humaines avec une solution moderne et intuitive !*
