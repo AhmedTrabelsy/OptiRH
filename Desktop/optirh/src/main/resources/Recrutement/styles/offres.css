@@ -1,0 +1,18 @@
+/* Exemple de style */
+.menu {
+    -fx-padding: 20;
+}
+
+.button {
+    -fx-background-color: #217ff8;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: #0e3b75;
+}
+
+.text-field {
+    -fx-border-radius: 5;
+    -fx-padding: 5;
+}

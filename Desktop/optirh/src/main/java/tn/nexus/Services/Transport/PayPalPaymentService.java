@@ -2,9 +2,9 @@ package tn.nexus.Services.Transport;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale; // Added for locale-specific formatting
 
 public class PayPalPaymentService {
     private static final String CLIENT_ID = "Ae0e-pqgdZLdSLCwYRkELsVgO2HQh8RcblD2Yic6yiWnTJJoNLk9NR7up5m2JrgINAH7FGq8hwi2m4UR";
@@ -15,8 +15,10 @@ public class PayPalPaymentService {
         APIContext apiContext = new APIContext(CLIENT_ID, CLIENT_SECRET, MODE);
 
         Amount paymentAmount = new Amount();
-        paymentAmount.setCurrency(currency);
-        paymentAmount.setTotal(String.format("%.2f", amount));
+        paymentAmount.setCurrency(currency.toUpperCase()); // Ensure uppercase currency code
+
+        // Fixed: Use Locale.US to enforce decimal point format
+        paymentAmount.setTotal(String.format(Locale.US, "%.2f", amount));
 
         Transaction transaction = new Transaction();
         transaction.setAmount(paymentAmount);
@@ -42,16 +44,16 @@ public class PayPalPaymentService {
             Payment createdPayment = payment.create(apiContext);
             System.out.println("Payment ID: " + createdPayment.getId());
 
-            // Récupérer l'URL d'approbation
+            // Get approval URL with French locale
             for (Links link : createdPayment.getLinks()) {
                 if (link.getRel().equalsIgnoreCase("approval_url")) {
-                    // Ajouter le paramètre de langue à l'URL d'approbation
                     String approvalUrl = link.getHref();
-                    approvalUrl += "&locale=fr_FR"; // Forcer le français
+                    approvalUrl += "&locale=fr_FR";
                     return approvalUrl;
                 }
             }
         } catch (PayPalRESTException e) {
+            System.err.println("PayPal Error: " + e.getDetails());
             e.printStackTrace();
         }
         return null;

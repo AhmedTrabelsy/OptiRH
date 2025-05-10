@@ -89,3 +89,68 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 5);
 
 }
+/* Pour un rendu HD */
+ImageView {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 3);
+}
+
+
+/* Style général pour les ComboBox */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #1a6dda;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+    -fx-pref-width: 200px;  /* Augmenter la largeur */
+    -fx-pref-height: 35px;  /* Ajuster la hauteur */
+}
+
+/* Style au survol (hover) */
+.combo-box:hover {
+    -fx-background-color: #f1f1f1;
+    -fx-border-color: #1a6dda;
+}
+
+/* Style lorsqu'un ComboBox est sélectionné */
+.combo-box:focused {
+    -fx-background-color: #e3e9f1;
+    -fx-border-color: #1a6dda;
+}
+
+/* Style de la flèche du ComboBox */
+.combo-box .arrow {
+    -fx-background-color: #1a6dda;
+    -fx-border-radius: 5px;
+}
+
+/* Style pour le texte du ComboBox */
+.combo-box .text {
+    -fx-text-fill: #333333;
+}
+
+/* Style pour le bouton de validation du ComboBox (flèche) */
+.combo-box .button {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #1a6dda;
+    -fx-border-radius: 5px;
+}
+
+/* Style pour les éléments de la liste déroulante */
+.combo-box .list-cell {
+    -fx-font-size: 14px;
+    -fx-padding: 2px;
+    -fx-background-color: #ffffff;
+}
+
+/* Survol des éléments de la liste */
+.combo-box .list-cell:hover {
+    -fx-background-color: #f1f1f1;
+}
+
+/* Sélection des éléments dans la liste */
+.combo-box .list-cell:focused {
+    -fx-background-color: #1a6dda;
+    -fx-text-fill: white;
+}
+

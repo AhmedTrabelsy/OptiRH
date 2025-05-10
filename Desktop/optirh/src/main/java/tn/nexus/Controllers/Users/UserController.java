@@ -173,7 +173,7 @@ public class UserController implements Initializable, WrapWithSideBar {
         // user.setNom(nomField.getText());
         // user.setEmail(emailField.getText());
         // user.setRole(roleField.getValue());
-        // user.setPassword(passwordField.getText());
+        // user.setMotDePasse(passwordField.getText());
         // user.setAddress(addressField.getText());
 
         // try {
