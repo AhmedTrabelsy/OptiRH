@@ -64,7 +64,7 @@ public class MissionService implements CRUD<Mission> {
     }
 
     public String getUserEmailByMission(int missionId) throws SQLException {
-        String query = "SELECT u.email FROM Users u "
+        String query = "SELECT u.email FROM User u "
                 + "JOIN Missions m ON u.id = m.assigned_to "
                 + "WHERE m.id = ?";
 
@@ -338,7 +338,7 @@ public class MissionService implements CRUD<Mission> {
     }
     public List<Mission> getTasksByUserEmail(String email) throws SQLException {
         List<Mission> missions = new ArrayList<>();
-        String query = "SELECT m.* FROM Missions m JOIN Users u ON m.assigned_to = u.id WHERE u.email = ?";
+        String query = "SELECT m.* FROM Missions m JOIN User u ON m.assigned_to = u.id WHERE u.email = ?";
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
@@ -385,7 +385,7 @@ public class MissionService implements CRUD<Mission> {
     }
     public List<Mission> getTasksByUserEmailAndDateRange(String email, Timestamp startDate, Timestamp endDate) throws SQLException {
         List<Mission> missions = new ArrayList<>();
-        String query = "SELECT m.* FROM Missions m JOIN Users u ON m.assigned_to = u.id WHERE u.email = ? AND m.date_terminer BETWEEN ? AND ?";
+        String query = "SELECT m.* FROM Missions m JOIN User u ON m.assigned_to = u.id WHERE u.email = ? AND m.date_terminer BETWEEN ? AND ?";
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
             statement.setString(1, email);
             statement.setTimestamp(2, startDate);
@@ -481,7 +481,7 @@ public class MissionService implements CRUD<Mission> {
         return missions;
     }
     public String getUserEmailByUserId(int userId) throws SQLException {
-        String query = "SELECT email FROM Users WHERE id = ?";
+        String query = "SELECT email FROM User WHERE id = ?";
         try (PreparedStatement stmt = cnx.prepareStatement(query)) {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();

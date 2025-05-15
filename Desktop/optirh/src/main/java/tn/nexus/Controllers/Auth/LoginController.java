@@ -37,17 +37,17 @@ public class LoginController {
 
             // Redirect to ListUsers.fxml
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Users/ListUsers.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Mission/MissionEmploye.fxml"));
                 Parent root = loader.load();
 
                 // Get the current stage and set the new scene
                 Stage stage = (Stage) emailField.getScene().getWindow();
                 stage.setScene(new Scene(root));
-                stage.setTitle("User List");
+                stage.setTitle("Event");
                 stage.show();
             } catch (Exception e) {
-                e.getMessage();
-                statusLabel.setText("Erreur lors de chargement de la liste des utilisateurs.");
+                System.out.println(e.getMessage());
+                statusLabel.setText("Erreur lors de chargement.");
             }
         } else {
             statusLabel.setText("Identifiants invalides.");

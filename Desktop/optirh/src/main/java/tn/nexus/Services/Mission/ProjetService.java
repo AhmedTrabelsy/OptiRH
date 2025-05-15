@@ -46,7 +46,7 @@ public class ProjetService implements CRUD<Projet> {
     }
     public List<User> getAllChefProjet() throws SQLException {
         List<User> users = new ArrayList<>();
-        String req = "SELECT id, nom FROM users WHERE role = 'Chef_Projet'"; // Filtre par rôle
+        String req = "SELECT id, nom FROM user WHERE role = 'Chef_Projet'"; // Filtre par rôle
         try (Statement st = cnx.createStatement();
              ResultSet rs = st.executeQuery(req)) {
             while (rs.next()) {
@@ -83,7 +83,7 @@ public class ProjetService implements CRUD<Projet> {
         List<Projet> projets = new ArrayList<>();
         String req = "SELECT p.id, p.nom, p.description, p.created_at, u.nom AS user_nom " +
                 "FROM Projects p " +
-                "JOIN Users u ON p.created_by = u.id";
+                "JOIN User u ON p.created_by = u.id";
         try (PreparedStatement ps = cnx.prepareStatement(req);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -103,7 +103,7 @@ public class ProjetService implements CRUD<Projet> {
         List<Projet> projets = new ArrayList<>();
         String req = "SELECT p.id, p.nom, p.description, p.created_at, u.nom AS user_nom " +
                 "FROM Projects p " +
-                "JOIN Users u ON p.created_by = u.id " +
+                "JOIN User u ON p.created_by = u.id " +
                 "WHERE p.created_by = ?";
         try (PreparedStatement ps = cnx.prepareStatement(req)) {
             ps.setInt(1, userId);
@@ -125,7 +125,7 @@ public class ProjetService implements CRUD<Projet> {
         List<Projet> projets = new ArrayList<>();
         String req = "SELECT p.*, u.nom AS user_nom " +
                 "FROM projects p " +
-                "JOIN users u ON p.created_by = u.id " +
+                "JOIN user u ON p.created_by = u.id " +
                 "WHERE u.email LIKE ?";
 
         try (PreparedStatement ps = cnx.prepareStatement(req)) {
@@ -154,7 +154,7 @@ public class ProjetService implements CRUD<Projet> {
         List<Projet> projets = new ArrayList<>();
         String req = "SELECT p.*, u.nom AS user_nom " +
                 "FROM projects p " +
-                "JOIN users u ON p.created_by = u.id " +
+                "JOIN user u ON p.created_by = u.id " +
                 "WHERE NOT EXISTS (" +
                 "   SELECT 1 FROM missions m " +
                 "   WHERE m.project_id = p.id AND m.status <> 'Done'" + // Utilisation de '<>' pour compatibilité SQL
@@ -176,7 +176,7 @@ public class ProjetService implements CRUD<Projet> {
 
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-        String req = "SELECT id, nom FROM users";
+        String req = "SELECT id, nom FROM user";
         try (Statement st = cnx.createStatement();
              ResultSet rs = st.executeQuery(req)) {
             while (rs.next()) {
