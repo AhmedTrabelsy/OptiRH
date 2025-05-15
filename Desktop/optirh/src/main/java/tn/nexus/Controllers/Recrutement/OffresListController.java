@@ -3,21 +3,24 @@ package tn.nexus.Controllers.Recrutement;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tn.nexus.Entities.Recrutement.Offre;
 import tn.nexus.Services.Recrutement.OffreService;
 
+
+
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
@@ -29,6 +32,13 @@ public class OffresListController {
     private TextField searchField;
     @FXML
     private VBox offresList;
+
+    @FXML
+    private ComboBox<String> modeTravailFilterCombo;
+    @FXML
+    private ComboBox<String> typeContratFilterCombo;
+    @FXML
+    private ComboBox<String> niveauExperienceFilterCombo;
 
     private OffreService offreService = new OffreService();
     private final BooleanProperty emptyList = new SimpleBooleanProperty();
@@ -101,38 +111,58 @@ public class OffresListController {
         offresList.getChildren().add(offrePane);
     }
 
-   /* @FXML
-    private void handleSearch() throws SQLException { // Retirez throws SQLException
-        offresList.getChildren().clear();
-        List<Offre> filtered = offreService.getAllOffres(searchField.getText())
-                .stream()
-                .filter(Offre::isActive)
+    /* @FXML
+     private void handleSearch() throws SQLException { // Retirez throws SQLException
+         offresList.getChildren().clear();
+         List<Offre> filtered = offreService.getAllOffres(searchField.getText())
+                 .stream()
+                 .filter(Offre::isActive)
+                 .collect(Collectors.toList());
+
+         filtered.forEach(this::createOfferCard);
+
+     }*/
+    @FXML
+    private void handleSearchTextChanged() {
+        offresList.getChildren().clear(); // On vide la liste à chaque modification du champ
+        String searchText = searchField.getText().toLowerCase();
+        String selectedModeTravail = modeTravailFilterCombo.getValue();
+        String selectedTypeContrat = typeContratFilterCombo.getValue();
+        String selectedNiveauExperience = niveauExperienceFilterCombo.getValue();
+
+
+        List<Offre> filtered = offreService.getAllOffres(searchText).stream()
+                .filter(offre -> {
+                    // Filtrage par mode de travail
+                    if (selectedModeTravail != null && !selectedModeTravail.equals("Tous")) {
+                        return offre.getModeTravail().equalsIgnoreCase(selectedModeTravail);
+                    }
+                    return true;
+                })
+                .filter(offre -> {
+                    // Filtrage par type de contrat
+                    if (selectedTypeContrat != null && !selectedTypeContrat.equals("Tous")) {
+                        return offre.getTypeContrat().equalsIgnoreCase(selectedTypeContrat);
+                    }
+                    return true;
+                })
+                .filter(offre -> {
+                    // Filtrage par niveau d'expérience
+                    if (selectedNiveauExperience != null && !selectedNiveauExperience.equals("Tous")) {
+                        return offre.getNiveauExperience().equalsIgnoreCase(selectedNiveauExperience);
+                    }
+                    return true;
+                })
                 .collect(Collectors.toList());
 
+        // Affichage des offres filtrées
         filtered.forEach(this::createOfferCard);
 
-    }*/
-   @FXML
-   private void handleSearchTextChanged() {
-       offresList.getChildren().clear(); // On vide la liste à chaque modification du champ
-       String searchText = searchField.getText();
+        if (filtered.isEmpty()) {
+            System.out.println("Aucune offre trouvée");
+        }
 
-       // Si le champ de recherche est vide, on charge toutes les offres actives
-       if (searchText.isEmpty()) {
-           loadActiveOffres(); // Charger toutes les offres actives si la recherche est vide
-           return;
-       }
-
-       // Filtrage des offres selon le texte de recherche
-       List<Offre> filtered = offreService.getAllOffres(searchText);
-
-       if (filtered.isEmpty()) {
-           System.out.println("Aucune offre trouvée"); // Débogage
-       }
-
-       // Créer des cartes d'offres pour les résultats filtrés
-       filtered.forEach(this::createOfferCard);
-   }
+    }
 
 
 
@@ -172,5 +202,37 @@ public class OffresListController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    @FXML
+    private void handleLogin(ActionEvent event) {
+        try {
+            // 1. Charger le FXML de login
+            Parent root = FXMLLoader.load(getClass().getResource("/Auth/login.fxml"));
+
+            // 2. Créer une nouvelle scène et une nouvelle fenêtre
+            Scene loginScene = new Scene(root);
+            Stage loginStage = new Stage();
+
+            // 3. Configurer la fenêtre
+            loginStage.setTitle("Connexion - Nexus Recrutement");
+            loginStage.setScene(loginScene);
+
+            // 4. Personnalisation optionnelle
+            loginStage.setResizable(false); // Fenêtre non redimensionnable
+            loginStage.initModality(Modality.NONE); // Autoriser l'interaction avec les autres fenêtres
+
+            // 5. Afficher la nouvelle fenêtre
+            loginStage.show();
+
+        } catch (IOException e) {
+            // Gestion d'erreur avec boîte de dialogue
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur technique");
+            alert.setHeaderText("Échec du chargement de la page de connexion");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
 }
 

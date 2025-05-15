@@ -8,7 +8,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class DBConnection {
     Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-    private final String URL = dotenv.get("DB_URL", "jdbc:mysql://localhost:3306/optirh");
+    private final String URL = dotenv.get("DB_URL", "jdbc:mysql://localhost:3306/web_optirh");
     private final String USER = dotenv.get("DB_USER", "root");
     private final String PWD = dotenv.get("DB_PWD", "");
 

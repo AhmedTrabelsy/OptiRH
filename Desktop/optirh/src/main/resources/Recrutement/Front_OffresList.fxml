@@ -5,32 +5,36 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
 
-<BorderPane stylesheets="@styles/style.css" xmlns="http://javafx.com/javafx/23.0.1"
+<?import java.lang.String?>
+<BorderPane stylesheets="@styles/style.css" xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.nexus.Controllers.Recrutement.OffresListController">
 
     <!-- UP BAR avec hauteur augmentée et coins arrondis -->
     <top>
-        <Pane fx:id="up_barre" prefHeight="130.0" prefWidth="1000.0"
+        <Pane fx:id="up_barre" prefHeight="140.0" prefWidth="1000.0"
               styleClass="up_barre"
               BorderPane.alignment="CENTER">
             <children>
-                <!-- Logo repositionné -->
-                <ImageView fitHeight="180.0" fitWidth="200.0"
-                           layoutX="30.0" layoutY="-10.0"
-                           pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@images/logoGris_enhanced.png" />
-                    </image>
-                </ImageView>
-
+                <HBox spacing="10" alignment="CENTER_LEFT"
+                      layoutX="0" layoutY="0" prefHeight="150"  prefWidth="1000.0">
+                    <padding>
+                        <Insets top="2" right="10" bottom="20" left="10"/>
+                    </padding>
+                    <ImageView fitHeight="180.0" fitWidth="300.0"
+                               pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@images/logoGris_enhanced.png" />
+                        </image>
+                    </ImageView>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Button text="Se connecter" style="-fx-background-color: #217ff8; -fx-text-fill: white;" onAction="#handleLogin"/>
+                </HBox>
             </children>
-
         </Pane>
     </top>
-
-
 
     <!-- CONTENU PRINCIPAL (votre liste d'offres) -->
     <center>
@@ -40,7 +44,46 @@
                   AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
                 <TextField fx:id="searchField" promptText="Rechercher une offre..." styleClass="search-field"
                            onKeyReleased="#handleSearchTextChanged"/>
-               <!-- <Button text="Rechercher" styleClass="btn" onAction="#handleSearch"/> -->
+
+                <!-- Filtre Mode de Travail -->
+                <ComboBox fx:id="modeTravailFilterCombo" promptText="Mode de travail" styleClass="combo-box"
+                          onAction="#handleSearchTextChanged">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Tous" />
+                            <String fx:value="Présentiel" />
+                            <String fx:value="Hybride" />
+                            <String fx:value="Télétravail" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <!-- Filtre Type de Contrat -->
+                <ComboBox fx:id="typeContratFilterCombo" promptText="Type de contrat" styleClass="combo-box"
+                          onAction="#handleSearchTextChanged">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Tous" />
+                            <String fx:value="CDI" />
+                            <String fx:value="CDD" />
+                            <String fx:value="Stage" />
+                            <String fx:value="Freelance" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <!-- Filtre Niveau d'Expérience -->
+                <ComboBox fx:id="niveauExperienceFilterCombo" promptText="Niveau d'expérience" styleClass="combo-box"
+                          onAction="#handleSearchTextChanged">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Tous" />
+                            <String fx:value="Débutant" />
+                            <String fx:value="Junior" />
+                            <String fx:value="Senior" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
             </HBox>
 
             <!-- Liste des offres -->
@@ -53,10 +96,12 @@
             </ScrollPane>
         </AnchorPane>
     </center>
+
     <!-- PIED DE PAGE -->
     <bottom>
         <HBox styleClass="footer" alignment="CENTER" prefHeight="50">
             <Label text="© 2024 Nexus Recrutement - Tous droits réservés"/>
         </HBox>
     </bottom>
+
 </BorderPane>
