@@ -19,7 +19,7 @@ public class UserService implements CRUD<User> {
     @Override
     public int insert(User user) throws SQLException {
 
-        String req = "INSERT INTO User(nom, email, mot_de_passe, role, address) VALUES (?, ?, ?, ?, ?)";
+        String req = "INSERT INTO User(nom, email, mot_de_passe, role, address, roles, created_at, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         ps = cnx.prepareStatement(req);
 
@@ -28,6 +28,9 @@ public class UserService implements CRUD<User> {
         ps.setString(3, BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         ps.setString(4, user.getRole().name());
         ps.setString(5, user.getAddress());
+        ps.setString(6, "{\"roles\": [\"ROLE_USER\"]}");
+        ps.setTimestamp(7, Timestamp.valueOf(java.time.LocalDateTime.now()));
+        ps.setInt(8, 1);
 
         return ps.executeUpdate();
     }
