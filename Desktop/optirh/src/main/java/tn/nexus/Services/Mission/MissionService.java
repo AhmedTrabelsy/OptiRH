@@ -21,8 +21,8 @@ public class MissionService implements CRUD<Mission> {
 
     @Override
     public int insert(Mission mission) throws SQLException {
-        String req = "INSERT INTO Missions (titre, description, status, project_id, assigned_to, created_at, updated_at, date_terminer) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO Missions (titre, description, status, project_id, assigned_to, created_at, updated_at, date_terminer, created_by_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)"; // Ajout de created_by_id=1
         try (PreparedStatement ps = cnx.prepareStatement(req)) {
             ps.setString(1, mission.getTitre());
             ps.setString(2, mission.getDescription());
@@ -34,8 +34,6 @@ public class MissionService implements CRUD<Mission> {
             ps.setTimestamp(8, mission.getDateTerminer());
             return ps.executeUpdate();
         }
-
-
     }
     public List<Mission> getTasksApproachingDeadline() throws SQLException {
         List<Mission> missions = new ArrayList<>();
@@ -128,14 +126,14 @@ public class MissionService implements CRUD<Mission> {
                         rs.getInt("assigned_to"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
-                        rs.getTimestamp("date_terminer") // Nouvel attribut
+                        rs.getTimestamp("date_terminer"),
+                        rs.getInt("created_by_id") // Ajout du nouveau champ
                 );
                 missions.add(mission);
             }
         }
         return missions;
     }
-
 
     // Récupérer les tâches par statut
     public List<Mission> getTasksByStatus(String status) throws SQLException {
@@ -173,7 +171,7 @@ public class MissionService implements CRUD<Mission> {
     }
 
     public void addMission(Mission mission) throws SQLException {
-        String query = "INSERT INTO Missions (titre, description, status, project_id, assigned_to, created_at, updated_at, date_terminer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Missions (titre, description, status, project_id, assigned_to, created_at, updated_at, date_terminer, created_by_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
             statement.setString(1, mission.getTitre());
             statement.setString(2, mission.getDescription());
@@ -182,7 +180,15 @@ public class MissionService implements CRUD<Mission> {
             statement.setInt(5, mission.getAssignedTo());
             statement.setTimestamp(6, mission.getCreatedAt());
             statement.setTimestamp(7, mission.getUpdatedAt());
-            statement.setTimestamp(8, mission.getDateTerminer()); // Nouvel attribut
+            statement.setTimestamp(8, mission.getDateTerminer());
+            statement.executeUpdate();
+        }
+    }
+    public void updateMissionCreatedBy(int missionId, int createdById) throws SQLException {
+        String query = "UPDATE Missions SET created_by_id = ? WHERE id = ?";
+        try (PreparedStatement statement = cnx.prepareStatement(query)) {
+            statement.setInt(1, createdById);
+            statement.setInt(2, missionId);
             statement.executeUpdate();
         }
     }

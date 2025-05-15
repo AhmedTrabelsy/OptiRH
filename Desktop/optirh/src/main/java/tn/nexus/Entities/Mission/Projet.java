@@ -8,7 +8,7 @@ public class Projet {
     private String nom;
     private String description;
     private Timestamp createdAt;
-    private int createdBy; // Référence à l'utilisateur qui a créé le projet
+    private int created_by_id; // Référence à l'utilisateur qui a créé le projet
     private String userNom;
     private List<Mission> missions = new ArrayList<>();
 
@@ -20,7 +20,7 @@ public class Projet {
         this.nom = nom;
         this.description = description;
         this.createdAt = createdAt;
-        this.createdBy = createdBy;
+        this.created_by_id = createdBy;
     }
     public Projet(int id, String nom, String description, Timestamp createdAt, String userNom) {
         this.id = id;
@@ -32,7 +32,7 @@ public class Projet {
     public Projet(String nom, String description, int createdBy) {
         this.nom = nom;
         this.description = description;
-        this.createdBy = createdBy;
+        this.created_by_id = createdBy;
     }
     // Méthode pour ajouter des missions
     public void addMission(Mission mission) {
@@ -86,11 +86,11 @@ public class Projet {
     }
 
     public int getCreatedBy() {
-        return createdBy;
+        return created_by_id;
     }
 
     public void setCreatedBy(int createdBy) {
-        this.createdBy = createdBy;
+        this.created_by_id = createdBy;
     }
 
     @Override
