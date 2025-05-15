@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class OffresController implements Initializable, WrapWithSideBar {
+public class OffresController implements Initializable , WrapWithSideBar {
 
     @FXML
     private TextField searchField;
@@ -33,7 +33,6 @@ public class OffresController implements Initializable, WrapWithSideBar {
 
     @FXML
     private TableColumn<Offre, String> colPoste, colDescription, colStatut, colDate, colModeTravail, colTypeContrat, colLocalisation, colNiveauExperience, colNbPostes, colDateExpiration, colActions;
-
     @FXML
     private AnchorPane sideBar;
 
@@ -97,38 +96,6 @@ public class OffresController implements Initializable, WrapWithSideBar {
 
         // Charger les offres
         loadOffres();
-
-        // Changer la couleur du statut avec cellFactory
-        colStatut.setCellFactory(col -> new TableCell<Offre, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle(null);
-                } else {
-                    setText(item);
-                    // Modifier la couleur en fonction du statut
-                    switch (item) {
-                        case "Brouillon":
-                            setStyle("-fx-background-color: lightgray;");
-                            break;
-                        case "En attente":
-                            setStyle("-fx-background-color: #FFA500;");
-                            break;
-                        case "Active":
-                            setStyle("-fx-background-color: #77DD77;");
-                            break;
-                        case "Cloturée":
-                            setStyle("-fx-background-color: #FF6666;");
-                            break;
-                        default:
-                            setStyle(null);
-                            break;
-                    }
-                }
-            }
-        });
     }
 
     private void loadOffres() {

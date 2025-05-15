@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import tn.nexus.Entities.User;
 import tn.nexus.Exceptions.InvalidInputException;
 import tn.nexus.Services.UserService;
+import tn.nexus.Services.Auth.MailingService;
 import tn.nexus.Utils.WrapWithSideBar;
 import tn.nexus.Utils.Enums.Role;
 
@@ -23,7 +24,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class UpdateUserController implements Initializable, WrapWithSideBar {
-
     private User user;
     @FXML
     private AnchorPane sideBar;
@@ -44,32 +44,35 @@ public class UpdateUserController implements Initializable, WrapWithSideBar {
     @FXML
     private Text pageTitle;
     UserService us = new UserService();
+    MailingService ms = new MailingService();
     private boolean isUpdate;
 
     @FXML
     void onSave(ActionEvent event) {
         try {
-            if (username.getText() == null || username.getText().isEmpty()) {
-                throw new InvalidInputException("Le nom d'utilisateur est requis");
-            } else if (email.getText() == null || email.getText().isEmpty()) {
-                throw new InvalidInputException("L'email est requis");
-            } else if (address.getText() == null || address.getText().isEmpty()) {
-                throw new InvalidInputException("L'adresse est requise");
+            if (username.getText() == null || username.getText().isEmpty() || username.getText().length() < 3 || username.getText().length() > 50) {
+                throw new InvalidInputException("Le nom d'utilisateur doit contenir entre 3 et 50 caractères");
+            } else if (email.getText() == null || email.getText().isEmpty() || !email.getText().matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+                throw new InvalidInputException("L'email n'est pas valide");
+            } else if (address.getText() == null || address.getText().isEmpty() || address.getText().length() > 100) {
+                throw new InvalidInputException("L'adresse doit contenir moins de 100 caractères");
             } else if (role.getValue() == null) {
                 throw new InvalidInputException("Choisir un rôle");
-            } else if (!this.isUpdate && password.getText() == null || password.getText().isEmpty()) {
-                throw new InvalidInputException("Le mot de passe est requis");
+            } else if (!this.isUpdate && (password.getText() == null || password.getText().isEmpty() || password.getText().length() < 8 || password.getText().length() > 100)) {
+                throw new InvalidInputException("Le mot de passe doit contenir entre 8 et 100 caractères");
             }
             user.setNom(username.getText());
-            user.setMotDePasse(password.getText());
+            user.setPassword(password.getText());
             user.setEmail(email.getText());
             user.setAddress(address.getText());
             user.setRole(role.getValue());
 
             if (this.isUpdate)
                 us.update(user);
-            else
+            else {
                 us.insert(user);
+                ms.sendEmail(user);
+            }
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Succès");
@@ -96,7 +99,6 @@ public class UpdateUserController implements Initializable, WrapWithSideBar {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         } catch (Exception e) {
-            System.out.println(e);
             System.out.println(e.getStackTrace());
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
@@ -117,7 +119,7 @@ public class UpdateUserController implements Initializable, WrapWithSideBar {
         this.user = user;
         // Initialize the form with the user data
         username.setText(user.getNom());
-        password.setText(user.getMotDePasse());
+        password.setText(user.getPassword());
         email.setText(user.getEmail());
         address.setText(user.getAddress());
         role.setValue(user.getRole());

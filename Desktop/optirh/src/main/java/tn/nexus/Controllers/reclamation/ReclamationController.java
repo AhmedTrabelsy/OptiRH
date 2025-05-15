@@ -188,8 +188,8 @@ public class ReclamationController implements Initializable, WrapWithSideBar {
                 document.open();
 
                 // Titre du document
-                document.add(new Paragraph("                Liste des Réclamations"));
-                document.add(new Paragraph("         "));
+                document.add(new Paragraph("Liste des Réclamations"));
+
                 // Création de la table PDF
                 PdfPTable table = new PdfPTable(3);
                 table.addCell("Description");

@@ -23,9 +23,7 @@ public class MainFx extends Application {
     public void start(Stage primaryStage) throws IOException {
         /********Mattre a jour le statut d'venement**********/
         EvenementServices evenementService = new EvenementServices();
-        evenementService.mettreAJourStatutEvenements(); // Mise à jour des statuts au démarrage        //FXMLLoader loader = new FXMLLoader(getClass().getResource("/Recrutement/Front_OffresList.fxml"));
-
-        // evenementService.mettreAJourStatutEvenements(); // Mise à jour des statuts au démarrage
+       evenementService.mettreAJourStatutEvenements(); // Mise à jour des statuts au démarrage
 
         // template fixe
         UserAgentBuilder.builder()
@@ -39,9 +37,7 @@ public class MainFx extends Application {
         // FXMLLoader loader = new
         // FXMLLoader(getClass().getResource("/formations/AjouterFormation.fxml"));
          //FXMLLoader loader = new FXMLLoader(getClass().getResource("/Users/ListUsers.fxml"));
-       FXMLLoader loader = new FXMLLoader(getClass().getResource("/Auth/Login.fxml"));
-       // FXMLLoader loader = new FXMLLoader(getClass().getResource("/Recrutement/Front_OffresList.fxml"));
-
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Auth/Login.fxml"));
 
         Parent root = loader.load();
         Scene scene = new Scene(root);

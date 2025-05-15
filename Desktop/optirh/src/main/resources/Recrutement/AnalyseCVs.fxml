@@ -20,55 +20,55 @@
     </left>
     <center>
 
-        <VBox>
+    <VBox>
 
-            <!-- ComboBox pour les offres -->
-            <ComboBox fx:id="offresComboBox" promptText="Sélectionnez une offre" />
+    <!-- ComboBox pour les offres -->
+    <ComboBox fx:id="offresComboBox" promptText="Sélectionnez une offre" />
 
-            <!-- ListView pour afficher les CVs -->
-            <ListView fx:id="cvListView" />
+    <!-- ListView pour afficher les CVs -->
+    <ListView fx:id="cvListView" />
 
-            <!-- Bouton d'analyse -->
-            <Button fx:id="analyserButton" text="Analyser les CVs" />
+    <!-- Bouton d'analyse -->
+    <Button fx:id="analyserButton" text="Analyser les CVs" />
 
-            <!-- TableView pour les résultats -->
-            <TableView fx:id="resultatTable">
-                <columns>
-                    <!-- Colonne Nom -->
-                    <TableColumn fx:id="colNom" text="Nom" prefWidth="150">
-                        <cellValueFactory>
-                            <PropertyValueFactory property="nom" />
-                        </cellValueFactory>
-                    </TableColumn>
+    <!-- TableView pour les résultats -->
+    <TableView fx:id="resultatTable">
+        <columns>
+            <!-- Colonne Nom -->
+            <TableColumn fx:id="colNom" text="Nom" prefWidth="150">
+                <cellValueFactory>
+                    <PropertyValueFactory property="nom" />
+                </cellValueFactory>
+            </TableColumn>
 
-                    <!-- Colonne Expérience (masquée) -->
-                    <TableColumn fx:id="colExperience" text="Expérience" visible="false">
-                        <cellValueFactory>
-                            <PropertyValueFactory property="experience" />
-                        </cellValueFactory>
-                    </TableColumn>
+            <!-- Colonne Expérience (masquée) -->
+            <TableColumn fx:id="colExperience" text="Expérience" visible="false">
+                <cellValueFactory>
+                    <PropertyValueFactory property="experience" />
+                </cellValueFactory>
+            </TableColumn>
 
-                    <!-- Colonne Contenu Brut (utilise "technologies") -->
-                    <TableColumn fx:id="colTechnologies" text="Contenu Brut" prefWidth="600">
-                        <cellValueFactory>
-                            <PropertyValueFactory property="technologies" />
-                        </cellValueFactory>
-                    </TableColumn>
-                    <TableColumn fx:id="colMatch" text="Correspondance" prefWidth="100">
-                        <cellValueFactory>
-                            <PropertyValueFactory property="matchPercentage"/>
-                        </cellValueFactory>
-                    </TableColumn>
+            <!-- Colonne Contenu Brut (utilise "technologies") -->
+            <TableColumn fx:id="colTechnologies" text="Contenu Brut" prefWidth="600">
+                <cellValueFactory>
+                    <PropertyValueFactory property="technologies" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="colMatch" text="Correspondance" prefWidth="100">
+                <cellValueFactory>
+                    <PropertyValueFactory property="matchPercentage"/>
+                </cellValueFactory>
+            </TableColumn>
 
-                    <!-- Colonne LinkedIn (masquée) -->
-                    <TableColumn fx:id="colLinkedin" text="LinkedIn" visible="false">
-                        <cellValueFactory>
-                            <PropertyValueFactory property="linkedin" />
-                        </cellValueFactory>
-                    </TableColumn>
-                </columns>
-            </TableView>
-        </VBox>
+            <!-- Colonne LinkedIn (masquée) -->
+            <TableColumn fx:id="colLinkedin" text="LinkedIn" visible="false">
+                <cellValueFactory>
+                    <PropertyValueFactory property="linkedin" />
+                </cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+</VBox>
     </center>
 
 </BorderPane>

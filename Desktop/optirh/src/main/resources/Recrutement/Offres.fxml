@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane stylesheets="@styles/offres.css" xmlns="http://javafx.com/javafx/23.0.1"
+<BorderPane stylesheets="@styles/offresStyle.css" xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.nexus.Controllers.Recrutement.OffresController">
 
@@ -40,22 +40,25 @@
                 <Button fx:id="btnAjouterOffre" onAction="#handleAddOffer" styleClass="button" text="Ajouter"/>
             </HBox>
 
-            <!-- Tableau des offres -->
-            <TableView fx:id="tableOffres" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="120" AnchorPane.bottomAnchor="20">
+            <!-- TableView -->
+            <TableView fx:id="tableOffres" styleClass="table-view"
+                       AnchorPane.topAnchor="120" AnchorPane.bottomAnchor="20"
+                       AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
                 <columns>
-                    <TableColumn fx:id="colPoste" text="Poste" prefWidth="200"/>
-                    <TableColumn fx:id="colDescription" text="Description" prefWidth="300"/>
-                    <TableColumn fx:id="colStatut" text="Statut" prefWidth="150"/>
-                    <TableColumn fx:id="colDate" text="Date de création" prefWidth="150"/>
-                    <TableColumn fx:id="colModeTravail" text="Mode de travail" prefWidth="150"/>
-                    <TableColumn fx:id="colTypeContrat" text="Type de contrat" prefWidth="150"/>
-                    <TableColumn fx:id="colLocalisation" text="Localisation" prefWidth="200"/>
-                    <TableColumn fx:id="colNiveauExperience" text="Niveau d'expérience" prefWidth="200"/>
-                    <TableColumn fx:id="colNbPostes" text="Nb de postes" prefWidth="150"/>
-                    <TableColumn fx:id="colDateExpiration" text="Date d'expiration" prefWidth="150"/>
-                    <TableColumn fx:id="colActions" text="Actions" prefWidth="150"/>
+                    <TableColumn fx:id="colPoste" text="Poste" prefWidth="150" minWidth="150"/>
+                    <TableColumn fx:id="colDescription" text="Description" prefWidth="250" minWidth="250"/>
+                    <TableColumn fx:id="colStatut" text="Statut" prefWidth="100" minWidth="100"/>
+                    <TableColumn fx:id="colDate" text="Date de création" prefWidth="150" minWidth="150"/>
+                    <TableColumn fx:id="colModeTravail" text="Mode de Travail" prefWidth="150" minWidth="150"/>
+                    <TableColumn fx:id="colTypeContrat" text="Type de Contrat" prefWidth="150" minWidth="150"/>
+                    <TableColumn fx:id="colLocalisation" text="Localisation" prefWidth="150" minWidth="150"/>
+                    <TableColumn fx:id="colNiveauExperience" text="Expérience" prefWidth="120" minWidth="120"/>
+                    <TableColumn fx:id="colNbPostes" text="Nb Postes" prefWidth="100" minWidth="100"/>
+                    <TableColumn fx:id="colDateExpiration" text="Date Expiration" prefWidth="150" minWidth="150"/>
+                    <TableColumn fx:id="colActions" text="Actions" prefWidth="200" minWidth="200"/>
                 </columns>
             </TableView>
         </AnchorPane>
     </center>
+
 </BorderPane>

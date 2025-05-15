@@ -1,5 +1,7 @@
 package tn.nexus.Controllers.Auth;
 
+import java.io.IOException;
+
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
@@ -45,19 +47,39 @@ public class LoginController {
                 stage.show();
             } catch (Exception e) {
                 e.getMessage();
-                statusLabel.setText("Failed to load user list.");
+                statusLabel.setText("Erreur lors de chargement de la liste des utilisateurs.");
             }
         } else {
-            statusLabel.setText("Invalid credentials.");
+            statusLabel.setText("Identifiants invalides.");
         }
     }
 
     public void forgotPassword(ActionEvent event) {
-        // Navigate to Forgot Password screen
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Auth/ForgotPassword.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Mot de passe oublié");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            statusLabel.setText("Erreur lors du chargement de l'ecran <Mot de passe oublié>");
+        }
     }
 
     public void createAccount(ActionEvent event) {
-        // Navigate to Create Account screen
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Auth/CreateAccount.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Créer un compte");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            statusLabel.setText("Erreur lors du chargement de l'écran <Créer un compte>.");
+        }
     }
 
 }
