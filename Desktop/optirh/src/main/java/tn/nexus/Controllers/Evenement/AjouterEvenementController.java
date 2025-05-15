@@ -1,5 +1,6 @@
 package tn.nexus.Controllers.Evenement;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -9,9 +10,15 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tn.nexus.Entities.Evenement.Evenement;
+import tn.nexus.Entities.Evenement.ModaliteEvenement;
+import tn.nexus.Entities.Evenement.TypeEvenement;
 import tn.nexus.Services.Evenement.EvenementServices;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -41,6 +48,8 @@ public class AjouterEvenementController {
     @FXML private Label weatherLabel;
     @FXML private ProgressIndicator progressIndicator;
     @FXML private ImageView weatherIcon;
+    @FXML private ComboBox<String> comboModalite;
+    @FXML private ComboBox<String> comboType;
 
 
 
@@ -53,6 +62,15 @@ public class AjouterEvenementController {
 
     @FXML
     public void initialize() {
+        comboType.setItems(FXCollections.observableArrayList(
+                "RH", "MARKETING", "TECH_INNOVATION", "SOFT_SKILLS",
+                "FINANCE", "COMMERCE", "MANAGEMENT", "LOISIR"
+        ));
+
+        comboModalite.setItems(FXCollections.observableArrayList(
+                "EN_LIGNE", "PRESENTIEL"
+        ));
+
         latitudeField.textProperty().addListener((obs, oldVal, newVal) -> handleFetchWeather());
         longitudeField.textProperty().addListener((obs, oldVal, newVal) -> handleFetchWeather());
         dateDebutField.valueProperty().addListener((obs, oldVal, newVal) -> handleFetchWeather());
@@ -110,25 +128,68 @@ public class AjouterEvenementController {
         }
         return true;
     }
+    public String copierImageDansSymfony(File imageFile) throws IOException {
+        String dossierSymfony = "C:/Users/ikbel/Desktop/inetgrationjava+symfony/OptiRH/Web/OptiRH/public/uploads/evenements";
+
+        File dossier = new File(dossierSymfony);
+        if (!dossier.exists()) {
+            dossier.mkdirs();
+        }
+
+        String nomFichier = imageFile.getName();  // même nom d’origine
+        Path destination = Path.of(dossierSymfony, nomFichier);
+
+        Files.copy(imageFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+
+        return "uploads/evenements/" + nomFichier;
+    }
+
 
     @FXML
     void ajouterEvenement(ActionEvent event) throws SQLException {
         if (!validateFields()) return;
 
+        String selectedType = String.valueOf(comboType.getValue());
+        String selectedModalite = String.valueOf(comboModalite.getValue());
+
+        if (selectedType == null || selectedModalite == null) {
+            return;
+        }
+
+        TypeEvenement typeEvenement = TypeEvenement.valueOf(selectedType);
+        ModaliteEvenement modaliteEvenement = ModaliteEvenement.valueOf(selectedModalite);
+
+        String cheminImageRelative = null;
+        if (imageField.getText() != null && !imageField.getText().isEmpty()) {
+            try {
+                File imageFichier = new File(imageField.getText());
+                cheminImageRelative = copierImageDansSymfony(imageFichier);
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Tu peux afficher une alerte ici si tu veux
+                return;
+            }
+        }
+
         Evenement evenement = new Evenement(
                 titreField.getText(), lieuField.getText(), descriptionField.getText(),
-                Double.parseDouble(prixField.getText()), imageField.getText(),
+                Double.parseDouble(prixField.getText()), cheminImageRelative,
                 dateDebutField.getValue(), dateFinField.getValue(), LocalTime.parse(heureField.getText()),
-                Double.parseDouble(latitudeField.getText()), Double.parseDouble(longitudeField.getText())
+                Double.parseDouble(latitudeField.getText()), Double.parseDouble(longitudeField.getText()),
+                modaliteEvenement,
+                typeEvenement
         );
 
         serviceEvenement.insert(evenement);
+
         if (listeEvenementController != null) {
             listeEvenementController.refreshTable();
         }
+
         clearFields();
         ((Stage) titreField.getScene().getWindow()).close();
     }
+
 
 
 

@@ -1,5 +1,7 @@
 package tn.nexus.Controllers.Evenement;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -9,6 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tn.nexus.Entities.Evenement.Evenement;
+import tn.nexus.Entities.Evenement.ModaliteEvenement;
+import tn.nexus.Entities.Evenement.TypeEvenement;
 import tn.nexus.Services.Evenement.EvenementServices;
 
 import java.io.File;
@@ -33,6 +37,13 @@ public class ModifierEvenementController {
     @FXML private Label weatherLabel;
     @FXML private ImageView weatherIcon;
     @FXML private ProgressIndicator progressIndicator;
+
+    @FXML
+    private ComboBox<ModaliteEvenement> comboModalite;
+
+
+    @FXML
+    private ComboBox<?> comboType;
 
 
     private final EvenementServices serviceEvenement = new EvenementServices();
@@ -79,6 +90,7 @@ public class ModifierEvenementController {
     public void initData(Evenement evenement) {
         this.evenementActuel = evenement;
 
+
         if (evenement != null) {
             titreField.setText(evenement.getTitre());
             lieuField.setText(evenement.getLieu());
@@ -121,6 +133,8 @@ public class ModifierEvenementController {
         String heureText = heureField.getText().trim();
         String latitudeText = latitudeField.getText().trim();
         String longitudeText = longitudeField.getText().trim();
+        String type = String.valueOf(comboType.getSelectionModel().getSelectedItem());  // Corrected to get the selected item
+        String mode = String.valueOf(comboModalite.getSelectionModel().getSelectedItem());  // Corrected to get the selected item
 
         if (titre.isEmpty() || lieu.isEmpty() || description.isEmpty() || prixText.isEmpty() || heureText.isEmpty() || latitudeText.isEmpty() || longitudeText.isEmpty()
                 || dateDebutField.getValue() == null || dateFinField.getValue() == null || image.isEmpty()) {
@@ -206,6 +220,8 @@ public class ModifierEvenementController {
         evenementActuel.setImage(image);
         evenementActuel.setLatitude(latitude);
         evenementActuel.setLongitude(longitude);
+        evenementActuel.setModaliteEvenement(ModaliteEvenement.valueOf(mode));
+        evenementActuel.setTypeEvenement(TypeEvenement.valueOf(type));
 
         serviceEvenement.update(evenementActuel);
 

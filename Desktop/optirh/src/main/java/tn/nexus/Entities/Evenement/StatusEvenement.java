@@ -2,9 +2,9 @@ package tn.nexus.Entities.Evenement;
 
 public enum StatusEvenement {
 
-    A_VENIR("à venir"),
-    EN_COURS("en cours"),
-    TERMINE("terminé");
+    A_VENIR("A_VENIR"),
+    EN_COURS("EN_COURS"),
+    TERMINE("TERMINE");
 
     private final String label;
 
