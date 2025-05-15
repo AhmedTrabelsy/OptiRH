@@ -15,16 +15,20 @@ public class ProjetService implements CRUD<Projet> {
     // Méthodes CRUD
     @Override
     public int insert(Projet project) throws SQLException {
-        String req = "INSERT INTO projects (nom, description, created_by, created_at) VALUES (?, ?, ?, ?)";
+        // Vérifier que created_at n'est pas null
+        if (project.getCreatedAt() == null) {
+            project.setCreatedAt(new Timestamp(System.currentTimeMillis())); // Valeur par défaut = maintenant
+        }
+
+        String req = "INSERT INTO projects (nom, description, created_by_id, created_at) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = cnx.prepareStatement(req)) {
             ps.setString(1, project.getNom());
             ps.setString(2, project.getDescription());
-            ps.setInt(3, project.getCreatedBy());
+            ps.setInt(3, project.getCreatedBy());  // Assurez-vous que ce getter existe
             ps.setTimestamp(4, project.getCreatedAt());
             return ps.executeUpdate();
         }
     }
-
     @Override
     public int update(Projet project) throws SQLException {
         String req = "UPDATE projects SET nom = ?, description = ? WHERE id = ?";
@@ -70,7 +74,7 @@ public class ProjetService implements CRUD<Projet> {
                         rs.getString("nom"),
                         rs.getString("description"),
                         rs.getTimestamp("created_at"),
-                        rs.getInt("created_by")
+                        rs.getInt("created_by_id")
                 );
                 projects.add(project);
             }
@@ -83,7 +87,7 @@ public class ProjetService implements CRUD<Projet> {
         List<Projet> projets = new ArrayList<>();
         String req = "SELECT p.id, p.nom, p.description, p.created_at, u.nom AS user_nom " +
                 "FROM Projects p " +
-                "JOIN User u ON p.created_by = u.id";
+                "JOIN User u ON p.created_by_id = u.id";
         try (PreparedStatement ps = cnx.prepareStatement(req);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -103,8 +107,8 @@ public class ProjetService implements CRUD<Projet> {
         List<Projet> projets = new ArrayList<>();
         String req = "SELECT p.id, p.nom, p.description, p.created_at, u.nom AS user_nom " +
                 "FROM Projects p " +
-                "JOIN User u ON p.created_by = u.id " +
-                "WHERE p.created_by = ?";
+                "JOIN User u ON p. created_by_id = u.id " +
+                "WHERE p. created_by_id = ?";
         try (PreparedStatement ps = cnx.prepareStatement(req)) {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -125,7 +129,7 @@ public class ProjetService implements CRUD<Projet> {
         List<Projet> projets = new ArrayList<>();
         String req = "SELECT p.*, u.nom AS user_nom " +
                 "FROM projects p " +
-                "JOIN user u ON p.created_by = u.id " +
+                "JOIN user u ON p.created_by_id = u.id " +
                 "WHERE u.email LIKE ?";
 
         try (PreparedStatement ps = cnx.prepareStatement(req)) {
@@ -154,7 +158,7 @@ public class ProjetService implements CRUD<Projet> {
         List<Projet> projets = new ArrayList<>();
         String req = "SELECT p.*, u.nom AS user_nom " +
                 "FROM projects p " +
-                "JOIN user u ON p.created_by = u.id " +
+                "JOIN user u ON p.created_by_id = u.id " +
                 "WHERE NOT EXISTS (" +
                 "   SELECT 1 FROM missions m " +
                 "   WHERE m.project_id = p.id AND m.status <> 'Done'" + // Utilisation de '<>' pour compatibilité SQL

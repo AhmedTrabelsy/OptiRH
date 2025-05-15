@@ -14,7 +14,9 @@ public class Mission {
     private int assignedTo; // Référence à l'utilisateur assigné
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private Timestamp dateTerminer; // Nouvel attribut
+    private Timestamp dateTerminer;
+    private int createdById; // Nouveau champ
+// Nouvel attribut
 
     public Mission(int id, String titre, String description, String status, int projectId, int assignedTo, Timestamp createdAt, Timestamp updatedAt, Timestamp dateTerminer) {
         this.id = id;
@@ -30,7 +32,9 @@ public class Mission {
     // Constructeurs
     public Mission() {}
 
-    public Mission(int id, String titre, String description, String status, int projectId, int assignedTo, Timestamp createdAt, Timestamp updatedAt) {
+    public Mission(int id, String titre, String description, String status, int projectId,
+                   int assignedTo, Timestamp createdAt, Timestamp updatedAt,
+                   Timestamp dateTerminer, int createdById) {
         this.id = id;
         this.titre = titre;
         this.description = description;
@@ -39,6 +43,8 @@ public class Mission {
         this.assignedTo = assignedTo;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.dateTerminer = dateTerminer;
+        this.createdById = createdById;
     }
 
     public Mission(LocalDate createdAt, LocalDate dateTerminer, String s) {
@@ -109,7 +115,13 @@ public class Mission {
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
+    public int getCreatedById() {
+        return createdById;
+    }
 
+    public void setCreatedById(int createdById) {
+        this.createdById = createdById;
+    }
     @Override
     public String toString() {
         return "Mission{" +
