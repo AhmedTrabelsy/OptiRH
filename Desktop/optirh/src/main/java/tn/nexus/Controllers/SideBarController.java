@@ -1,8 +1,8 @@
 package tn.nexus.Controllers;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -33,6 +33,16 @@ public class SideBarController {
     @FXML
     private HBox analyseCvButton;
     private UserSession userSession = UserSession.getInstance();
+
+    private final StringProperty userName = new SimpleStringProperty();
+
+    public StringProperty userNameProperty() {
+        return userName;
+    }
+
+    public String getUserName() {
+        return userName.get();
+    }
 
     @FXML
     private void initialize() {
@@ -104,6 +114,7 @@ public class SideBarController {
 
             manageTransportButton.setManaged(true);
         }
+        userName.set(userSession.getUser().getNom());
     }
 
     @FXML
@@ -241,3 +252,4 @@ public class SideBarController {
         menu.getScene().setRoot(root);
     }
 }
+
