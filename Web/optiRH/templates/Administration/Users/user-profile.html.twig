@@ -144,9 +144,6 @@
 									</tbody>
 								</table>
 							</div>
-							{% if user.getNotifications|length > 5 %}
-								<a href="{{ path('admin_notifications_list', {'userId': user.id}) }}" class="btn btn-link">Voir toutes les notifications</a>
-							{% endif %}
 						</div>
 					</div>
 				{% else %}

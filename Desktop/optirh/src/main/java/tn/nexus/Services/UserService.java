@@ -28,7 +28,7 @@ public class UserService implements CRUD<User> {
         ps.setString(3, BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         ps.setString(4, user.getRole().name());
         ps.setString(5, user.getAddress());
-        ps.setString(6, "{\"roles\": [\"ROLE_USER\"]}");
+        ps.setString(6, "[\"ROLE_USER\"]");
         ps.setTimestamp(7, Timestamp.valueOf(java.time.LocalDateTime.now()));
         ps.setInt(8, 1);
 
