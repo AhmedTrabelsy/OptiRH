@@ -97,7 +97,7 @@ public class EventFrontController implements WrapWithSideBar {
         imageView.getStyleClass().add("event-image");
 
         // Chemin absolu vers le dossier public de Symfony
-        String basePath = "C:/Users/ikbel/Desktop/inetgrationjava+symfony/OptiRH/Web/OptiRH/public/";
+        String basePath = "C:/Users/ikbel/Desktop/ProjetGit/inetgrationjava+symfony/OptiRH/Web/OptiRH/public/";
         File file = new File(basePath + event.getImage());
 
         if (file.exists()) {

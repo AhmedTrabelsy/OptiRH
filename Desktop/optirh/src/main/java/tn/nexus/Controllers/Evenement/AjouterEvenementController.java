@@ -129,7 +129,7 @@ public class AjouterEvenementController {
         return true;
     }
     public String copierImageDansSymfony(File imageFile) throws IOException {
-        String dossierSymfony = "C:/Users/ikbel/Desktop/inetgrationjava+symfony/OptiRH/Web/OptiRH/public/uploads/evenements";
+        String dossierSymfony = "C:/Users/ikbel/Desktop/ProjetGit/inetgrationjava+symfony/OptiRH/Web/OptiRH/public/uploads/evenements";
 
         File dossier = new File(dossierSymfony);
         if (!dossier.exists()) {

@@ -82,7 +82,7 @@ public class EventDetailsController {
         emailField.setText(userSession.getUser().getEmail());
 
         // Chemin absolu vers les images Symfony
-        String basePath = "C:/Users/ikbel/Desktop/inetgrationjava+symfony/OptiRH/Web/OptiRH/public/";
+        String basePath = "C:/Users/ikbel/Desktop/ProjetGit/inetgrationjava+symfony/OptiRH/Web/OptiRH/public/";
         File file = new File(basePath + event.getImage());
 
         if (file.exists()) {
