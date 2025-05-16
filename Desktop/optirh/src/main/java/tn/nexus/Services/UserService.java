@@ -80,7 +80,11 @@ public class UserService implements CRUD<User> {
             p.setId(rs.getInt("id"));
             p.setNom(rs.getString("nom"));
             p.setEmail(rs.getString("email"));
-            p.setRole(rs.getString("role") == null ? Role.Candidat : Role.valueOf(rs.getString("role")));
+            try {
+                p.setRole(Role.valueOf(rs.getString("role")));
+            } catch (IllegalArgumentException e) {
+                p.setRole(Role.Candidat);
+            }
             String address = rs.getString("address");
             if (address == null) {
                 address = "Tunis, 1234 Ariana St.";
