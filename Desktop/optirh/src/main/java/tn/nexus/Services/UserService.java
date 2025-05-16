@@ -80,8 +80,12 @@ public class UserService implements CRUD<User> {
             p.setId(rs.getInt("id"));
             p.setNom(rs.getString("nom"));
             p.setEmail(rs.getString("email"));
-            p.setRole(Role.valueOf(rs.getString("role")));
-            p.setAddress(rs.getString("address"));
+            p.setRole(rs.getString("role") == null ? Role.Candidat : Role.valueOf(rs.getString("role")));
+            String address = rs.getString("address");
+            if (address == null) {
+                address = "Tunis, 1234 Ariana St.";
+            }
+            p.setAddress(address);
 
             temp.add(p);
         }
