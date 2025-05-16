@@ -70,6 +70,7 @@ public class EventDetailsController {
     /*******************get data******************/
     public void setEventData(Evenement event) {
         this.currentEvent = event;
+
         titleLabel.setText(event.getTitre());
         DateDebutData.setText(event.getDateDebut().toString());
         DateFinData.setText(event.getDateFin().toString());
@@ -79,11 +80,16 @@ public class EventDetailsController {
         LieuxData.setText(String.valueOf(event.getLieu()));
         firstNameField.setText(userSession.getUser().getNom());
         emailField.setText(userSession.getUser().getEmail());
-        File file = new File(event.getImage());
+
+        // Chemin absolu vers les images Symfony
+        String basePath = "C:/Users/ikbel/Desktop/ProjetGit/inetgrationjava+symfony/OptiRH/Web/OptiRH/public/";
+        File file = new File(basePath + event.getImage());
+
         if (file.exists()) {
             eventImage.setImage(new Image(file.toURI().toString()));
         }
     }
+
 
 
 

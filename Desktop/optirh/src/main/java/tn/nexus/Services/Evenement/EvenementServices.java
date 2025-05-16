@@ -21,8 +21,8 @@ public class EvenementServices implements CRUD<Evenement> {
         evenement.calculerStatus();
 
         // Requête d'insertion
-        String req = "INSERT INTO evenement (titre, lieu, description, prix, date_debut, date_fin, image, heure, latitude, longitude, status) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO evenement (titre, lieu, description, prix, date_debut, date_fin, image, heure, latitude, longitude, status, type, modalite) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         ps = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
 
@@ -37,7 +37,10 @@ public class EvenementServices implements CRUD<Evenement> {
         ps.setTime(8, Time.valueOf(evenement.getHeure()));
         ps.setDouble(9, evenement.getLatitude());
         ps.setDouble(10, evenement.getLongitude());
-        ps.setString(11, evenement.getStatus().getLabel()); // Ajout de la valeur ENUM correctement formatée
+        ps.setString(11, evenement.getStatus().getLabel());
+        ps.setString(12, evenement.getTypeEvenement().getLabel());  // Insertion du type
+        ps.setString(13, evenement.getModaliteEvenement().getLabel());  // Insertion de la modalité
+
 
         // Exécuter la requête et récupérer les clés générées
         int rowsAffected = ps.executeUpdate();
@@ -61,7 +64,7 @@ public class EvenementServices implements CRUD<Evenement> {
     public int update(Evenement evenement) throws SQLException {
         evenement.calculerStatus();
 
-        String req =  "UPDATE evenement SET titre = ?, lieu = ?, description = ?, prix = ?, date_debut = ?, date_fin = ?, heure = ?, image = ?, latitude = ?, longitude = ?, status = ? " + "WHERE id_evenement = ?";
+        String req =  "UPDATE evenement SET titre = ?, lieu = ?, description = ?, prix = ?, date_debut = ?, date_fin = ?, heure = ?, image = ?, latitude = ?, longitude = ?, status = ? , type = ?, modalite = ?" + "WHERE id_evenement = ?";
 
         try (PreparedStatement ps = con.prepareStatement(req)) {
             // Associer les valeurs des paramètres à l'objet Evenement
@@ -75,9 +78,11 @@ public class EvenementServices implements CRUD<Evenement> {
             ps.setString(8, evenement.getImage());
             ps.setDouble(9, evenement.getLatitude());
             ps.setDouble(10, evenement.getLongitude());
-            ps.setString(11, evenement.getStatus().getLabel()); // Mettre à jour le statut
+            ps.setString(11, evenement.getStatus().getLabel());// Mettre à jour le statut
+            ps.setString(12, evenement.getTypeEvenement().getLabel());    // Ajouter le type
+            ps.setString(13, evenement.getModaliteEvenement().getLabel()); // Ajouter la modalité
 
-            ps.setInt(12, evenement.getIdEvenement());  // Utiliser l'ID pour identifier l'événement à mettre à jour
+            ps.setInt(14, evenement.getIdEvenement());  // Utiliser l'ID pour identifier l'événement à mettre à jour
 
             // Exécuter la mise à jour
             return ps.executeUpdate();  // Retourne le nombre de lignes affectées
@@ -183,13 +188,13 @@ public class EvenementServices implements CRUD<Evenement> {
     public void mettreAJourStatutEvenements() {
         String sql = "UPDATE evenement SET status = " +
                 "CASE " +
-                "WHEN date_debut <= NOW() AND date_fin >= NOW() THEN 'en cours' " +
-                "WHEN date_fin < NOW() THEN 'terminé' " +
-                "ELSE 'à venir' " +
+                "WHEN date_debut <= NOW() AND date_fin >= NOW() THEN 'EN_COURS' " +
+                "WHEN date_fin < NOW() THEN 'TERMINE' " +
+                "ELSE 'A_VENIR' " +
                 "END " +
-                "WHERE (status != 'en cours' AND date_debut <= NOW() AND date_fin >= NOW()) " +
-                "OR (status != 'terminé' AND date_fin < NOW()) " +
-                "OR (status != 'à venir' AND date_debut > NOW())";
+                "WHERE (status != 'EN_COURS' AND date_debut <= NOW() AND date_fin >= NOW()) " +
+                "OR (status != 'TERMINE' AND date_fin < NOW()) " +
+                "OR (status != 'A_VENIR' AND date_debut > NOW())";
 
         try (PreparedStatement statement = con.prepareStatement(sql)) {
             int rowsUpdated = statement.executeUpdate();

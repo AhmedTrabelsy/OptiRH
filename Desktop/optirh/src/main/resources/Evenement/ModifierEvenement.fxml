@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
@@ -28,6 +31,29 @@
 
         <TextField fx:id="imageField" layoutX="40.0" layoutY="340.0" prefWidth="380.0" promptText="Image (URL ou fichier)" />
         <Button fx:id="imageButton" layoutX="440.0" layoutY="340.0" onAction="#choisirImage" style="-fx-background-color: #005f73; -fx-text-fill: white; -fx-background-radius: 8;" text="📷 Choisir" />
+        <ComboBox fx:id="comboType" layoutX="40.0" layoutY="385.0" prefWidth="200.0">
+                <items>
+                        <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="RH" />
+                                <String fx:value="MARKETING" />
+                                <String fx:value="TECH_INNOVATION" />
+                                <String fx:value="SOFT_SKILLS" />
+                                <String fx:value="FINANCE" />
+                                <String fx:value="COMMERCE" />
+                                <String fx:value="MANAGEMENT" />
+                                <String fx:value="LOISIR" />
+                        </FXCollections>
+                </items>
+        </ComboBox>
+        <ComboBox fx:id="comboModalite" layoutX="310.0" layoutY="385.0" prefWidth="250.0">
+                <items>
+                        <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="EN_LIGNE" />
+                                <String fx:value="PRESENTIEL" />
+                        </FXCollections>
+                </items>
+        </ComboBox>
+
 
         <!-- Boutons d'action -->
         <Button layoutX="160.0" layoutY="420.0" onAction="#modifierEvenement" style="-fx-background-color: #007b8f; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10;" text="✏️ Modifier" />

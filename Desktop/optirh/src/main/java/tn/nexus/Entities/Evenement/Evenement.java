@@ -1,5 +1,7 @@
 package tn.nexus.Entities.Evenement;
 
+import javafx.collections.ObservableList;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -17,6 +19,9 @@ public class Evenement {
     private double longitude;
     private double latitude;
     private StatusEvenement status;
+    private ModaliteEvenement ModaliteEvenement;
+    private TypeEvenement typeEvenement;
+
 
     // Constructeurs
     public Evenement() {}
@@ -33,6 +38,23 @@ public class Evenement {
         this.heure = heure;
         this.longitude = Longitude;
         this.latitude = Latitude;
+
+    }
+
+    //cons d ajout
+    public Evenement(String titre, String lieu, String description, double prix, String image, LocalDate dateDebut, LocalDate dateFin, LocalTime heure, double latitude, double longitude,ModaliteEvenement ModaliteEvenement, TypeEvenement typeEvenement) {
+        this.titre = titre;
+        this.lieu = lieu;
+        this.description = description;
+        this.prix = prix;
+        this.image = image;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.heure = heure;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.ModaliteEvenement = ModaliteEvenement;
+        this.typeEvenement = typeEvenement;
 
     }
 
@@ -54,27 +76,32 @@ public class Evenement {
         this.dateDebut = dateDebut;
     }
 
-    public Evenement(String titre, String lieu, String description, double prix, String image, LocalDate dateDebut, LocalDate dateFin, LocalTime heure, double latitude, double longitude) {
-        this.titre = titre;
-        this.lieu = lieu;
-        this.description = description;
-        this.prix = prix;
-        this.image = image;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
-        this.heure = heure;
-        this.longitude = longitude;
-        this.latitude = latitude;
-    }
+
+
+
 
 
     // Getters et Setters
     public StatusEvenement getStatus() {
         return status;
     }
-
     public void setStatus(StatusEvenement status) {
         this.status = status;
+    }
+
+    public ModaliteEvenement getModaliteEvenement() {
+        return ModaliteEvenement;
+    }
+    public void setModaliteEvenement(ModaliteEvenement ModaliteEvenement) {
+        this.ModaliteEvenement = ModaliteEvenement;
+    }
+
+    public TypeEvenement getTypeEvenement() {
+        return typeEvenement;
+    }
+
+    public void setTypeEvenement(TypeEvenement typeEvenement) {
+        this.typeEvenement = typeEvenement;
     }
 
     public double getLatitude() {

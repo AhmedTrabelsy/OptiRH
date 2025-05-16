@@ -96,7 +96,10 @@ public class EventFrontController implements WrapWithSideBar {
         imageView.setPreserveRatio(false);
         imageView.getStyleClass().add("event-image");
 
-        File file = new File(event.getImage());
+        // Chemin absolu vers le dossier public de Symfony
+        String basePath = "C:/Users/ikbel/Desktop/ProjetGit/inetgrationjava+symfony/OptiRH/Web/OptiRH/public/";
+        File file = new File(basePath + event.getImage());
+
         if (file.exists()) {
             imageView.setImage(new Image(file.toURI().toString()));
         }
@@ -121,6 +124,7 @@ public class EventFrontController implements WrapWithSideBar {
 
         return card;
     }
+
 
     private void openEventDetails(Evenement event) {
         if (showCaptchaDialog()) { // Vérifie si la réponse est correcte
